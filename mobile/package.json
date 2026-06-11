@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 5173",
     "build": "vite build",
     "typecheck": "tsc -b",
     "lint": "eslint .",
@@ -14,10 +14,15 @@
     "cap:ios": "cap open ios"
   },
   "dependencies": {
+    "@capacitor-community/sqlite": "^8.1.0",
     "@capacitor/android": "^8.4.0",
     "@capacitor/core": "^8.4.0",
     "@capacitor/ios": "^8.4.0",
     "@radix-ui/react-slot": "^1.2.5",
+    "@tanstack/react-form": "^1.33.0",
+    "@tanstack/react-query": "^5.101.0",
+    "@tanstack/react-router": "^1.170.15",
+    "axios": "^1.17.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.40.0",
@@ -25,7 +30,8 @@
     "motion": "^12.40.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
-    "tailwind-merge": "^2.6.0"
+    "tailwind-merge": "^2.6.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@capacitor/cli": "^7.0.0",
