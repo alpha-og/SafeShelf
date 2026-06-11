@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "mobile:dev": "pnpm --filter mobile dev",
     "dev": "pnpm --filter mobile dev",
     "build": "pnpm --filter mobile build",
     "cap:sync": "pnpm --filter mobile cap:sync",
