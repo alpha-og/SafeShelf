@@ -1,5 +1,11 @@
 # SafeShelf — AGENTS.md
 
+## Rules
+
+- Do not build the frontend or backend without explicit permission.
+- Git commits must follow Conventional Commits format, be a single line, and have no description/body.
+- When launching a dev server (frontend or backend), always set a timeout of at least 60 seconds so the process can start and stay alive during development.
+
 ## Structure
 
 ```
@@ -11,7 +17,7 @@ safeshelf/
 │   │   ├── schemas.py   # Pydantic/SQLModel models
 │   │   ├── service.py   # Business logic
 │   │   └── __init__.py
-│   └── pyproject.toml   # `serve` entrypoint → app:run_cli
+│   └── pyproject.toml   # Entrypoint: `uv run python -m app`
 └── mobile/         # React 19 + TypeScript 6 + Vite 8 + TanStack Router
     └── src/
         ├── routes/       # File-based routes; routeTree.gen.ts is auto-generated
@@ -38,7 +44,7 @@ safeshelf/
 ## Backend
 
 - **Package manager**: `uv` (not pip/poetry). Python 3.14 required.
-- **Entrypoint**: `uv run serve` → `app/__init__.py:run_cli()` → uvicorn on `app.main:app`
+- **Entrypoint**: `uv run python -m app` → `app/__init__.py:run_cli()` → uvicorn on `app.main:app`
 - **Config**: `.env` / `.env.local` read by `app/shared/config.py` via pydantic-settings
 - **DB**: SQLModel + asyncpg. Tables auto-created on startup via lifespan. Session injected via `get_session` dependency.
 - **Auth**: JWT access tokens (in-memory, `Bearer` header) + refresh tokens (httpOnly cookie, path `/v1/auth`). Auto-refresh in mobile Axios interceptor.
