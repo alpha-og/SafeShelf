@@ -32,6 +32,14 @@ class UserResponse(BaseModel):
     created_at: datetime
 
 
+class SignInResponse(BaseModel):
+    id: int
+    email: str
+    created_at: datetime
+    access_token: str
+    token_type: str = "bearer"
+
+
 class DeviceRegisterRequest(BaseModel):
     device_name: str
     device_type: str = "mobile"

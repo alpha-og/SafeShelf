@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, Request, Response
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.auth.models import User
 from app.auth.schemas import (
@@ -6,6 +7,7 @@ from app.auth.schemas import (
     DeviceRegisterResponse,
     LoginRequest,
     SignInRequest,
+    SignInResponse,
     TokenResponse,
     UserResponse,
 )
@@ -34,16 +36,27 @@ def _clear_refresh_cookie(response: Response) -> None:
     response.delete_cookie(key="refresh_token", path="/v1/auth")
 
 
-@router.post("/signin", response_model=UserResponse, status_code=201)
-async def register(req: SignInRequest, session=Depends(get_session)):
-    return await signin(req, session)
+@router.post("/signin", response_model=SignInResponse, status_code=201)
+async def register(
+    req: SignInRequest,
+    response: Response,
+    session: AsyncSession = Depends(get_session),
+):
+    user, access_token, refresh_token = await signin(req, session)
+    _set_refresh_cookie(response, refresh_token)
+    return SignInResponse(
+        id=user.id,
+        email=user.email,
+        created_at=user.created_at,
+        access_token=access_token,
+    )
 
 
 @router.post("/login", response_model=TokenResponse)
 async def login_route(
     req: LoginRequest,
     response: Response,
-    session=Depends(get_session),
+    session: AsyncSession = Depends(get_session),
 ):
     access_token, refresh_token = await login(req, session)
     _set_refresh_cookie(response, refresh_token)
@@ -54,7 +67,7 @@ async def login_route(
 async def refresh_route(
     request: Request,
     response: Response,
-    session=Depends(get_session),
+    session: AsyncSession = Depends(get_session),
 ):
     raw = request.cookies.get("refresh_token")
     access_token, new_token = await refresh(raw, session)
@@ -66,7 +79,7 @@ async def refresh_route(
 async def signout_route(
     request: Request,
     response: Response,
-    session=Depends(get_session),
+    session: AsyncSession = Depends(get_session),
 ):
     raw = request.cookies.get("refresh_token")
     await signout(raw, session)
@@ -76,7 +89,7 @@ async def signout_route(
 @router.post("/device/register", response_model=DeviceRegisterResponse, status_code=201)
 async def device_register(
     req: DeviceRegisterRequest,
-    session=Depends(get_session),
+    session: AsyncSession = Depends(get_session),
 ):
     return await register_device(req, session)
 

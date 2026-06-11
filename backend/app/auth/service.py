@@ -1,15 +1,18 @@
 import hashlib
 import uuid
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta
 
-from fastapi import HTTPException, status
+from fastapi import HTTPException
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import selectinload
 from sqlmodel import select, update
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.auth.models import Device, RefreshToken, User
 from app.auth.schemas import DeviceRegisterRequest, LoginRequest, SignInRequest
 from app.shared.config import settings
 from app.shared.security import create_access_token, hash_password, verify_password
+from app.shared.utils import utcnow
 
 
 def _hash_token(raw: str) -> str:
@@ -21,18 +24,33 @@ def _generate_refresh_token() -> tuple[str, str]:
     return raw, _hash_token(raw)
 
 
-async def signin(req: SignInRequest, session) -> User:
+async def signin(req: SignInRequest, session: AsyncSession) -> tuple[User, str, str]:
     existing = await session.exec(select(User).where(User.email == req.email))
     if existing.first():
         raise HTTPException(status_code=409, detail="Email already registered")
     user = User(email=req.email, hashed_password=hash_password(req.password))
     session.add(user)
-    await session.commit()
+    try:
+        await session.commit()
+    except IntegrityError:
+        raise HTTPException(status_code=409, detail="Email already registered")
     await session.refresh(user)
-    return user
+
+    access_token = create_access_token({"sub": str(user.id)})
+    raw_refresh, token_hash = _generate_refresh_token()
+
+    refresh = RefreshToken(
+        token_hash=token_hash,
+        user_id=user.id,
+        expires_at=utcnow() + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS),
+    )
+    session.add(refresh)
+    await session.commit()
+
+    return user, access_token, raw_refresh
 
 
-async def login(req: LoginRequest, session) -> tuple[str, str]:
+async def login(req: LoginRequest, session: AsyncSession) -> tuple[str, str]:
     result = await session.exec(select(User).where(User.email == req.email))
     user = result.first()
     if not user or not verify_password(req.password, user.hashed_password):
@@ -63,8 +81,7 @@ async def login(req: LoginRequest, session) -> tuple[str, str]:
         token_hash=token_hash,
         user_id=user.id,
         device_id=device_pk,
-        expires_at=datetime.now(timezone.utc)
-        + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS),
+        expires_at=utcnow() + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS),
     )
     session.add(refresh)
     await session.commit()
@@ -72,12 +89,12 @@ async def login(req: LoginRequest, session) -> tuple[str, str]:
     return access_token, raw_refresh
 
 
-async def refresh(raw_token: str | None, session) -> tuple[str, str]:
+async def refresh(raw_token: str | None, session: AsyncSession) -> tuple[str, str]:
     if not raw_token:
         raise HTTPException(status_code=401, detail="Refresh token missing")
 
     token_hash = _hash_token(raw_token)
-    now = datetime.now(timezone.utc)
+    now = utcnow()
 
     result = await session.exec(
         update(RefreshToken)
@@ -106,8 +123,7 @@ async def refresh(raw_token: str | None, session) -> tuple[str, str]:
         token_hash=new_hash,
         user_id=token.user_id,
         device_id=token.device_id,
-        expires_at=datetime.now(timezone.utc)
-        + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS),
+        expires_at=utcnow() + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS),
     )
     session.add(new_token)
     await session.commit()
@@ -115,7 +131,7 @@ async def refresh(raw_token: str | None, session) -> tuple[str, str]:
     return access_token, raw_new
 
 
-async def signout(raw_token: str | None, session) -> None:
+async def signout(raw_token: str | None, session: AsyncSession) -> None:
     if not raw_token:
         raise HTTPException(status_code=401, detail="Refresh token missing")
 
@@ -128,12 +144,12 @@ async def signout(raw_token: str | None, session) -> None:
     )
     token = result.first()
     if token:
-        token.revoked_at = datetime.now(timezone.utc)
+        token.revoked_at = utcnow()
         session.add(token)
         await session.commit()
 
 
-async def register_device(req: DeviceRegisterRequest, session) -> dict:
+async def register_device(req: DeviceRegisterRequest, session: AsyncSession) -> dict:
     device = Device(
         device_uuid=uuid.uuid4().hex,
         device_name=req.device_name,
