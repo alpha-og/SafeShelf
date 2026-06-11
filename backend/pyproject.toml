@@ -22,4 +22,4 @@ dependencies = [
 ]
 
 [project.scripts]
-serve = "uvicorn app.main:app --reload"
+serve = "app:run_cli"

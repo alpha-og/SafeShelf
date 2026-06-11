@@ -6,6 +6,9 @@
     "dev": "pnpm --filter mobile dev",
     "build": "pnpm --filter mobile build",
     "cap:sync": "pnpm --filter mobile cap:sync",
-    "cap:android": "pnpm --filter mobile cap:android"
+    "cap:android": "pnpm --filter mobile cap:android",
+    "backend:dev": "cd backend && uv run serve",
+    "backend:serve": "cd backend && uv run serve",
+    "backend:sync": "cd backend && uv sync"
   }
 }
