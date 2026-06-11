@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel, EmailStr
 
 
@@ -9,10 +11,7 @@ class SignUpRequest(BaseModel):
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
-
-
-class RefreshRequest(BaseModel):
-    refresh_token: str
+    device_id: str | None = None
 
 
 class TokenResponse(BaseModel):
@@ -21,7 +20,9 @@ class TokenResponse(BaseModel):
 
 
 class UserResponse(BaseModel):
+    id: int
     email: str
+    created_at: datetime
 
 
 class DeviceRegisterRequest(BaseModel):
