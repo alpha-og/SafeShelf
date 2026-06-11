@@ -1,7 +1,10 @@
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from sqlmodel import SQLModel
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s:     %(message)s")
 
 from app.api.v1 import v1_router
 from app.shared.db import engine
