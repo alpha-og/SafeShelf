@@ -1,0 +1,16 @@
+# Node / pnpm
+node_modules/
+.pnpm-store/
+
+# Vite
+mobile/dist/
+mobile/.vite/
+
+# Capacitor native projects
+mobile/android/
+mobile/ios/
+mobile/.capacitor/
+
+# Misc
+*.local
+.DS_Store

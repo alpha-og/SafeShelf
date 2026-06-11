@@ -1,0 +1,11 @@
+{
+  "name": "safeshelf-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter mobile dev",
+    "build": "pnpm --filter mobile build",
+    "cap:sync": "pnpm --filter mobile cap:sync",
+    "cap:android": "pnpm --filter mobile cap:android"
+  }
+}
