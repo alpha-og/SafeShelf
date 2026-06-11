@@ -3,7 +3,7 @@ from datetime import datetime
 from pydantic import BaseModel, EmailStr, field_validator
 
 
-class SignInRequest(BaseModel):
+class SignUpRequest(BaseModel):
     email: EmailStr
     password: str
 
@@ -15,7 +15,7 @@ class SignInRequest(BaseModel):
         return v
 
 
-class LoginRequest(BaseModel):
+class SignInRequest(BaseModel):
     email: EmailStr
     password: str
     device_id: str | None = None
@@ -32,7 +32,7 @@ class UserResponse(BaseModel):
     created_at: datetime
 
 
-class SignInResponse(BaseModel):
+class SignUpResponse(BaseModel):
     id: int
     email: str
     created_at: datetime

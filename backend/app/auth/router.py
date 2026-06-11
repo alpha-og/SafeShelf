@@ -5,13 +5,13 @@ from app.auth.models import User
 from app.auth.schemas import (
     DeviceRegisterRequest,
     DeviceRegisterResponse,
-    LoginRequest,
     SignInRequest,
-    SignInResponse,
+    SignUpRequest,
+    SignUpResponse,
     TokenResponse,
     UserResponse,
 )
-from app.auth.service import login, refresh, register_device, signin, signout
+from app.auth.service import refresh, register_device, signin, signout, signup
 from app.shared.config import settings
 from app.shared.deps import get_current_user, get_session
 
@@ -36,15 +36,15 @@ def _clear_refresh_cookie(response: Response) -> None:
     response.delete_cookie(key="refresh_token", path="/v1/auth")
 
 
-@router.post("/signin", response_model=SignInResponse, status_code=201)
+@router.post("/signup", response_model=SignUpResponse, status_code=201)
 async def register(
-    req: SignInRequest,
+    req: SignUpRequest,
     response: Response,
     session: AsyncSession = Depends(get_session),
 ):
-    user, access_token, refresh_token = await signin(req, session)
+    user, access_token, refresh_token = await signup(req, session)
     _set_refresh_cookie(response, refresh_token)
-    return SignInResponse(
+    return SignUpResponse(
         id=user.id,
         email=user.email,
         created_at=user.created_at,
@@ -52,13 +52,13 @@ async def register(
     )
 
 
-@router.post("/login", response_model=TokenResponse)
-async def login_route(
-    req: LoginRequest,
+@router.post("/signin", response_model=TokenResponse)
+async def signin_route(
+    req: SignInRequest,
     response: Response,
     session: AsyncSession = Depends(get_session),
 ):
-    access_token, refresh_token = await login(req, session)
+    access_token, refresh_token = await signin(req, session)
     _set_refresh_cookie(response, refresh_token)
     return TokenResponse(access_token=access_token)
 

@@ -9,7 +9,7 @@ from sqlmodel import select, update
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.auth.models import Device, RefreshToken, User
-from app.auth.schemas import DeviceRegisterRequest, LoginRequest, SignInRequest
+from app.auth.schemas import DeviceRegisterRequest, SignInRequest, SignUpRequest
 from app.shared.config import settings
 from app.shared.security import create_access_token, hash_password, verify_password
 from app.shared.utils import utcnow
@@ -24,7 +24,7 @@ def _generate_refresh_token() -> tuple[str, str]:
     return raw, _hash_token(raw)
 
 
-async def signin(req: SignInRequest, session: AsyncSession) -> tuple[User, str, str]:
+async def signup(req: SignUpRequest, session: AsyncSession) -> tuple[User, str, str]:
     existing = await session.exec(select(User).where(User.email == req.email))
     if existing.first():
         raise HTTPException(status_code=409, detail="Email already registered")
@@ -50,7 +50,7 @@ async def signin(req: SignInRequest, session: AsyncSession) -> tuple[User, str, 
     return user, access_token, raw_refresh
 
 
-async def login(req: LoginRequest, session: AsyncSession) -> tuple[str, str]:
+async def signin(req: SignInRequest, session: AsyncSession) -> tuple[str, str]:
     result = await session.exec(select(User).where(User.email == req.email))
     user = result.first()
     if not user or not verify_password(req.password, user.hashed_password):
