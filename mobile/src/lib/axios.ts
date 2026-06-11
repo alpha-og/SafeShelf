@@ -37,7 +37,12 @@ function processQueue(error: unknown, token: string | null): void {
 }
 
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (response.data?.success === true) {
+      response.data = response.data.data
+    }
+    return response
+  },
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean }
     if (!originalRequest) return Promise.reject(error)
@@ -59,7 +64,7 @@ api.interceptors.response.use(
 
       try {
         const { data } = await axios.post('/v1/auth/refresh', {}, { withCredentials: true })
-        const newToken: string = data.access_token
+        const newToken: string = data.data?.access_token ?? data.access_token
         accessToken = newToken
         await setToken(newToken)
         processQueue(null, newToken)
