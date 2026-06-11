@@ -21,13 +21,13 @@ async def get_current_user(
             settings.SECRET_KEY,
             algorithms=[settings.ALGORITHM],
         )
-        email = payload.get("sub")
-        if email is None:
+        user_id = payload.get("sub")
+        if user_id is None:
             raise HTTPException(status_code=401, detail="Invalid token")
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-    result = await session.exec(select(User).where(User.email == email))
+    result = await session.exec(select(User).where(User.id == int(user_id)))
     user = result.first()
     if user is None:
         raise HTTPException(status_code=401, detail="User not found")

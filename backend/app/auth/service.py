@@ -3,10 +3,11 @@ import uuid
 from datetime import datetime, timedelta, timezone
 
 from fastapi import HTTPException, status
-from sqlmodel import select
+from sqlalchemy.orm import selectinload
+from sqlmodel import select, update
 
 from app.auth.models import Device, RefreshToken, User
-from app.auth.schemas import DeviceRegisterRequest, LoginRequest, SignUpRequest
+from app.auth.schemas import DeviceRegisterRequest, LoginRequest, SignInRequest
 from app.shared.config import settings
 from app.shared.security import create_access_token, hash_password, verify_password
 
@@ -20,7 +21,7 @@ def _generate_refresh_token() -> tuple[str, str]:
     return raw, _hash_token(raw)
 
 
-async def signin(req: SignUpRequest, session) -> User:
+async def signin(req: SignInRequest, session) -> User:
     existing = await session.exec(select(User).where(User.email == req.email))
     if existing.first():
         raise HTTPException(status_code=409, detail="Email already registered")
@@ -37,7 +38,7 @@ async def login(req: LoginRequest, session) -> tuple[str, str]:
     if not user or not verify_password(req.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    access_token = create_access_token({"sub": user.email})
+    access_token = create_access_token({"sub": str(user.id)})
     raw_refresh, token_hash = _generate_refresh_token()
 
     device_pk: int | None = None
@@ -47,11 +48,16 @@ async def login(req: LoginRequest, session) -> tuple[str, str]:
                 select(Device).where(Device.device_uuid == req.device_id)
             )
         ).first()
-        if device:
-            device_pk = device.id
-            if device.user_id is None:
-                device.user_id = user.id
-                session.add(device)
+        if device is None:
+            raise HTTPException(status_code=404, detail="Device not found")
+        if device.user_id is not None and device.user_id != user.id:
+            raise HTTPException(
+                status_code=403, detail="Device belongs to another user"
+            )
+        if device.user_id is None:
+            device.user_id = user.id
+            session.add(device)
+        device_pk = device.id
 
     refresh = RefreshToken(
         token_hash=token_hash,
@@ -71,21 +77,29 @@ async def refresh(raw_token: str | None, session) -> tuple[str, str]:
         raise HTTPException(status_code=401, detail="Refresh token missing")
 
     token_hash = _hash_token(raw_token)
+    now = datetime.now(timezone.utc)
+
     result = await session.exec(
-        select(RefreshToken).where(
+        update(RefreshToken)
+        .where(
             RefreshToken.token_hash == token_hash,
             RefreshToken.revoked_at.is_(None),
-            RefreshToken.expires_at > datetime.now(timezone.utc),
+            RefreshToken.expires_at > now,
         )
+        .values(revoked_at=now)
     )
-    token = result.first()
-    if not token:
+    if result.rowcount == 0:
         raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
 
-    token.revoked_at = datetime.now(timezone.utc)
-    session.add(token)
+    token = (
+        await session.exec(
+            select(RefreshToken)
+            .where(RefreshToken.token_hash == token_hash)
+            .options(selectinload(RefreshToken.user))
+        )
+    ).first()
 
-    access_token = create_access_token({"sub": token.user.email})
+    access_token = create_access_token({"sub": str(token.user_id)})
     raw_new, new_hash = _generate_refresh_token()
 
     new_token = RefreshToken(
@@ -120,7 +134,11 @@ async def signout(raw_token: str | None, session) -> None:
 
 
 async def register_device(req: DeviceRegisterRequest, session) -> dict:
-    device = Device(device_name=req.device_name, device_type=req.device_type)
+    device = Device(
+        device_uuid=uuid.uuid4().hex,
+        device_name=req.device_name,
+        device_type=req.device_type,
+    )
     session.add(device)
     await session.commit()
     await session.refresh(device)

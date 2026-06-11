@@ -5,7 +5,7 @@ from app.auth.schemas import (
     DeviceRegisterRequest,
     DeviceRegisterResponse,
     LoginRequest,
-    SignUpRequest,
+    SignInRequest,
     TokenResponse,
     UserResponse,
 )
@@ -23,7 +23,7 @@ def _set_refresh_cookie(response: Response, token: str) -> None:
         key="refresh_token",
         value=token,
         httponly=True,
-        secure=False,  # TODO: set from env
+        secure=settings.COOKIE_SECURE,
         samesite="strict",
         max_age=COOKIE_MAX_AGE,
         path="/v1/auth",
@@ -35,7 +35,7 @@ def _clear_refresh_cookie(response: Response) -> None:
 
 
 @router.post("/signin", response_model=UserResponse, status_code=201)
-async def register(req: SignUpRequest, session=Depends(get_session)):
+async def register(req: SignInRequest, session=Depends(get_session)):
     return await signin(req, session)
 
 
@@ -67,7 +67,6 @@ async def signout_route(
     request: Request,
     response: Response,
     session=Depends(get_session),
-    _current_user: User = Depends(get_current_user),
 ):
     raw = request.cookies.get("refresh_token")
     await signout(raw, session)
