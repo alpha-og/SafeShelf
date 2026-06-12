@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, useAnimation, type PanInfo } from 'framer-motion'
-import { RotateCcw, ArrowLeft } from 'lucide-react'
+import { X, ArrowLeft } from 'lucide-react'
 
 interface ProductSheetProps {
   onRetake: () => void
@@ -80,7 +80,7 @@ export function ProductSheet({ onRetake, cameraAvailable }: ProductSheetProps) {
             }`}
             aria-label="Retake"
           >
-            <RotateCcw className="h-4 w-4" />
+            <X className="h-4 w-4" />
           </button>
         </div>
 
