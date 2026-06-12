@@ -22,8 +22,12 @@ from app.shared.middleware import setup_middleware
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    async with engine.begin() as conn:
-        await conn.run_sync(SQLModel.metadata.create_all)
+    try:
+        async with engine.begin() as conn:
+            await conn.run_sync(SQLModel.metadata.create_all)
+    except Exception:
+        logger.exception("Failed to connect to database at %s", settings.DATABASE_URL)
+        sys.exit(1)
     yield
     await engine.dispose()
 
