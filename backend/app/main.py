@@ -1,13 +1,20 @@
 import logging
+import sys
 from contextlib import asynccontextmanager
+
+# Must be imported before SQLAlchemy to patch platform.machine(),
+# which can hang on Windows due to a WMI query in Python 3.14.
+from app.shared import _patch_platform  # noqa: F401
 
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
 from sqlmodel import SQLModel
 
+logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(levelname)s:     %(message)s")
 
 from app.api.v1 import v1_router
+from app.shared.config import settings
 from app.shared.db import engine
 from app.shared.exceptions import global_exception_handler, http_exception_handler, validation_exception_handler
 from app.shared.middleware import setup_middleware
