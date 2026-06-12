@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SafeShelf</string>
+    <string name="title_activity_main">SafeShelf</string>
+    <string name="package_name">com.safeshelf.app</string>
+    <string name="custom_url_scheme">com.safeshelf.app</string>
+</resources>

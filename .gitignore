@@ -6,9 +6,7 @@ node_modules/
 mobile/dist/
 mobile/.vite/
 
-# Capacitor native projects
-mobile/android/
-mobile/ios/
+# Capacitor CLI cache (auto-generated)
 mobile/.capacitor/
 
 # Misc
