@@ -61,7 +61,7 @@ export function ProductSheet({ onDismiss, dismissRef }: ProductSheetProps) {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="absolute inset-0 z-10 bg-black/50"
+          className="absolute inset-0 z-10 bg-background/50"
           onClick={() => {
             setIsFull(false)
             snapTo(peekY)
@@ -70,7 +70,7 @@ export function ProductSheet({ onDismiss, dismissRef }: ProductSheetProps) {
       )}
 
       <motion.div
-        className="absolute inset-x-0 bottom-0 z-20 flex flex-col bg-black/50 backdrop-blur-2xl rounded-t-3xl"
+        className="absolute inset-x-0 bottom-0 z-20 flex flex-col bg-background/50 backdrop-blur-2xl rounded-t-3xl"
         style={{ height: '100dvh' }}
         initial={{ y: OFFRANGE }}
         drag="y"
@@ -79,7 +79,7 @@ export function ProductSheet({ onDismiss, dismissRef }: ProductSheetProps) {
         onDragEnd={handleDragEnd}
       >
         <div className="flex justify-center pt-3 pb-2">
-          <div className="w-10 h-1 rounded-full bg-white/40" />
+          <div className="w-10 h-1 rounded-full bg-foreground/40" />
         </div>
 
         <div className="flex items-center px-4 pb-3">
@@ -89,25 +89,25 @@ export function ProductSheet({ onDismiss, dismissRef }: ProductSheetProps) {
                 setIsFull(false)
                 snapTo(peekY)
               }}
-              className="text-white/80 hover:text-white transition-colors"
+              className="text-foreground/80 hover:text-foreground transition-colors"
             >
               <ArrowLeft className="h-5 w-5" />
             </button>
           ) : (
-            <h2 className="text-sm font-semibold text-white">Product Details</h2>
+            <h2 className="text-sm font-semibold text-foreground">Product Details</h2>
           )}
         </div>
 
         <div className="flex-1 px-4 space-y-3 overflow-y-auto">
-          <div className="h-4 bg-white/20 rounded w-3/4 animate-pulse" />
-          <div className="h-4 bg-white/20 rounded w-1/2 animate-pulse" />
-          <div className="h-20 bg-white/20 rounded animate-pulse" />
-          <div className="h-4 bg-white/20 rounded w-full animate-pulse" />
-          <div className="h-4 bg-white/20 rounded w-2/3 animate-pulse" />
-          <div className="h-4 bg-white/20 rounded w-5/6 animate-pulse" />
-          <div className="h-24 bg-white/20 rounded animate-pulse" />
-          <div className="h-4 bg-white/20 rounded w-3/4 animate-pulse" />
-          <div className="h-4 bg-white/20 rounded w-1/3 animate-pulse" />
+          <div className="h-4 bg-foreground/20 rounded w-3/4 animate-pulse" />
+          <div className="h-4 bg-foreground/20 rounded w-1/2 animate-pulse" />
+          <div className="h-20 bg-foreground/20 rounded animate-pulse" />
+          <div className="h-4 bg-foreground/20 rounded w-full animate-pulse" />
+          <div className="h-4 bg-foreground/20 rounded w-2/3 animate-pulse" />
+          <div className="h-4 bg-foreground/20 rounded w-5/6 animate-pulse" />
+          <div className="h-24 bg-foreground/20 rounded animate-pulse" />
+          <div className="h-4 bg-foreground/20 rounded w-3/4 animate-pulse" />
+          <div className="h-4 bg-foreground/20 rounded w-1/3 animate-pulse" />
         </div>
       </motion.div>
     </>

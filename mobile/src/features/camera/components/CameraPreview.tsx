@@ -11,8 +11,8 @@ export function CameraPreview({ videoRef, isCameraReady, error }: CameraPreviewP
   if (error) {
     return (
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-neutral-950">
-        <Camera className="h-12 w-12 text-neutral-600" />
-        <p className="text-sm text-neutral-500 text-center px-4">{error}</p>
+        <Camera className="h-12 w-12 text-muted-foreground" />
+        <p className="text-sm text-muted-foreground text-center px-4">{error}</p>
       </div>
     )
   }
@@ -28,7 +28,7 @@ export function CameraPreview({ videoRef, isCameraReady, error }: CameraPreviewP
       />
       {!isCameraReady && (
         <div className="absolute inset-0 flex items-center justify-center bg-neutral-950">
-          <Camera className="h-12 w-12 text-neutral-600 animate-pulse" />
+          <Camera className="h-12 w-12 text-muted-foreground animate-pulse" />
         </div>
       )}
     </>

@@ -1,4 +1,4 @@
-import { useRef, useCallback } from 'react'
+import { useRef, useState, useCallback } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Scan, ScanLine, Image, FileText } from 'lucide-react'
 import type { ScanMode } from '../hooks/useCamera'
@@ -30,18 +30,18 @@ const variants = {
 
 export function ModeSwitcher({ mode, onModeChange, cameraAvailable }: ModeSwitcherProps) {
   const touchStartX = useRef(0)
-  const directionRef = useRef(1)
+  const [direction, setDirection] = useState(1)
 
   const currentIndex = modes.findIndex((m) => m.value === mode)
 
   const goNext = useCallback(() => {
-    directionRef.current = 1
+    setDirection(1)
     const next = (currentIndex + 1) % modes.length
     onModeChange(modes[next].value)
   }, [currentIndex, onModeChange])
 
   const goPrev = useCallback(() => {
-    directionRef.current = -1
+    setDirection(-1)
     const prev = (currentIndex - 1 + modes.length) % modes.length
     onModeChange(modes[prev].value)
   }, [currentIndex, onModeChange])
@@ -69,24 +69,24 @@ export function ModeSwitcher({ mode, onModeChange, cameraAvailable }: ModeSwitch
       onTouchEnd={handleTouchEnd}
       className={`flex items-center justify-center gap-2 w-32 backdrop-blur-md rounded-full border px-3 py-2 select-none ${
         cameraAvailable
-          ? 'bg-black/50 border-white/15'
-          : 'bg-black/25 border-white/8'
+          ? 'bg-background/50 border-border'
+          : 'bg-background/25 border-border/50'
       }`}
     >
-      <AnimatePresence mode="wait" custom={directionRef.current}>
+      <AnimatePresence mode="wait" custom={direction}>
         <motion.div
           key={mode}
           className="flex items-center justify-center gap-2"
-          custom={directionRef.current}
+          custom={direction}
           variants={variants}
           initial="enter"
           animate="center"
           exit="exit"
           transition={{ duration: 0.15, ease: 'easeInOut' }}
         >
-          <Icon className={`h-5 w-5 shrink-0 ${cameraAvailable ? 'text-white' : 'text-white/50'}`} />
+          <Icon className={`h-5 w-5 shrink-0 ${cameraAvailable ? 'text-foreground' : 'text-foreground/50'}`} />
           <div className="flex flex-col items-center gap-1">
-            <span className={`text-xs font-medium leading-tight ${cameraAvailable ? 'text-white' : 'text-white/50'}`}>
+            <span className={`text-xs font-medium leading-tight ${cameraAvailable ? 'text-foreground' : 'text-foreground/50'}`}>
               {current.label}
             </span>
             <div className="flex items-center gap-1">
@@ -95,12 +95,12 @@ export function ModeSwitcher({ mode, onModeChange, cameraAvailable }: ModeSwitch
                   key={i}
                   className={`rounded-full transition-all duration-200 shrink-0 ${
                     i === currentIndex
-                      ? cameraAvailable
-                        ? 'bg-white w-1 h-1'
-                        : 'bg-white/50 w-1 h-1'
-                      : cameraAvailable
-                        ? 'bg-white/30 w-[5px] h-[5px]'
-                        : 'bg-white/15 w-[5px] h-[5px]'
+                    ? cameraAvailable
+                      ? 'bg-foreground w-1 h-1'
+                      : 'bg-foreground/50 w-1 h-1'
+                    : cameraAvailable
+                      ? 'bg-foreground/30 w-[5px] h-[5px]'
+                      : 'bg-foreground/15 w-[5px] h-[5px]'
                   }`}
                 />
               ))}
