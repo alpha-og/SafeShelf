@@ -14,22 +14,22 @@ export function TopBar({ cameraAvailable }: TopBarProps) {
         onClick={() => navigate({ to: '/settings' })}
         className={`flex items-center justify-center w-10 h-10 rounded-full backdrop-blur-md border transition-colors ${
           cameraAvailable
-            ? 'bg-background/40 hover:bg-background/60 text-foreground border-border'
-            : 'bg-background/20 hover:bg-background/30 text-foreground/50 border-border/50'
+            ? 'bg-black/20 hover:bg-black/30 text-white/80 border-white/10'
+            : 'bg-black/10 text-white/50 border-white/5'
         }`}
       >
         <Settings className="h-5 w-5" />
       </button>
 
       <div className={`flex backdrop-blur-md rounded-full p-1 gap-0.5 border ${
-        cameraAvailable ? 'bg-background/50 border-border' : 'bg-background/25 border-border/50'
+        cameraAvailable ? 'bg-black/20 border-white/10' : 'bg-black/10 border-white/5'
       }`}>
         <button
           onClick={() => navigate({ to: '/cart' })}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
             cameraAvailable
-              ? 'text-foreground/80 hover:text-foreground hover:bg-foreground/10'
-              : 'text-foreground/40 hover:text-foreground/60'
+              ? 'text-white/70 hover:text-white hover:bg-white/10'
+              : 'text-white/40 hover:text-white/60'
           }`}
         >
           <ShoppingCart className="h-3.5 w-3.5" />
@@ -39,8 +39,8 @@ export function TopBar({ cameraAvailable }: TopBarProps) {
           onClick={() => navigate({ to: '/history' })}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
             cameraAvailable
-              ? 'text-foreground/80 hover:text-foreground hover:bg-foreground/10'
-              : 'text-foreground/40 hover:text-foreground/60'
+              ? 'text-white/70 hover:text-white hover:bg-white/10'
+              : 'text-white/40 hover:text-white/60'
           }`}
         >
           <History className="h-3.5 w-3.5" />

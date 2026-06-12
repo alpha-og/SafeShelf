@@ -69,8 +69,8 @@ export function ModeSwitcher({ mode, onModeChange, cameraAvailable }: ModeSwitch
       onTouchEnd={handleTouchEnd}
       className={`flex items-center justify-center gap-2 w-32 backdrop-blur-md rounded-full border px-3 py-2 select-none ${
         cameraAvailable
-          ? 'bg-background/50 border-border'
-          : 'bg-background/25 border-border/50'
+          ? 'bg-black/20 border-white/10'
+          : 'bg-black/10 border-white/5'
       }`}
     >
       <AnimatePresence mode="wait" custom={direction}>
@@ -84,9 +84,9 @@ export function ModeSwitcher({ mode, onModeChange, cameraAvailable }: ModeSwitch
           exit="exit"
           transition={{ duration: 0.15, ease: 'easeInOut' }}
         >
-          <Icon className={`h-5 w-5 shrink-0 ${cameraAvailable ? 'text-foreground' : 'text-foreground/50'}`} />
+          <Icon className={`h-5 w-5 shrink-0 ${cameraAvailable ? 'text-white/80' : 'text-white/50'}`} />
           <div className="flex flex-col items-center gap-1">
-            <span className={`text-xs font-medium leading-tight ${cameraAvailable ? 'text-foreground' : 'text-foreground/50'}`}>
+            <span className={`text-xs font-medium leading-tight ${cameraAvailable ? 'text-white/80' : 'text-white/50'}`}>
               {current.label}
             </span>
             <div className="flex items-center gap-1">
@@ -96,11 +96,11 @@ export function ModeSwitcher({ mode, onModeChange, cameraAvailable }: ModeSwitch
                   className={`rounded-full transition-all duration-200 shrink-0 ${
                     i === currentIndex
                     ? cameraAvailable
-                      ? 'bg-foreground w-1 h-1'
-                      : 'bg-foreground/50 w-1 h-1'
+                      ? 'bg-white/80 w-1 h-1'
+                      : 'bg-white/50 w-1 h-1'
                     : cameraAvailable
-                      ? 'bg-foreground/30 w-[5px] h-[5px]'
-                      : 'bg-foreground/15 w-[5px] h-[5px]'
+                      ? 'bg-white/30 w-[5px] h-[5px]'
+                      : 'bg-white/15 w-[5px] h-[5px]'
                   }`}
                 />
               ))}

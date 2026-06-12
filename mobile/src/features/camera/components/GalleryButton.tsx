@@ -11,8 +11,8 @@ export function GalleryButton({ onClick, cameraAvailable }: GalleryButtonProps) 
       onClick={onClick}
       className={`flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full backdrop-blur-md border transition-colors ${
           cameraAvailable
-            ? 'bg-background/40 hover:bg-background/60 text-foreground border-border'
-            : 'bg-background/20 hover:bg-background/30 text-foreground/50 border-border/50'
+            ? 'bg-black/20 hover:bg-black/30 text-white/80 border-white/10'
+            : 'bg-black/10 text-white/50 border-white/5'
         }`}
       aria-label="Pick from gallery"
     >
