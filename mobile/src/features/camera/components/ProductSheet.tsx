@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, useAnimation, type PanInfo } from 'framer-motion'
+import { RotateCcw, ArrowLeft } from 'lucide-react'
 
 interface ProductSheetProps {
   onRetake: () => void
@@ -11,13 +12,21 @@ export function ProductSheet({ onRetake, cameraAvailable }: ProductSheetProps) {
   const controls = useAnimation()
   const [isFull, setIsFull] = useState(false)
 
-  const handleDragEnd = async (_: unknown, info: PanInfo) => {
-    const shouldSnapToFull = info.offset.y < -50 || info.velocity.y < -500
-    setIsFull(shouldSnapToFull)
-    await controls.start({
-      y: shouldSnapToFull ? 0 : peekY,
+  useEffect(() => {
+    controls.set({ y: peekY })
+  }, [peekY, controls])
+
+  const snapTo = (y: number) => {
+    controls.start({
+      y,
       transition: { type: 'spring', stiffness: 300, damping: 30 },
     })
+  }
+
+  const handleDragEnd = (_: unknown, info: PanInfo) => {
+    const shouldSnapToFull = info.offset.y < -50 || info.velocity.y < -500
+    setIsFull(shouldSnapToFull)
+    snapTo(shouldSnapToFull ? 0 : peekY)
   }
 
   return (
@@ -29,16 +38,13 @@ export function ProductSheet({ onRetake, cameraAvailable }: ProductSheetProps) {
           className="absolute inset-0 z-10 bg-black/50"
           onClick={() => {
             setIsFull(false)
-            controls.start({
-              y: peekY,
-              transition: { type: 'spring', stiffness: 300, damping: 30 },
-            })
+            snapTo(peekY)
           }}
         />
       )}
 
       <motion.div
-        className="absolute inset-x-0 bottom-0 z-20 flex flex-col bg-black/30 backdrop-blur-xl rounded-t-3xl"
+        className="absolute inset-x-0 bottom-0 z-20 flex flex-col bg-black/50 backdrop-blur-2xl rounded-t-3xl"
         style={{ height: '100dvh' }}
         initial={{ y: peekY }}
         drag="y"
@@ -52,16 +58,29 @@ export function ProductSheet({ onRetake, cameraAvailable }: ProductSheetProps) {
         </div>
 
         <div className="flex items-center justify-between px-4 pb-3">
-          <h2 className="text-sm font-semibold text-white/90">Product Details</h2>
+          {isFull ? (
+            <button
+              onClick={() => {
+                setIsFull(false)
+                snapTo(peekY)
+              }}
+              className="text-white/80 hover:text-white transition-colors"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+          ) : (
+            <h2 className="text-sm font-semibold text-white">Product Details</h2>
+          )}
           <button
             onClick={onRetake}
-            className={`text-xs underline transition-colors ${
+            className={`p-1.5 rounded-full transition-colors ${
               cameraAvailable
-                ? 'text-white/60 hover:text-white/90'
+                ? 'text-white/70 hover:text-white hover:bg-white/10'
                 : 'text-white/40'
             }`}
+            aria-label="Retake"
           >
-            Retake
+            <RotateCcw className="h-4 w-4" />
           </button>
         </div>
 
