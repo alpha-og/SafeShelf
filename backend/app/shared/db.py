@@ -5,7 +5,11 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.shared.config import settings
 
-engine = create_async_engine(settings.DATABASE_URL, echo=settings.DB_ECHO)
+engine = create_async_engine(
+    settings.DATABASE_URL,
+    echo=settings.DB_ECHO,
+    connect_args={"timeout": 5},
+)
 async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 
