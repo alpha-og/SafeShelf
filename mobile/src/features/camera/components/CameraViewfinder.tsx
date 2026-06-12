@@ -36,7 +36,8 @@ export function CameraViewfinder() {
   }
 
   return (
-    <div className="fixed inset-0 bg-neutral-950">
+    <div className="fixed inset-0 bg-background">
+      <div className="absolute inset-0 bg-black/[0.04]" />
       <CameraPreview videoRef={videoRef} isCameraReady={isCameraReady} error={error} />
 
       <TopBar cameraAvailable={isCameraReady} />

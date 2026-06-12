@@ -18,7 +18,7 @@ export function CapturePreview({ image, isCameraReady, onRetake }: CapturePrevie
 
   return (
     <motion.div
-      className="fixed inset-0 bg-neutral-950"
+      className="fixed inset-0 bg-background"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.15 }}

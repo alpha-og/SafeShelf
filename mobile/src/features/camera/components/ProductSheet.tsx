@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, useAnimation, type PanInfo } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 interface ProductSheetProps {
   onDismiss: () => void
@@ -84,15 +85,16 @@ export function ProductSheet({ onDismiss, dismissRef }: ProductSheetProps) {
 
         <div className="flex items-center px-4 pb-3">
           {isFull ? (
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => {
                 setIsFull(false)
                 snapTo(peekY)
               }}
-              className="text-foreground/80 hover:text-foreground transition-colors"
             >
               <ArrowLeft className="h-5 w-5" />
-            </button>
+            </Button>
           ) : (
             <h2 className="text-sm font-semibold text-foreground">Product Details</h2>
           )}
