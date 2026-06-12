@@ -1,30 +1,56 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, useAnimation, type PanInfo } from 'framer-motion'
-import { X, ArrowLeft } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 
 interface ProductSheetProps {
-  onRetake: () => void
-  cameraAvailable: boolean
+  onDismiss: () => void
+  dismissRef?: React.MutableRefObject<(() => void) | null>
 }
 
-export function ProductSheet({ onRetake, cameraAvailable }: ProductSheetProps) {
+const OFFRANGE = typeof window !== 'undefined' ? window.innerHeight : 700
+
+export function ProductSheet({ onDismiss, dismissRef }: ProductSheetProps) {
   const [peekY] = useState(() => (typeof window !== 'undefined' ? window.innerHeight * 0.5 : 400))
   const controls = useAnimation()
   const [isFull, setIsFull] = useState(false)
 
   useEffect(() => {
-    controls.set({ y: peekY })
+    controls.start({
+      y: peekY,
+      transition: { type: 'spring', stiffness: 300, damping: 30 },
+    })
   }, [peekY, controls])
 
-  const snapTo = (y: number) => {
+  const snapTo = useCallback((y: number) => {
     controls.start({
       y,
       transition: { type: 'spring', stiffness: 300, damping: 30 },
     })
-  }
+  }, [controls])
+
+  const handleDismiss = useCallback(async () => {
+    await controls.start({
+      y: OFFRANGE,
+      transition: { type: 'spring', stiffness: 300, damping: 30 },
+    })
+    onDismiss()
+  }, [controls, onDismiss])
+
+  useEffect(() => {
+    if (dismissRef) {
+      dismissRef.current = handleDismiss
+    }
+  }, [dismissRef, handleDismiss])
 
   const handleDragEnd = (_: unknown, info: PanInfo) => {
-    const shouldSnapToFull = info.offset.y < -50 || info.velocity.y < -500
+    const { offset, velocity } = info
+
+    if (offset.y > 100 || (offset.y > 30 && velocity.y > 500)) {
+      handleDismiss()
+      return
+    }
+
+    const shouldSnapToFull = offset.y < -50 || velocity.y < -500
     setIsFull(shouldSnapToFull)
     snapTo(shouldSnapToFull ? 0 : peekY)
   }
@@ -46,10 +72,9 @@ export function ProductSheet({ onRetake, cameraAvailable }: ProductSheetProps) {
       <motion.div
         className="absolute inset-x-0 bottom-0 z-20 flex flex-col bg-black/50 backdrop-blur-2xl rounded-t-3xl"
         style={{ height: '100dvh' }}
-        initial={{ y: peekY }}
+        initial={{ y: OFFRANGE }}
         drag="y"
-        dragConstraints={{ top: 0, bottom: peekY }}
-        dragElastic={0.1}
+        dragElastic={{ top: 0, bottom: 0.4 }}
         animate={controls}
         onDragEnd={handleDragEnd}
       >
@@ -57,7 +82,7 @@ export function ProductSheet({ onRetake, cameraAvailable }: ProductSheetProps) {
           <div className="w-10 h-1 rounded-full bg-white/40" />
         </div>
 
-        <div className="flex items-center justify-between px-4 pb-3">
+        <div className="flex items-center px-4 pb-3">
           {isFull ? (
             <button
               onClick={() => {
@@ -71,17 +96,6 @@ export function ProductSheet({ onRetake, cameraAvailable }: ProductSheetProps) {
           ) : (
             <h2 className="text-sm font-semibold text-white">Product Details</h2>
           )}
-          <button
-            onClick={onRetake}
-            className={`p-1.5 rounded-full transition-colors ${
-              cameraAvailable
-                ? 'text-white/70 hover:text-white hover:bg-white/10'
-                : 'text-white/40'
-            }`}
-            aria-label="Retake"
-          >
-            <X className="h-4 w-4" />
-          </button>
         </div>
 
         <div className="flex-1 px-4 space-y-3 overflow-y-auto">

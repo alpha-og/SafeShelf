@@ -1,3 +1,5 @@
+import { useRef } from 'react'
+import { motion } from 'framer-motion'
 import { TopBar } from './TopBar'
 import { ProductSheet } from './ProductSheet'
 
@@ -8,8 +10,20 @@ interface CapturePreviewProps {
 }
 
 export function CapturePreview({ image, isCameraReady, onRetake }: CapturePreviewProps) {
+  const dismissRef = useRef<(() => void) | null>(null)
+
+  const handleImageTap = () => {
+    dismissRef.current?.()
+  }
+
   return (
-    <div className="fixed inset-0 bg-neutral-950">
+    <motion.div
+      className="fixed inset-0 bg-neutral-950"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.15 }}
+      onClick={handleImageTap}
+    >
       <img
         src={image}
         alt="Preview"
@@ -18,7 +32,10 @@ export function CapturePreview({ image, isCameraReady, onRetake }: CapturePrevie
 
       <TopBar cameraAvailable={isCameraReady} />
 
-      <ProductSheet onRetake={onRetake} cameraAvailable={isCameraReady} />
-    </div>
+      <ProductSheet
+        onDismiss={onRetake}
+        dismissRef={dismissRef}
+      />
+    </motion.div>
   )
 }
