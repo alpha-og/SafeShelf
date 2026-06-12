@@ -4,12 +4,15 @@
   "private": true,
   "scripts": {
     "mobile:dev": "pnpm --filter mobile dev",
-    "dev": "pnpm --filter mobile dev",
+    "dev": "concurrently -n backend,mobile -c cyan,magenta \"pnpm backend:dev\" \"pnpm mobile:dev\"",
     "build": "pnpm --filter mobile build",
     "cap:sync": "pnpm --filter mobile cap:sync",
     "cap:android": "pnpm --filter mobile cap:android",
     "backend:dev": "cd backend && uv run python -m app",
     "backend:serve": "cd backend && uv run python -m app",
     "backend:sync": "cd backend && uv sync"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.3"
   }
 }
