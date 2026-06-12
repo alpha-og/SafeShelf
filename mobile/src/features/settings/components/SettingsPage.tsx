@@ -1,21 +1,41 @@
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Sun } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
+import { Button } from '@/components/ui/button'
+
+const settingsItems = [
+  { to: '/settings/appearance' as const, label: 'Appearance', icon: Sun },
+]
 
 export function SettingsPage() {
   const navigate = useNavigate()
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b">
+      <header className="border-b border-border">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
-          <button onClick={() => navigate({ to: '/' })} className="text-muted-foreground hover:text-foreground transition-colors">
+          <Button variant="ghost" size="icon" onClick={() => navigate({ to: '/' })}>
             <ArrowLeft className="h-5 w-5" />
-          </button>
-          <h1 className="text-xl font-bold">Settings</h1>
+          </Button>
+          <h1 className="text-xl font-bold text-foreground">Settings</h1>
         </div>
       </header>
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        <p className="text-muted-foreground">Settings will be available soon.</p>
+
+      <main className="max-w-7xl mx-auto px-4 py-6">
+        <div className="rounded-lg border border-border overflow-hidden">
+          {settingsItems.map((item) => {
+            const Icon = item.icon
+            return (
+              <button
+                key={item.to}
+                onClick={() => navigate({ to: item.to })}
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-foreground transition-colors hover:bg-accent"
+              >
+                <Icon className="h-5 w-5 text-muted-foreground" />
+                <span className="flex-1 text-left">{item.label}</span>
+              </button>
+            )
+          })}
+        </div>
       </main>
     </div>
   )
