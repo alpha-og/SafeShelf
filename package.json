@@ -3,9 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "setup": "pnpm install && pnpm backend:sync",
     "mobile:dev": "pnpm --filter mobile dev",
     "dev": "concurrently -n backend,mobile -c cyan,magenta \"pnpm backend:dev\" \"pnpm mobile:dev\"",
     "build": "pnpm --filter mobile build",
+    "typecheck": "pnpm --filter mobile typecheck",
+    "lint": "pnpm --filter mobile lint",
     "cap:sync": "pnpm --filter mobile cap:sync",
     "cap:android": "pnpm --filter mobile cap:android",
     "backend:dev": "cd backend && uv run python -m app",
@@ -13,6 +16,7 @@
     "backend:sync": "cd backend && uv sync"
   },
   "devDependencies": {
+    "@vitejs/plugin-basic-ssl": "^2.3.0",
     "concurrently": "^10.0.3"
   }
 }

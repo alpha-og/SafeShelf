@@ -32,6 +32,7 @@ safeshelf/
 
 | Action | Command |
 |---|---|
+| Setup everything | `pnpm setup` (pnpm install + uv sync) |
 | Mobile dev server (port 5173) | `pnpm dev` or `pnpm mobile:dev` |
 | Mobile build | `pnpm build` |
 | TypeScript check | `pnpm typecheck` (runs `tsc -b`) |
@@ -40,6 +41,16 @@ safeshelf/
 | Capacitor Android | `pnpm cap:android` |
 | Backend dev server (port 8926) | `pnpm backend:dev` or `pnpm backend:serve` |
 | Backend sync deps | `pnpm backend:sync` (uv sync) |
+
+## Configuration
+
+Environment variables are loaded hierarchically:
+
+1. **`/.env`** — shared defaults (root, tracked in `.env.example`)
+2. **`/backend/.env`** / **`/mobile/.env`** — sub-package overrides
+3. **`/backend/.env.local`** — local-only overrides (gitignored)
+
+Later values override earlier ones. Each sub-package can have its own `.env` for private secrets. See `/.env.example` for all shared variables.
 
 ## Backend
 

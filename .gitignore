@@ -11,4 +11,5 @@ mobile/.capacitor/
 
 # Misc
 *.local
+.env
 .DS_Store
