@@ -26,6 +26,7 @@
     "@tanstack/react-router": "^1.170.15",
     "@tanstack/router-devtools": "^1.167.0",
     "axios": "^1.17.0",
+    "barcode-detector": "^3.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.40.0",
