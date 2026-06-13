@@ -1,4 +1,8 @@
+from pathlib import Path
+
 from pydantic_settings import BaseSettings
+
+ROOT_DIR = Path(__file__).resolve().parents[3]
 
 
 class Settings(BaseSettings):
@@ -15,8 +19,18 @@ class Settings(BaseSettings):
     DB_ECHO: bool = False
     GROQ_API_KEY: str = ""
     GROQ_MODEL: str = "llama-3.3-70b-versatile"
+    WHO_CLIENT_ID: str = ""
+    WHO_CLIENT_SECRET: str = ""
 
-    model_config = {"env_file": [".env", ".env.local"], "env_file_encoding": "utf-8", "extra": "ignore"}
+    model_config = {
+        "env_file": [
+            ROOT_DIR / ".env",
+            ".env",
+            ".env.local",
+        ],
+        "env_file_encoding": "utf-8",
+        "extra": "ignore",
+    }
 
 
 settings = Settings()

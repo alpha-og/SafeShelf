@@ -2,44 +2,59 @@ from fastapi import HTTPException, status
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
+from app.shared.who_icd import fetch_icd11_code, get_valid_who_token
 from app.guidelines.agent import URLS, extract_thresholds, scrape_guidelines
-from app.guidelines.embeddings import store_embeddings
 from app.guidelines.models import ConditionThreshold, IngredientAlias
+from app.shared.utils import utcnow
 
 
 async def import_guidelines(session: AsyncSession) -> dict:
     imported = []
+    who_token = await get_valid_who_token()
     for url in URLS:
         raw_text = await scrape_guidelines(url)
         bootstrap = await extract_thresholds(raw_text)
 
-        for ct in bootstrap["condition_thresholds"]:
+        for ct in bootstrap.get("condition_thresholds", []):
             disease = ct["disease"]
-            existing = await session.exec(
-                select(ConditionThreshold).where(ConditionThreshold.disease == disease)
-            )
-            row = existing.first()
-            if row:
-                row.rules = ct.get("rules", [])
-                row.recommendations = ct.get("recommendations", [])
-                row.exclusions = ct.get("exclusions", [])
-                row.interaction_rules = ct.get("interaction_rules", [])
-                row.source = url
-                row.version = bootstrap.get("version", "1.0")
-            else:
+            icd = await fetch_icd11_code(disease, who_token)
+            standard_name = icd.get("standard_name", disease)
+            icd_code = icd.get("icd11_code", "UNKNOWN")
+            entry = {
+                "rules": ct.get("rules", []),
+                "recommendations": ct.get("recommendations", []),
+                "exclusions": ct.get("exclusions", []),
+                "interaction_rules": ct.get("interaction_rules", []),
+                "source": url,
+            }
+
+            row = None
+            if icd_code != "UNKNOWN":
+                existing = await session.exec(
+                    select(ConditionThreshold).where(ConditionThreshold.code == icd_code)
+                )
+                row = existing.first()
+
+            if row is None:
+                existing = await session.exec(
+                    select(ConditionThreshold).where(ConditionThreshold.disease == standard_name)
+                )
+                row = existing.first()
+
+            if row is None:
                 row = ConditionThreshold(
-                    disease=disease,
-                    rules=ct.get("rules", []),
-                    recommendations=ct.get("recommendations", []),
-                    exclusions=ct.get("exclusions", []),
-                    interaction_rules=ct.get("interaction_rules", []),
-                    source=url,
+                    disease=standard_name,
+                    code=icd_code,
+                    entries=[entry],
                     version=bootstrap.get("version", "1.0"),
                 )
-            session.add(row)
-            imported.append(disease)
+            else:
+                if row.code == "UNKNOWN" and icd_code != "UNKNOWN":
+                    row.code = icd_code
+                row.entries = [*(row.entries or []), entry]
 
-       # await store_embeddings(raw_text, disease=ct["disease"], source=url)
+            session.add(row)
+            imported.append(standard_name)
 
         for alias, trigger in bootstrap.get("ingredient_aliases", {}).items():
             existing = await session.exec(
@@ -55,13 +70,13 @@ async def import_guidelines(session: AsyncSession) -> dict:
     return {"imported": imported, "count": len(imported)}
 
 
-async def get_guideline(disease: str, session: AsyncSession) -> ConditionThreshold:
+async def get_guideline_by_code(code: str, session: AsyncSession) -> ConditionThreshold:
     result = await session.exec(
-        select(ConditionThreshold).where(ConditionThreshold.disease == disease)
+        select(ConditionThreshold).where(ConditionThreshold.code == code)
     )
     row = result.first()
     if not row:
-        raise HTTPException(status_code=404, detail=f"Guideline for '{disease}' not found")
+        raise HTTPException(status_code=404, detail=f"Guideline for code '{code}' not found")
     return row
 
 
@@ -79,10 +94,10 @@ async def get_bootstrap(session: AsyncSession) -> dict:
         "condition_thresholds": [
             {
                 "disease": c.disease,
-                "rules": c.rules,
-                "recommendations": c.recommendations,
-                "exclusions": c.exclusions,
-                "interaction_rules": c.interaction_rules,
+                "code": c.code,
+                "entries": c.entries,
+                "version": c.version,
+                "created_at": c.created_at,
             }
             for c in conditions.all()
         ],

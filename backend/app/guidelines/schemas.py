@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Rule(BaseModel):
@@ -10,12 +10,20 @@ class Rule(BaseModel):
     unit: str
 
 
+class GuidelineEntrySchema(BaseModel):
+    rules: list[Rule] = Field(default_factory=list)
+    recommendations: list[str] = Field(default_factory=list)
+    exclusions: list[str] = Field(default_factory=list)
+    interaction_rules: list[dict] = Field(default_factory=list)
+    source: str | None = None
+
+
 class ConditionThresholdSchema(BaseModel):
     disease: str
-    rules: list[Rule]
-    recommendations: list[str] = []
-    exclusions: list[str] = []
-    interaction_rules: list[dict] = []
+    code: str = "UNKNOWN"
+    entries: list[GuidelineEntrySchema] = Field(default_factory=list)
+    version: str = "1.0"
+    created_at: datetime | None = None
 
 
 class BootstrapResponse(BaseModel):
@@ -26,9 +34,6 @@ class BootstrapResponse(BaseModel):
 
 class GuidelineResponse(ConditionThresholdSchema):
     id: int
-    source: str | None = None
-    version: str
-    created_at: datetime | None = None
 
 
 class GuidelineListResponse(BaseModel):
