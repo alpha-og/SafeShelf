@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import { useCamera } from '../hooks/useCamera'
 import { CameraPreview } from './CameraPreview'
 import { CaptureButton } from './CaptureButton'
@@ -25,32 +26,34 @@ export function CameraViewfinder() {
     setCapturedImage(null)
   }
 
-  if (capturedImage) {
-    return (
-      <CapturePreview
-        image={capturedImage}
-        mode={mode}
-        isCameraReady={isCameraReady}
-        onRetake={handleRetake}
-      />
-    )
-  }
-
   return (
     <div className="fixed inset-0 bg-background">
-      <div className="absolute inset-0 bg-black/[0.04]" />
-      <CameraPreview videoRef={videoRef} isCameraReady={isCameraReady} error={error} />
+      <div className={`absolute inset-0 transition-opacity duration-200 ${capturedImage ? 'opacity-0 pointer-events-none' : ''}`}>
+        <div className="absolute inset-0 bg-black/[0.04]" />
+        <CameraPreview videoRef={videoRef} isCameraReady={isCameraReady} error={error} />
 
-      <TopBar cameraAvailable={isCameraReady} />
+        <TopBar cameraAvailable={isCameraReady} />
 
-      <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center pb-8 sm:pb-16 gap-4 sm:gap-6">
-        <div className="flex items-center gap-6 sm:gap-8">
-          <GalleryButton onClick={handleGalleryPick} cameraAvailable={isCameraReady} />
-          <CaptureButton onClick={handleCapture} disabled={!isCameraReady} cameraAvailable={isCameraReady} />
-          <div className="w-12 sm:w-14" />
+        <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center pb-[calc(2rem_+_env(safe-area-inset-bottom))] sm:pb-[calc(4rem_+_env(safe-area-inset-bottom))] gap-4 sm:gap-6">
+          <div className="flex items-center gap-6 sm:gap-8">
+            <GalleryButton onClick={handleGalleryPick} cameraAvailable={isCameraReady} />
+            <CaptureButton onClick={handleCapture} disabled={!isCameraReady} cameraAvailable={isCameraReady} />
+            <div className="w-12 sm:w-14" />
+          </div>
+          <ModeSwitcher mode={mode} onModeChange={setMode} cameraAvailable={isCameraReady} />
         </div>
-        <ModeSwitcher mode={mode} onModeChange={setMode} cameraAvailable={isCameraReady} />
       </div>
+
+      <AnimatePresence>
+        {capturedImage && (
+          <CapturePreview
+            image={capturedImage}
+            mode={mode}
+            isCameraReady={isCameraReady}
+            onRetake={handleRetake}
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }
