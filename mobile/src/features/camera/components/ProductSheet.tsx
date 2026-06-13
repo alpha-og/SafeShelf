@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, useAnimation, type PanInfo } from 'framer-motion'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, ShoppingCart, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useCart } from '@/providers/CartProvider'
 import type { ProductInfo } from '../services/detection'
 
 interface ProductSheetProps {
@@ -18,6 +19,8 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
   const [peekY] = useState(() => (typeof window !== 'undefined' ? window.innerHeight * 0.5 : 400))
   const controls = useAnimation()
   const [isFull, setIsFull] = useState(false)
+  const [isAdded, setIsAdded] = useState(false)
+  const { addToCart } = useCart()
 
   useEffect(() => {
     controls.start({
@@ -185,6 +188,37 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
                   </p>
                 </div>
               )}
+
+              <div className="pt-4 mt-4 border-t">
+                <Button 
+                  className="w-full gap-2 text-md font-semibold transition-all" 
+                  size="lg" 
+                  variant={isAdded ? "secondary" : "default"}
+                  onClick={() => {
+                    addToCart(result)
+                    setIsAdded(true)
+                    setTimeout(() => setIsAdded(false), 2000)
+                  }}
+                  disabled={!result.barcode || isAdded}
+                >
+                  {isAdded ? (
+                    <>
+                      <Check className="h-5 w-5 text-green-500" />
+                      Added to Cart
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingCart className="h-5 w-5" />
+                      Add to Cart
+                    </>
+                  )}
+                </Button>
+                {!result.barcode && (
+                  <p className="text-xs text-center text-muted-foreground mt-2">
+                    Cannot add items without a barcode to the cart.
+                  </p>
+                )}
+              </div>
             </div>
           ) : (
              <div className="flex flex-col items-center justify-center py-10 text-center text-muted-foreground">
