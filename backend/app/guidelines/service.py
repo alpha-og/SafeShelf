@@ -39,7 +39,7 @@ async def import_guidelines(session: AsyncSession) -> dict:
             session.add(row)
             imported.append(disease)
 
-        await store_embeddings(raw_text, disease=ct["disease"], source=url)
+       # await store_embeddings(raw_text, disease=ct["disease"], source=url)
 
         for alias, trigger in bootstrap.get("ingredient_aliases", {}).items():
             existing = await session.exec(
