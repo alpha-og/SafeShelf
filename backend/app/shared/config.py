@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     PORT: int = Field(default=8926, validation_alias=AliasChoices("BACKEND_PORT", "PORT"))
     DEBUG: bool = True
     DB_ECHO: bool = False
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "llama-3.3-70b-versatile"
 
     model_config = {
         "env_file": [
