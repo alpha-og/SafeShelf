@@ -1,4 +1,5 @@
 import { BarcodeDetector, type BarcodeFormat } from 'barcode-detector/ponyfill'
+import { api } from '@/lib/axios'
 
 type ScanMode = 'auto' | 'barcode' | 'image' | 'nutrient-label'
 
@@ -63,14 +64,48 @@ export async function decodeBarcode(imageData: string): Promise<string | null> {
 }
 
 export async function lookupByBarcode(barcode: string): Promise<ProductInfo | null> {
-  console.log(`[stub] GET /v1/products/${barcode}`)
-  console.log(`[stub]   → would fetch product info for barcode "${barcode}"`)
-  return null
+  try {
+    const response = await api.get(`/v1/products/${barcode}`)
+    const data = response.data
+    return {
+      barcode: data.barcode ?? null,
+      productName: data.product_name ?? null,
+      brand: data.brand ?? null,
+      categories: data.categories ?? [],
+      ingredients: data.ingredients ?? [],
+      nutrients: data.nutrients ?? {},
+      allergens: data.allergens ?? [],
+      imageUrl: data.image_url ?? null,
+    }
+  } catch (err) {
+    console.error('Failed to lookup barcode:', err)
+    return null
+  }
 }
 
 export async function identifyProduct(imageData: string, mode: ScanMode): Promise<ProductInfo | null> {
-  console.log(`[stub] POST /v1/products/identify`)
-  console.log(`[stub]   → mode: "${mode}"`)
-  console.log(`[stub]   → image: ${imageData.slice(0, 64)}... (${imageData.length} chars)`)
-  return null
+  try {
+    const response = await api.post('/v1/products/identify', {
+      image: imageData,
+      text: mode,
+    })
+    const data = response.data.product
+    if (!data) {
+      throw new Error('Product not found or barcode not readable')
+    }
+    
+    return {
+      barcode: data.barcode ?? null,
+      productName: data.product_name ?? null,
+      brand: data.brand ?? null,
+      categories: data.categories ?? [],
+      ingredients: data.ingredients ?? [],
+      nutrients: data.nutrients ?? {},
+      allergens: data.allergens ?? [],
+      imageUrl: data.image_url ?? null,
+    }
+  } catch (err: any) {
+    console.error('Failed to identify product:', err)
+    throw new Error(err.response?.data?.detail || 'Failed to identify product from image')
+  }
 }

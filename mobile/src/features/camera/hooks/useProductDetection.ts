@@ -36,7 +36,8 @@ export function useProductDetection(
             console.log(`[scan] Barcode detected: ${barcode}`)
             setResult(await lookupByBarcode(barcode))
           } else {
-            setError('No barcode detected')
+            console.log('[scan] No barcode detected locally (barcode mode) → sending for backend identification')
+            setResult(await identifyProduct(data, mode))
           }
           return
         }
