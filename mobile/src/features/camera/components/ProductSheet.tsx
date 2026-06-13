@@ -50,6 +50,15 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
   const handleDragEnd = (_: unknown, info: PanInfo) => {
     const { offset, velocity } = info
 
+    if (isFull) {
+      if (offset.y > 150 || (offset.y > 50 && velocity.y > 800)) {
+        handleDismiss()
+        return
+      }
+      snapTo(0)
+      return
+    }
+
     if (offset.y > 100 || (offset.y > 30 && velocity.y > 500)) {
       handleDismiss()
       return
@@ -79,6 +88,7 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
         style={{ height: '100dvh' }}
         initial={{ y: OFFRANGE }}
         drag="y"
+        dragConstraints={{ top: 0 }}
         dragElastic={{ top: 0, bottom: 0.4 }}
         animate={controls}
         onDragEnd={handleDragEnd}
