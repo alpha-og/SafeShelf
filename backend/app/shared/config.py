@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     DB_ECHO: bool = False
     GROQ_API_KEY: str = ""
     GROQ_MODEL: str = "llama-3.3-70b-versatile"
+    WHO_CLIENT_ID: str = ""
+    WHO_CLIENT_SECRET: str = ""
 
     model_config = {
         "env_file": [
