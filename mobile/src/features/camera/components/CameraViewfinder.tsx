@@ -29,6 +29,7 @@ export function CameraViewfinder() {
     return (
       <CapturePreview
         image={capturedImage}
+        mode={mode}
         isCameraReady={isCameraReady}
         onRetake={handleRetake}
       />

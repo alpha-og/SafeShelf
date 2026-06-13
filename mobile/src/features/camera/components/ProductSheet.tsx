@@ -2,8 +2,12 @@ import { useState, useEffect, useCallback } from 'react'
 import { motion, useAnimation, type PanInfo } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import type { ProductInfo } from '../services/detection'
 
 interface ProductSheetProps {
+  isProcessing: boolean
+  result: ProductInfo | null
+  error: string | null
   onDismiss: () => void
   dismissRef?: React.MutableRefObject<(() => void) | null>
 }
