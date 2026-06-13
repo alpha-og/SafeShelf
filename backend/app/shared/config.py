@@ -13,8 +13,10 @@ class Settings(BaseSettings):
     PORT: int = 8926
     DEBUG: bool = True
     DB_ECHO: bool = False
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "llama-3.3-70b-versatile"
 
-    model_config = {"env_file": [".env", ".env.local"], "env_file_encoding": "utf-8"}
+    model_config = {"env_file": [".env", ".env.local"], "env_file_encoding": "utf-8", "extra": "ignore"}
 
 
 settings = Settings()
