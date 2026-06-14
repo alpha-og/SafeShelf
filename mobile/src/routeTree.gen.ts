@@ -21,6 +21,7 @@ import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authen
 import { Route as AuthenticatedSettingsPreferencesRouteImport } from './routes/_authenticated/settings/preferences'
 import { Route as AuthenticatedSettingsConstraintsRouteImport } from './routes/_authenticated/settings/constraints'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
+import { Route as AuthenticatedProductBarcodeRouteImport } from './routes/_authenticated/product/$barcode'
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
@@ -85,6 +86,12 @@ const AuthenticatedSettingsAppearanceRoute =
     path: '/appearance',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
+const AuthenticatedProductBarcodeRoute =
+  AuthenticatedProductBarcodeRouteImport.update({
+    id: '/product/$barcode',
+    path: '/product/$barcode',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -93,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof AuthSignupRoute
   '/cart': typeof AuthenticatedCartRoute
   '/history': typeof AuthenticatedHistoryRoute
+  '/product/$barcode': typeof AuthenticatedProductBarcodeRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/constraints': typeof AuthenticatedSettingsConstraintsRoute
   '/settings/preferences': typeof AuthenticatedSettingsPreferencesRoute
@@ -104,6 +112,7 @@ export interface FileRoutesByTo {
   '/signup': typeof AuthSignupRoute
   '/cart': typeof AuthenticatedCartRoute
   '/history': typeof AuthenticatedHistoryRoute
+  '/product/$barcode': typeof AuthenticatedProductBarcodeRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/constraints': typeof AuthenticatedSettingsConstraintsRoute
   '/settings/preferences': typeof AuthenticatedSettingsPreferencesRoute
@@ -119,6 +128,7 @@ export interface FileRoutesById {
   '/_authenticated/cart': typeof AuthenticatedCartRoute
   '/_authenticated/history': typeof AuthenticatedHistoryRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/product/$barcode': typeof AuthenticatedProductBarcodeRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/constraints': typeof AuthenticatedSettingsConstraintsRoute
   '/_authenticated/settings/preferences': typeof AuthenticatedSettingsPreferencesRoute
@@ -133,6 +143,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/cart'
     | '/history'
+    | '/product/$barcode'
     | '/settings/appearance'
     | '/settings/constraints'
     | '/settings/preferences'
@@ -144,6 +155,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/cart'
     | '/history'
+    | '/product/$barcode'
     | '/settings/appearance'
     | '/settings/constraints'
     | '/settings/preferences'
@@ -158,6 +170,7 @@ export interface FileRouteTypes {
     | '/_authenticated/cart'
     | '/_authenticated/history'
     | '/_authenticated/'
+    | '/_authenticated/product/$barcode'
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/constraints'
     | '/_authenticated/settings/preferences'
@@ -255,6 +268,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsAppearanceRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/product/$barcode': {
+      id: '/_authenticated/product/$barcode'
+      path: '/product/$barcode'
+      fullPath: '/product/$barcode'
+      preLoaderRoute: typeof AuthenticatedProductBarcodeRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
@@ -297,6 +317,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedCartRoute: typeof AuthenticatedCartRoute
   AuthenticatedHistoryRoute: typeof AuthenticatedHistoryRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedProductBarcodeRoute: typeof AuthenticatedProductBarcodeRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -304,6 +325,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedCartRoute: AuthenticatedCartRoute,
   AuthenticatedHistoryRoute: AuthenticatedHistoryRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedProductBarcodeRoute: AuthenticatedProductBarcodeRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(

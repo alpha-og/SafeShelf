@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
+import { useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { SearchableMultiSelect } from './SearchableMultiSelect'
+import { setItem } from '@/lib/storage'
 import type { ConstraintItem } from '../services/constraints'
 
 const CONDITIONS_KEY = 'constraints:conditions'
@@ -19,16 +21,19 @@ function load(key: string): ConstraintItem[] {
 
 export function ConstraintsPage() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const [conditions, setConditions] = useState<ConstraintItem[]>(() => load(CONDITIONS_KEY))
   const [allergens, setAllergens] = useState<ConstraintItem[]>(() => load(ALLERGENS_KEY))
 
   useEffect(() => {
-    localStorage.setItem(CONDITIONS_KEY, JSON.stringify(conditions))
-  }, [conditions])
+    setItem(CONDITIONS_KEY, conditions)
+    queryClient.invalidateQueries({ queryKey: ['userProfile'] })
+  }, [conditions, queryClient])
 
   useEffect(() => {
-    localStorage.setItem(ALLERGENS_KEY, JSON.stringify(allergens))
-  }, [allergens])
+    setItem(ALLERGENS_KEY, allergens)
+    queryClient.invalidateQueries({ queryKey: ['userProfile'] })
+  }, [allergens, queryClient])
 
   return (
     <div className="min-h-screen bg-background">

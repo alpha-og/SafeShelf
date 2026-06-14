@@ -1,9 +1,10 @@
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useProductDetection } from '../hooks/useProductDetection'
 import type { ScanMode } from '../hooks/useCamera'
 import { TopBar } from './TopBar'
 import { ProductSheet } from './ProductSheet'
+import { scanStore } from '../services/scanStore'
 
 interface CapturePreviewProps {
   image: string
@@ -15,6 +16,12 @@ interface CapturePreviewProps {
 export function CapturePreview({ image, mode, isCameraReady, onRetake }: CapturePreviewProps) {
   const { isProcessing, result, error } = useProductDetection(image, mode)
   const dismissRef = useRef<(() => void) | null>(null)
+
+  useEffect(() => {
+    if (result) {
+      scanStore.lastResult = result
+    }
+  }, [result])
 
   const handleImageTap = () => {
     dismissRef.current?.()

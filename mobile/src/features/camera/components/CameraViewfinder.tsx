@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { useCamera } from '../hooks/useCamera'
 import { CameraPreview } from './CameraPreview'
@@ -7,10 +7,17 @@ import { ModeSwitcher } from './ModeSwitcher'
 import { TopBar } from './TopBar'
 import { GalleryButton } from './GalleryButton'
 import { CapturePreview } from './CapturePreview'
+import { scanStore } from '../services/scanStore'
 
 export function CameraViewfinder() {
   const { videoRef, mode, error, isCameraReady, capturePhoto, pickFromGallery, setMode } = useCamera()
-  const [capturedImage, setCapturedImage] = useState<string | null>(null)
+  const [capturedImage, setCapturedImage] = useState<string | null>(() => scanStore.capturedImage)
+
+  useEffect(() => {
+    if (capturedImage) {
+      scanStore.capturedImage = capturedImage
+    }
+  }, [capturedImage])
 
   const handleCapture = async () => {
     const photo = await capturePhoto()
@@ -23,6 +30,7 @@ export function CameraViewfinder() {
   }
 
   const handleRetake = () => {
+    scanStore.clearAll()
     setCapturedImage(null)
   }
 

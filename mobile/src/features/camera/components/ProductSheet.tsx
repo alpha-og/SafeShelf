@@ -1,8 +1,13 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, useAnimation, type PanInfo } from 'framer-motion'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import type { ProductInfo } from '../services/detection'
+import { useSuitability } from '@/features/suitability/hooks/useSuitability'
+import { SuitabilityBadge } from '@/features/suitability/components/SuitabilityBadge'
+import { SuitabilityBreakdown } from '@/features/suitability/components/SuitabilityBreakdown'
 
 interface ProductSheetProps {
   isProcessing: boolean
@@ -15,6 +20,8 @@ interface ProductSheetProps {
 const OFFRANGE = typeof window !== 'undefined' ? window.innerHeight : 700
 
 export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRef }: ProductSheetProps) {
+  const navigate = useNavigate()
+  const { result: suitability } = useSuitability(result)
   const [peekY] = useState(() => (typeof window !== 'undefined' ? window.innerHeight * 0.5 : 400))
   const controls = useAnimation()
   const [isFull, setIsFull] = useState(false)
@@ -75,7 +82,7 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="absolute inset-0 z-10 bg-background/50"
+          className="absolute inset-0 z-10 bg-background/60"
           onClick={() => {
             setIsFull(false)
             snapTo(peekY)
@@ -84,7 +91,7 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
       )}
 
       <motion.div
-        className="absolute inset-x-0 bottom-0 z-20 flex flex-col bg-background/50 backdrop-blur-2xl rounded-t-3xl"
+        className="absolute inset-x-0 bottom-0 z-20 flex flex-col bg-background/60 backdrop-blur-2xl rounded-t-3xl"
         style={{ height: '100dvh' }}
         initial={{ y: OFFRANGE }}
         drag="y"
@@ -94,38 +101,30 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
         onDragEnd={handleDragEnd}
       >
         <div className="flex justify-center pt-3 pb-2">
-          <div className="w-10 h-1 rounded-full bg-foreground/40" />
+          <div className="w-10 h-1 rounded-full bg-foreground/30" />
         </div>
 
-        <div className="flex items-center px-4 pb-3">
+        <div className="flex items-center px-5 pb-2">
           {isFull ? (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                setIsFull(false)
-                snapTo(peekY)
-              }}
-            >
+            <Button variant="ghost" size="icon" onClick={() => { setIsFull(false); snapTo(peekY) }}>
               <ArrowLeft className="h-5 w-5" />
             </Button>
           ) : (
-            <h2 className="text-sm font-semibold text-foreground">Product Details</h2>
+            <h2 className="text-sm font-semibold text-foreground/70">Product</h2>
           )}
         </div>
 
-        <div className="flex-1 px-4 pb-8 overflow-y-auto">
+        <div className="flex-1 px-5 pb-8 overflow-y-auto">
           {isProcessing ? (
-            <div className="space-y-3">
-              <div className="h-4 bg-foreground/20 rounded w-3/4 animate-pulse" />
-              <div className="h-4 bg-foreground/20 rounded w-1/2 animate-pulse" />
-              <div className="h-20 bg-foreground/20 rounded animate-pulse" />
-              <div className="h-4 bg-foreground/20 rounded w-full animate-pulse" />
-              <div className="h-4 bg-foreground/20 rounded w-2/3 animate-pulse" />
-              <div className="h-4 bg-foreground/20 rounded w-5/6 animate-pulse" />
-              <div className="h-24 bg-foreground/20 rounded animate-pulse" />
-              <div className="h-4 bg-foreground/20 rounded w-3/4 animate-pulse" />
-              <div className="h-4 bg-foreground/20 rounded w-1/3 animate-pulse" />
+            <div className="space-y-3 pt-4">
+              <div className="flex gap-4">
+                <div className="w-16 h-16 rounded-2xl bg-foreground/10 animate-pulse flex-shrink-0" />
+                <div className="flex-1 space-y-2 pt-1">
+                  <div className="h-4 bg-foreground/10 rounded w-3/4 animate-pulse" />
+                  <div className="h-3 bg-foreground/10 rounded w-1/2 animate-pulse" />
+                  <div className="h-3 bg-foreground/10 rounded w-1/3 animate-pulse" />
+                </div>
+              </div>
             </div>
           ) : error ? (
             <div className="flex flex-col items-center justify-center py-10 text-center">
@@ -133,57 +132,56 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
               <p className="text-muted-foreground text-sm">{error}</p>
             </div>
           ) : result ? (
-            <div className="space-y-6 pb-6">
+            <div className="space-y-5 pt-2">
               <div className="flex gap-4">
                 {result.imageUrl ? (
-                  <div className="w-24 h-24 rounded-2xl overflow-hidden bg-muted flex-shrink-0 border shadow-sm">
+                  <div className="w-16 h-16 rounded-2xl overflow-hidden bg-muted flex-shrink-0 border shadow-sm">
                     <img src={result.imageUrl} alt={result.productName || 'Product'} className="w-full h-full object-cover" />
                   </div>
                 ) : (
-                  <div className="w-24 h-24 rounded-2xl bg-muted flex items-center justify-center flex-shrink-0 border shadow-sm">
-                    <span className="text-muted-foreground text-xs font-medium">No Image</span>
+                  <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center flex-shrink-0 border shadow-sm">
+                    <span className="text-muted-foreground text-[10px] font-medium">No Img</span>
                   </div>
                 )}
-                <div className="flex-1 pt-1">
-                  <h3 className="text-xl font-bold leading-tight">{result.productName || 'Unknown Product'}</h3>
-                  {result.brand && <p className="text-muted-foreground text-sm mt-1">{result.brand}</p>}
-                  {result.barcode && <p className="text-xs text-muted-foreground mt-2 font-mono bg-muted/50 px-2 py-1 rounded inline-block">{result.barcode}</p>}
+                <div className="flex-1 min-w-0 pt-0.5">
+                  <div className="flex items-start gap-2">
+                    <h3 className="text-base font-bold leading-tight text-foreground truncate">{result.productName || 'Unknown Product'}</h3>
+                  </div>
+                  {result.brand && <p className="text-xs text-muted-foreground mt-0.5">{result.brand}</p>}
+                  {result.barcode && <p className="text-[10px] text-muted-foreground/50 mt-1 font-mono">{result.barcode}</p>}
+                </div>
+                <div className="flex-shrink-0 pt-0.5">
+                  <SuitabilityBadge result={suitability} />
                 </div>
               </div>
 
-              {result.categories && result.categories.length > 0 && (
-                <div>
-                  <h4 className="text-sm font-semibold mb-3">Categories</h4>
-                  <div className="flex overflow-x-auto gap-2 pb-2 -mx-4 px-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-                    {result.categories.map((c, i) => (
-                      <span key={i} className="whitespace-nowrap px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold border border-primary/20">
-                        {c}
-                      </span>
-                    ))}
-                  </div>
+              {result.allergens.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {result.allergens.map((a, i) => (
+                    <Badge key={i} variant="destructive" className="text-xs">{a}</Badge>
+                  ))}
                 </div>
               )}
 
-              {result.allergens && result.allergens.length > 0 && (
-                <div>
-                  <h4 className="text-sm font-semibold mb-3 text-destructive">Allergens Warning</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {result.allergens.map((a, i) => (
-                      <span key={i} className="px-3 py-1 rounded-full bg-destructive/10 text-destructive text-xs font-semibold border border-destructive/20">
-                        {a}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+              {suitability?.serving?.flagged && (
+                <p className="text-xs text-amber-500 font-medium">
+                  Serving size ({suitability.serving.declaredQuantity}{suitability.serving.unit}) is unusually small
+                </p>
               )}
 
-              {result.ingredients && result.ingredients.length > 0 && (
-                <div>
-                  <h4 className="text-sm font-semibold mb-3">Ingredients</h4>
-                  <p className="text-sm text-foreground/80 leading-relaxed bg-muted/30 p-4 rounded-2xl border">
-                    {result.ingredients.join(', ')}
-                  </p>
-                </div>
+              {suitability && suitability.checks.length > 0 && (
+                <SuitabilityBreakdown checks={suitability.checks} />
+              )}
+
+              {result.barcode && (
+                <Button
+                  variant="outline"
+                  className="w-full gap-2 text-sm font-medium"
+                  onClick={() => navigate({ to: '/product/$barcode', params: { barcode: result.barcode! } })}
+                >
+                  View full details
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
               )}
             </div>
           ) : (

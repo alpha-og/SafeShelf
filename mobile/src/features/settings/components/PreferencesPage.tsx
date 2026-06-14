@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react'
 import { ArrowLeft, Check } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
+import { useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Card } from '@/components/ui/card'
+import { setItem } from '@/lib/storage'
+import type { ServingSettings } from '@/features/suitability/types'
+import { DEFAULT_SERVING_SETTINGS } from '@/features/suitability/types'
 
 const PREFERENCES_KEY = 'preferences:dietary'
 const BUDGET_KEY = 'preferences:budget'
+const SERVING_SETTINGS_KEY = 'preferences:serving_settings'
 
 const DIETARY_OPTIONS = [
   { id: 'vegan', label: 'Vegan' },
@@ -19,33 +25,44 @@ const DIETARY_OPTIONS = [
   { id: 'low-sodium', label: 'Low sodium' },
 ] as const
 
-function load(): string[] {
+function load<T>(key: string, fallback: T): T {
   try {
-    const raw = localStorage.getItem(PREFERENCES_KEY)
-    return raw ? (JSON.parse(raw) as string[]) : []
+    const raw = localStorage.getItem(key)
+    return raw ? (JSON.parse(raw) as T) : fallback
   } catch {
-    return []
+    return fallback
   }
-}
-
-function loadBudget(): string {
-  return localStorage.getItem(BUDGET_KEY) ?? ''
 }
 
 export function PreferencesPage() {
   const navigate = useNavigate()
-  const [selected, setSelected] = useState<string[]>(() => load())
-  // Draft holds what's in the box; budget is the committed (saved) value.
-  const [budget, setBudget] = useState<string>(() => loadBudget())
-  const [budgetDraft, setBudgetDraft] = useState<string>(() => loadBudget())
+  const queryClient = useQueryClient()
+  const [selected, setSelected] = useState<string[]>(() => load(PREFERENCES_KEY, []))
+  const [budget, setBudget] = useState<string>(() => load(BUDGET_KEY, ''))
+  const [budgetDraft, setBudgetDraft] = useState<string>(() => load(BUDGET_KEY, ''))
+  const [servingSettings, setServingSettings] = useState<ServingSettings>(() => load(SERVING_SETTINGS_KEY, DEFAULT_SERVING_SETTINGS))
+  const [solidDraft, setSolidDraft] = useState<string>(String(load(SERVING_SETTINGS_KEY, DEFAULT_SERVING_SETTINGS).minSolidG))
+  const [liquidDraft, setLiquidDraft] = useState<string>(String(load(SERVING_SETTINGS_KEY, DEFAULT_SERVING_SETTINGS).minLiquidMl))
 
   useEffect(() => {
-    localStorage.setItem(PREFERENCES_KEY, JSON.stringify(selected))
-  }, [selected])
+    setItem(PREFERENCES_KEY, selected)
+    queryClient.invalidateQueries({ queryKey: ['userProfile'] })
+  }, [selected, queryClient])
 
   function saveBudget() {
     setBudget(budgetDraft)
-    localStorage.setItem(BUDGET_KEY, budgetDraft)
+    setItem(BUDGET_KEY, budgetDraft)
+    queryClient.invalidateQueries({ queryKey: ['userProfile'] })
+  }
+
+  function saveServing() {
+    const updated: ServingSettings = {
+      minSolidG: Math.max(1, parseInt(solidDraft, 10) || DEFAULT_SERVING_SETTINGS.minSolidG),
+      minLiquidMl: Math.max(1, parseInt(liquidDraft, 10) || DEFAULT_SERVING_SETTINGS.minLiquidMl),
+    }
+    setServingSettings(updated)
+    setItem(SERVING_SETTINGS_KEY, updated)
+    queryClient.invalidateQueries({ queryKey: ['userProfile'] })
   }
 
   function toggle(id: string) {
@@ -66,21 +83,21 @@ export function PreferencesPage() {
       <main className="max-w-7xl mx-auto px-4 py-6 space-y-8">
         <section>
           <label className="text-sm font-medium text-foreground mb-2 block">Dietary choices</label>
-          <div className="rounded-lg border border-border overflow-hidden">
+          <Card className="overflow-hidden">
             {DIETARY_OPTIONS.map((option) => {
               const checked = selected.includes(option.id)
               return (
                 <button
                   key={option.id}
                   onClick={() => toggle(option.id)}
-                  className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-foreground transition-colors hover:bg-accent"
+                  className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-foreground transition-colors hover:bg-accent border-b border-border last:border-b-0"
                 >
                   <span className="flex-1 text-left">{option.label}</span>
                   {checked && <Check className="h-4 w-4 text-foreground shrink-0" />}
                 </button>
               )
             })}
-          </div>
+          </Card>
         </section>
 
         <section>
@@ -100,13 +117,54 @@ export function PreferencesPage() {
               inputMode="numeric"
               value={budgetDraft}
               placeholder="e.g. 100"
-              // Allow digits only — strip anything else as the user types/pastes.
               onChange={(e) => setBudgetDraft(e.target.value.replace(/\D/g, ''))}
             />
             <Button type="submit" disabled={budgetDraft === budget}>
               Enter
             </Button>
           </form>
+        </section>
+
+        <section>
+          <h2 className="text-sm font-medium text-foreground mb-2">Serving size thresholds</h2>
+          <p className="text-xs text-muted-foreground mb-4">
+            Products with declared serving sizes below these values will be flagged as potentially misleading.
+          </p>
+          <Card className="p-4 space-y-4">
+            <div>
+              <label htmlFor="min-solid" className="text-xs font-medium text-foreground block mb-1.5">
+                Min solid serving (g)
+              </label>
+              <Input
+                id="min-solid"
+                type="text"
+                inputMode="numeric"
+                value={solidDraft}
+                placeholder={String(DEFAULT_SERVING_SETTINGS.minSolidG)}
+                onChange={(e) => setSolidDraft(e.target.value.replace(/\D/g, ''))}
+              />
+            </div>
+            <div>
+              <label htmlFor="min-liquid" className="text-xs font-medium text-foreground block mb-1.5">
+                Min liquid serving (ml)
+              </label>
+              <Input
+                id="min-liquid"
+                type="text"
+                inputMode="numeric"
+                value={liquidDraft}
+                placeholder={String(DEFAULT_SERVING_SETTINGS.minLiquidMl)}
+                onChange={(e) => setLiquidDraft(e.target.value.replace(/\D/g, ''))}
+              />
+            </div>
+            <Button
+              onClick={saveServing}
+              disabled={solidDraft === String(servingSettings.minSolidG) && liquidDraft === String(servingSettings.minLiquidMl)}
+              size="sm"
+            >
+              Save
+            </Button>
+          </Card>
         </section>
       </main>
     </div>
