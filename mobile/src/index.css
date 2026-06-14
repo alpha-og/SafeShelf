@@ -74,6 +74,9 @@
   * {
     @apply border-border;
   }
+  html, body {
+    @apply overflow-hidden h-dvh;
+  }
   body {
     @apply bg-background text-foreground;
   }
