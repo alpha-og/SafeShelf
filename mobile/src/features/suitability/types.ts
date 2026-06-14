@@ -40,6 +40,7 @@ export interface Rule {
 
 export interface ConditionThreshold {
   disease: string
+  code: string
   rules: Rule[]
   recommendations: string[]
   exclusions: string[]

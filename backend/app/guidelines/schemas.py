@@ -9,6 +9,7 @@ _EATING_OCCASIONS = 3
 
 _PER_SERVING_MAX: dict[str, dict[str, float]] = {
     "fiber": {"g": 20},
+    "dietary_fiber": {"g": 20},
     "sodium": {"mg": 3000},
     "salt": {"mg": 5000},
     "saturated_fat": {"g": 30},
@@ -16,8 +17,11 @@ _PER_SERVING_MAX: dict[str, dict[str, float]] = {
     "sugars": {"g": 80},
     "added_sugars": {"g": 80},
     "protein": {"g": 80},
+    "proteins": {"g": 80},
     "carbohydrates": {"g": 150},
+    "carbs": {"g": 150},
     "fat": {"g": 80},
+    "total_fat": {"g": 80},
     "cholesterol": {"mg": 800},
     "energy": {"kcal": 1500},
 }
@@ -48,7 +52,8 @@ class Rule(BaseModel):
     @field_validator("value")
     @classmethod
     def sanitize_threshold(cls, v: float, info) -> float:
-        nutrient = info.data.get("nutrient", "")
+        raw = info.data.get("nutrient", "")
+        nutrient = raw.lower().replace("-", "_").replace(" ", "_")
         unit = info.data.get("unit", "")
         operator = info.data.get("operator", "")
         if operator not in ("ge", "gt"):

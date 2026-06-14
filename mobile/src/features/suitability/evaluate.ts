@@ -97,7 +97,12 @@ function convertUnit(value: number, from: string, to: string): number {
   if (from === 'g' && to === 'mg') return value * 1000
   if (from === 'g' && to === 'mcg') return value * 1_000_000
   if (from === 'mg' && to === 'g') return value / 1000
+  if (from === 'mg' && to === 'mcg') return value * 1000
+  if (from === 'mcg' && to === 'g') return value / 1_000_000
+  if (from === 'mcg' && to === 'mg') return value / 1000
   if (from === 'kcal' && to === 'kJ') return value * 4.184
+  if (from === 'kJ' && to === 'kcal') return value / 4.184
+  console.warn('convertUnit: unknown pair', { from, to })
   return value
 }
 
@@ -149,7 +154,14 @@ const DAILY_VALUE_HINTS: Record<string, { max: number; unit: string }> = {
 function getDailyHint(nutrient: string, value: number, unit: string): string | null {
   const hint = DAILY_VALUE_HINTS[nutrient]
   if (!hint) return null
-  const converted = unit === hint.unit ? value : unit === 'g' && hint.unit === 'mg' ? value * 1000 : unit === 'mg' && hint.unit === 'g' ? value / 1000 : value
+  const converted = unit === hint.unit ? value
+    : unit === 'g' && hint.unit === 'mg' ? value * 1000
+    : unit === 'mg' && hint.unit === 'g' ? value / 1000
+    : unit === 'mcg' && hint.unit === 'mg' ? value / 1000
+    : unit === 'mg' && hint.unit === 'mcg' ? value * 1000
+    : unit === 'g' && hint.unit === 'mcg' ? value * 1_000_000
+    : unit === 'mcg' && hint.unit === 'g' ? value / 1_000_000
+    : value
   if (converted > hint.max) return 'daily'
   return null
 }

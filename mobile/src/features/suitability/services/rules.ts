@@ -7,6 +7,7 @@ const ALIASES_CACHE_KEY = 'safeshelf:ingredient_aliases'
 
 function flattenEntry(threshold: {
   disease: string
+  code: string
   entries?: Array<{
     rules?: Rule[]
     recommendations?: string[]
@@ -17,6 +18,7 @@ function flattenEntry(threshold: {
   const entry = threshold.entries?.[0] ?? {}
   return {
     disease: threshold.disease,
+    code: threshold.code,
     rules: entry.rules ?? [],
     recommendations: entry.recommendations ?? [],
     exclusions: entry.exclusions ?? [],
