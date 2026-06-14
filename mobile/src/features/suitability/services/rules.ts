@@ -26,10 +26,14 @@ function flattenEntry(threshold: {
   }
 }
 
-async function fetchAndCacheConditionRule(code: string): Promise<ConditionThreshold> {
-  const response = await api.get(`/v1/guidelines/${code}`)
-  const rule = flattenEntry(response.data)
-  return rule
+async function fetchAndCacheConditionRule(code: string): Promise<ConditionThreshold | null> {
+  try {
+    const response = await api.get(`/v1/guidelines/${code}`)
+    return flattenEntry(response.data)
+  } catch (err: any) {
+    if (err.response?.status === 404) return null
+    throw err
+  }
 }
 
 export function useConditionRules(codes: string[]) {
