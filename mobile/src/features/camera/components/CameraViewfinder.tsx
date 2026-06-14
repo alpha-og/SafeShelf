@@ -10,14 +10,15 @@ import { CapturePreview } from './CapturePreview'
 import { scanStore } from '../services/scanStore'
 
 export function CameraViewfinder() {
-  const { videoRef, mode, error, isCameraReady, capturePhoto, pickFromGallery, setMode } = useCamera()
+  const { videoRef, mode, error, isCameraReady, capturePhoto, pickFromGallery, setMode, stopCamera, startCamera } = useCamera()
   const [capturedImage, setCapturedImage] = useState<string | null>(() => scanStore.capturedImage)
 
   useEffect(() => {
     if (capturedImage) {
       scanStore.capturedImage = capturedImage
+      stopCamera()
     }
-  }, [capturedImage])
+  }, [capturedImage, stopCamera])
 
   const handleCapture = async () => {
     const photo = await capturePhoto()
@@ -32,6 +33,7 @@ export function CameraViewfinder() {
   const handleRetake = () => {
     scanStore.clearAll()
     setCapturedImage(null)
+    startCamera()
   }
 
   return (
