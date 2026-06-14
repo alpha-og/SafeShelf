@@ -5,6 +5,16 @@ from bs4 import BeautifulSoup
 from openai import AsyncOpenAI
 
 from app.shared.config import settings
+HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/137.0.0.0 Safari/537.36"
+    ),
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Referer": "https://www.google.com/",
+}
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -17,10 +27,12 @@ client = AsyncOpenAI(
 
 URLS: list[str] = [
     "https://www.who.int/news-room/fact-sheets/detail/healthy-diet",
-    "https://www.fao.org/nutrition/education/food-dietary-guidelines",
-    "https://ods.od.nih.gov/HealthInformation/Dietary_Reference_Intakes.aspx",
-    "https://www.fao.org/fao-who-codexalimentarius",
+    "https://www.fao.org/nutrition/education/food-dietary-guidelines/regions/countries/india/en/",
+    "https://www.niddk.nih.gov/health-information/kidney-disease/chronic-kidney-disease-ckd/healthy-eating-adults-chronic-kidney-disease",
+    "https://professional.diabetes.org/clinical-support/nutrition-wellness",
     "https://www.fao.org/food-safety/scientific-advice/jecfa/en/",
+    "https://www.heart.org/en/health-topics/high-blood-pressure/changes-you-can-make-to-manage-high-blood-pressure/shaking-the-salt-habit-to-lower-high-blood-pressure",
+    "https://www.heart.org/en/healthy-living/healthy-eating/eat-smart/sodium/sodium-and-salt"
 ]
 
 _EXTRACT_SYSTEM_PROMPT = """You are a nutrition guideline parser. Given raw text from medical/nutrition guidelines, extract structured data into JSON.
@@ -63,11 +75,12 @@ Rules:
 
 
 async def scrape_guidelines(url: str) -> str:
-    async with httpx.AsyncClient(timeout=30,verify=False) as client:
+    async with httpx.AsyncClient(timeout=30,verify=False,headers=HEADERS,
+    follow_redirects=True,) as client:
         resp = await client.get(url)
         resp.raise_for_status()
     soup = BeautifulSoup(resp.text, "lxml")
-    for tag in soup(["script", "style", "nav", "footer", "header"]):
+    for tag in soup(["script", "style", "nav", "footer", "header","aside","noscript","svg"]):
         tag.decompose()
     return soup.get_text(separator="\n", strip=True)
 

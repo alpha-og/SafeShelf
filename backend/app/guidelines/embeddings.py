@@ -1,3 +1,5 @@
+import asyncio
+
 import chromadb
 from chromadb.utils import embedding_functions
 
@@ -14,12 +16,18 @@ def _get_collection():
     )
 
 
-def store_embeddings(text: str, disease: str, source: str) -> None:
+def _store_embeddings_sync(text: str, disease: str, source: str) -> None:
     collection = _get_collection()
     chunks = [p.strip() for p in text.split("\n\n") if p.strip()]
     ids = [f"{disease}-{i}" for i in range(len(chunks))]
     metadatas = [{"disease": disease, "source": source, "chunk": i} for i, _ in enumerate(chunks)]
-    collection.add(documents=chunks, ids=ids, metadatas=metadatas)
+    # Use upsert so re-ingestion updates existing chunks instead of failing on duplicate IDs.
+    collection.upsert(documents=chunks, ids=ids, metadatas=metadatas)
+
+
+async def store_embeddings(text: str, disease: str, source: str) -> None:
+    # Chroma and embedding generation are sync/blocking; run in a worker thread.
+    await asyncio.to_thread(_store_embeddings_sync, text, disease, source)
 
 
 def search_similar(query: str, n: int = 5) -> list[dict]:

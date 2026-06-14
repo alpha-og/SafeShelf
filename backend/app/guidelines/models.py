@@ -8,11 +8,8 @@ from app.shared.utils import utcnow
 class ConditionThreshold(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     disease: str = Field(index=True)
-    rules: list[dict] = Field(default_factory=list, sa_type=JSON)
-    recommendations: list[str] = Field(default_factory=list, sa_type=JSON)
-    exclusions: list[str] = Field(default_factory=list, sa_type=JSON)
-    interaction_rules: list[dict] = Field(default_factory=list, sa_type=JSON)
-    source: str | None = None
+    code: str = Field(default="UNKNOWN", index=True)
+    entries: list[dict] = Field(default_factory=list, sa_type=JSON)
     version: str = Field(default="1.0")
     created_at: datetime = Field(default_factory=utcnow)
 
