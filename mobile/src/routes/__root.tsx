@@ -8,9 +8,9 @@ interface RouterContext {
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: () => (
-    <>
+    <div className="min-h-dvh bg-background text-foreground antialiased font-sans selection:bg-primary/20">
       <Outlet />
-      <TanStackRouterDevtools />
-    </>
+      {import.meta.env.DEV && <TanStackRouterDevtools />}
+    </div>
   ),
 })
