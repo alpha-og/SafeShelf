@@ -1,4 +1,4 @@
-import type { ProductInfo } from '@/features/camera/services/detection'
+import type { ProductInfo } from '@/features/products/services/product'
 import type {
   ConditionThreshold,
   SuitabilityCheck,

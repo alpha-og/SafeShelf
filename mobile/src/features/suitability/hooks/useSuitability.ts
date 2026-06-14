@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import type { ProductInfo } from '@/features/camera/services/detection'
+import type { ProductInfo } from '@/features/products/services/product'
 import { evaluate } from '../evaluate'
 import { useConditionRules, useAliases } from '../services/rules'
 import { useUserProfile } from './useUserProfile'

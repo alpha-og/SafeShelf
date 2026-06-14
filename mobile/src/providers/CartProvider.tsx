@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { getItem, setItem } from '@/lib/storage'
-import type { ProductInfo } from '@/features/camera/services/detection'
+import type { ProductInfo } from '@/features/products/services/product'
 
 export interface CartItem {
   product: ProductInfo

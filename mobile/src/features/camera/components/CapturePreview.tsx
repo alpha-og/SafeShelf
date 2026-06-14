@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { useProductDetection } from '../hooks/useProductDetection'
 import type { ScanMode } from '../hooks/useCamera'
 import { TopBar } from './TopBar'
-import { ProductSheet } from './ProductSheet'
+import { ProductSheet } from '@/features/products/components/ProductSheet'
 import { scanStore } from '../services/scanStore'
 
 interface CapturePreviewProps {

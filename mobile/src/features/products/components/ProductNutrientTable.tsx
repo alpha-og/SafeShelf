@@ -47,7 +47,7 @@ interface NutrientRow {
   level: string | null
 }
 
-export function NutrientTable({
+export function ProductNutrientTable({
   nutrients,
   servingInfo,
   nutrientLevels,

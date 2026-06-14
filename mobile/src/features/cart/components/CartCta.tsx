@@ -1,7 +1,7 @@
 import { ShoppingCart, Trash2, ChevronUp, ChevronDown } from 'lucide-react'
 import { ShinyButton } from '@/components/reactbits/ShinyButton'
 import type { CartItem } from '@/providers/CartProvider'
-import type { ProductInfo } from '@/features/camera/services/detection'
+import type { ProductInfo } from '@/features/products/services/product'
 
 interface CartCtaProps {
   product: ProductInfo

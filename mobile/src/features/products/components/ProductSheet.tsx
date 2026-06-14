@@ -1,16 +1,15 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, useAnimation, type PanInfo } from 'framer-motion'
-import { ArrowLeft, ArrowRight, ShoppingCart, AlertTriangle, Trash2, Minus, Plus } from 'lucide-react'
+import { ArrowRight, AlertTriangle } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/providers/CartProvider'
-import type { ProductInfo } from '../services/detection'
+import type { ProductInfo } from '../services/product'
 import { useSuitability } from '@/features/suitability/hooks/useSuitability'
-import { SuitabilityBadge } from '@/features/suitability/components/SuitabilityBadge'
 import { SuitabilityBreakdown } from '@/features/suitability/components/SuitabilityBreakdown'
-
 import { AuroraBackground } from '@/components/reactbits/AuroraBackground'
 import { CartCta } from '@/features/cart/components/CartCta'
+import { ProductHero } from './ProductHero'
 
 interface ProductSheetProps {
   isProcessing: boolean
@@ -137,107 +136,19 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
             </>
           ) : result ? (
             <div className="flex flex-col flex-1">
-              {/* Banner - fills top, drag indicator overlaid */}
-              <div className="shrink-0 relative w-full h-56">
-                {result.imageUrl ? (
-                  <img
-                    src={result.imageUrl}
-                    alt={result.productName || 'Product'}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-white/5 flex items-center justify-center">
-                    <span className="text-white/40 text-sm font-medium">No Image</span>
-                  </div>
-                )}
+              <ProductHero
+                product={result}
+                suitability={suitability}
+                cartItem={cartItem}
+                addToCart={addToCart}
+                removeFromCart={removeFromCart}
+                updateQuantity={updateQuantity}
+                onBack={handleDismiss}
+                dragIndicator
+                peekGradient={!isFull}
+                hideCartIcon={isFull}
+              />
 
-                {/* Top gradient — peek only */}
-                {!isFull && (
-                  <div className="absolute top-0 left-0 right-0 h-24 bg-linear-to-b from-black/60 to-transparent pointer-events-none z-10" />
-                )}
-
-                {/* Drag indicator overlaid on banner */}
-                <div className="absolute top-0 left-0 right-0 flex justify-center pt-3 pb-2 z-10">
-                  <div className="w-12 h-1.5 rounded-full bg-white/30 backdrop-blur-md" />
-                </div>
-
-                {/* Back button overlaid */}
-                <div className="absolute top-0 left-0 z-20 p-3">
-                  <button
-                    className="flex items-center justify-center w-9 h-9 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-colors border border-white/15"
-                    onClick={handleDismiss}
-                  >
-                    <ArrowLeft className="h-5 w-5" />
-                  </button>
-                </div>
-
-                {/* Cart icon — peek only */}
-                {!isFull && (
-                  <div className="absolute top-0 right-0 z-20 p-3">
-                    {cartItem ? (
-                      <div className="flex items-center gap-0.5 bg-white/10 backdrop-blur-md rounded-full px-1.5 py-1 border border-white/15">
-                        <button
-                          className="flex items-center justify-center w-7 h-7 rounded-full text-red-400 hover:bg-white/10 transition-colors"
-                          onClick={() => removeFromCart(cartItem.product.barcode!)}
-                          disabled={!result.barcode}
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-7 h-7 rounded-full text-white hover:bg-white/10 transition-colors"
-                          onClick={() => {
-                            if (cartItem.quantity <= 1) {
-                              removeFromCart(cartItem.product.barcode!)
-                            } else {
-                              updateQuantity(cartItem.product.barcode!, cartItem.quantity - 1)
-                            }
-                          }}
-                          disabled={!result.barcode}
-                        >
-                          <Minus className="h-3.5 w-3.5" />
-                        </button>
-                        <span className="text-white text-xs font-semibold tabular-nums min-w-5 text-center">
-                          {cartItem.quantity}
-                        </span>
-                        <button
-                          className="flex items-center justify-center w-7 h-7 rounded-full text-white hover:bg-white/10 transition-colors"
-                          onClick={() => addToCart(result)}
-                          disabled={!result.barcode}
-                        >
-                          <Plus className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        className="flex items-center justify-center w-9 h-9 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-colors border border-white/15"
-                        onClick={() => addToCart(result)}
-                        disabled={!result.barcode}
-                      >
-                        <ShoppingCart className="h-4 w-4" />
-                      </button>
-                    )}
-                  </div>
-                )}
-
-                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent pointer-events-none" />
-
-                {/* Bottom info: name/brand left, badge right */}
-                <div className="absolute bottom-0 left-0 right-0 p-5 flex items-end justify-between gap-4">
-                  <div className="space-y-1 min-w-0">
-                    <h1 className="text-2xl font-bold text-white truncate">
-                      {result.productName || 'Unknown Product'}
-                    </h1>
-                    {result.brand && (
-                      <p className="text-white/70 text-base truncate">{result.brand}</p>
-                    )}
-                  </div>
-                  <div className="shrink-0">
-                    <SuitabilityBadge result={suitability} />
-                  </div>
-                </div>
-              </div>
-
-              {/* Scrollable content */}
               <div className="flex-1 overflow-y-auto px-4 pt-6 space-y-6 relative z-20 no-scrollbar">
                 {suitability?.serving?.flagged && (
                   <p className="text-xs text-amber-500 font-medium text-center">
@@ -269,7 +180,6 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
                 )}
               </div>
 
-              {/* Sticky CTA */}
               <div className="shrink-0 h-14 px-4 mb-4 bg-linear-to-t from-slate-950 via-slate-950/90 to-transparent z-30">
                 <CartCta
                   product={result}

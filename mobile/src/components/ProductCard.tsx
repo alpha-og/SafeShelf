@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, CardContent } from '@/components/ui/card'
-import type { ProductInfo } from '@/features/camera/services/detection'
+import type { ProductInfo } from '@/features/products/services/product'
 
 interface ProductCardProps {
   product: ProductInfo

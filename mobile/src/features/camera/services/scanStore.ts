@@ -1,4 +1,4 @@
-import type { ProductInfo } from './detection'
+import type { ProductInfo } from '@/features/products/services/product'
 
 interface ScanStore {
   capturedImage: string | null
