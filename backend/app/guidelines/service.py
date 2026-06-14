@@ -1,4 +1,4 @@
-from fastapi import HTTPException, status
+from fastapi import HTTPException
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -6,7 +6,6 @@ from app.shared.who_icd import fetch_icd11_code, get_valid_who_token
 from app.guidelines.agent import URLS, extract_thresholds, scrape_guidelines
 from app.guidelines.models import ConditionThreshold, IngredientAlias
 from app.guidelines.schemas import sanitize_rules
-from app.shared.utils import utcnow
 
 
 async def import_guidelines(session: AsyncSession) -> dict:
@@ -32,13 +31,17 @@ async def import_guidelines(session: AsyncSession) -> dict:
             row = None
             if icd_code != "UNKNOWN":
                 existing = await session.exec(
-                    select(ConditionThreshold).where(ConditionThreshold.code == icd_code)
+                    select(ConditionThreshold).where(
+                        ConditionThreshold.code == icd_code
+                    )
                 )
                 row = existing.first()
 
             if row is None:
                 existing = await session.exec(
-                    select(ConditionThreshold).where(ConditionThreshold.disease == standard_name)
+                    select(ConditionThreshold).where(
+                        ConditionThreshold.disease == standard_name
+                    )
                 )
                 row = existing.first()
 
@@ -77,7 +80,9 @@ async def get_guideline_by_code(code: str, session: AsyncSession) -> ConditionTh
     )
     row = result.first()
     if not row:
-        raise HTTPException(status_code=404, detail=f"Guideline for code '{code}' not found")
+        raise HTTPException(
+            status_code=404, detail=f"Guideline for code '{code}' not found"
+        )
     return row
 
 
