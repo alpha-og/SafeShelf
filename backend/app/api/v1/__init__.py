@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from app.analysis.router import router as analysis_router
 from app.auth.router import router as auth_router
 from app.cart.router import router as cart_router
+from app.conditions.router import router as conditions_router
 from app.guidelines.router import router as guidelines_router
 from app.products.router import router as products_router
 from app.profiles.router import router as profiles_router
@@ -14,6 +15,7 @@ v1_router = APIRouter(prefix="/v1")
 v1_router.include_router(analysis_router)
 v1_router.include_router(auth_router)
 v1_router.include_router(cart_router)
+v1_router.include_router(conditions_router)
 v1_router.include_router(guidelines_router)
 v1_router.include_router(products_router)
 v1_router.include_router(profiles_router)

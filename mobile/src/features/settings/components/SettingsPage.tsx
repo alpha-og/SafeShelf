@@ -1,9 +1,11 @@
-import { ArrowLeft, Sun } from 'lucide-react'
+import { ArrowLeft, Sun, Settings2, Info } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 
 const settingsItems = [
   { to: '/settings/appearance' as const, label: 'Appearance', icon: Sun },
+  { to: '/settings/preferences' as const, label: 'Preferences', icon: Settings2 },
+  { to: '/settings/constraints' as const, label: 'Constraints', icon: Info },
 ]
 
 export function SettingsPage() {

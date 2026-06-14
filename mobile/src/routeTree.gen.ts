@@ -18,6 +18,8 @@ import { Route as AuthSignupRouteImport } from './routes/_auth.signup'
 import { Route as AuthSigninRouteImport } from './routes/_auth.signin'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
+import { Route as AuthenticatedSettingsPreferencesRouteImport } from './routes/_authenticated/settings/preferences'
+import { Route as AuthenticatedSettingsConstraintsRouteImport } from './routes/_authenticated/settings/constraints'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
@@ -65,6 +67,18 @@ const AuthenticatedSettingsIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
+const AuthenticatedSettingsPreferencesRoute =
+  AuthenticatedSettingsPreferencesRouteImport.update({
+    id: '/preferences',
+    path: '/preferences',
+    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any)
+const AuthenticatedSettingsConstraintsRoute =
+  AuthenticatedSettingsConstraintsRouteImport.update({
+    id: '/constraints',
+    path: '/constraints',
+    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any)
 const AuthenticatedSettingsAppearanceRoute =
   AuthenticatedSettingsAppearanceRouteImport.update({
     id: '/appearance',
@@ -80,6 +94,8 @@ export interface FileRoutesByFullPath {
   '/cart': typeof AuthenticatedCartRoute
   '/history': typeof AuthenticatedHistoryRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/settings/constraints': typeof AuthenticatedSettingsConstraintsRoute
+  '/settings/preferences': typeof AuthenticatedSettingsPreferencesRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -89,6 +105,8 @@ export interface FileRoutesByTo {
   '/cart': typeof AuthenticatedCartRoute
   '/history': typeof AuthenticatedHistoryRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/settings/constraints': typeof AuthenticatedSettingsConstraintsRoute
+  '/settings/preferences': typeof AuthenticatedSettingsPreferencesRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
 }
 export interface FileRoutesById {
@@ -102,6 +120,8 @@ export interface FileRoutesById {
   '/_authenticated/history': typeof AuthenticatedHistoryRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/_authenticated/settings/constraints': typeof AuthenticatedSettingsConstraintsRoute
+  '/_authenticated/settings/preferences': typeof AuthenticatedSettingsPreferencesRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
 }
 export interface FileRouteTypes {
@@ -114,6 +134,8 @@ export interface FileRouteTypes {
     | '/cart'
     | '/history'
     | '/settings/appearance'
+    | '/settings/constraints'
+    | '/settings/preferences'
     | '/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -123,6 +145,8 @@ export interface FileRouteTypes {
     | '/cart'
     | '/history'
     | '/settings/appearance'
+    | '/settings/constraints'
+    | '/settings/preferences'
     | '/settings'
   id:
     | '__root__'
@@ -135,6 +159,8 @@ export interface FileRouteTypes {
     | '/_authenticated/history'
     | '/_authenticated/'
     | '/_authenticated/settings/appearance'
+    | '/_authenticated/settings/constraints'
+    | '/_authenticated/settings/preferences'
     | '/_authenticated/settings/'
   fileRoutesById: FileRoutesById
 }
@@ -208,6 +234,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/settings/preferences': {
+      id: '/_authenticated/settings/preferences'
+      path: '/preferences'
+      fullPath: '/settings/preferences'
+      preLoaderRoute: typeof AuthenticatedSettingsPreferencesRouteImport
+      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    }
+    '/_authenticated/settings/constraints': {
+      id: '/_authenticated/settings/constraints'
+      path: '/constraints'
+      fullPath: '/settings/constraints'
+      preLoaderRoute: typeof AuthenticatedSettingsConstraintsRouteImport
+      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    }
     '/_authenticated/settings/appearance': {
       id: '/_authenticated/settings/appearance'
       path: '/appearance'
@@ -232,12 +272,18 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface AuthenticatedSettingsRouteRouteChildren {
   AuthenticatedSettingsAppearanceRoute: typeof AuthenticatedSettingsAppearanceRoute
+  AuthenticatedSettingsConstraintsRoute: typeof AuthenticatedSettingsConstraintsRoute
+  AuthenticatedSettingsPreferencesRoute: typeof AuthenticatedSettingsPreferencesRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
 }
 
 const AuthenticatedSettingsRouteRouteChildren: AuthenticatedSettingsRouteRouteChildren =
   {
     AuthenticatedSettingsAppearanceRoute: AuthenticatedSettingsAppearanceRoute,
+    AuthenticatedSettingsConstraintsRoute:
+      AuthenticatedSettingsConstraintsRoute,
+    AuthenticatedSettingsPreferencesRoute:
+      AuthenticatedSettingsPreferencesRoute,
     AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
   }
 
