@@ -1,5 +1,4 @@
 import json
-import urllib3
 import httpx
 from bs4 import BeautifulSoup
 from openai import AsyncOpenAI
@@ -16,9 +15,7 @@ HEADERS = {
     "Referer": "https://www.google.com/",
 }
 
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-http_client = httpx.AsyncClient(verify=False)
+http_client = httpx.AsyncClient()
 client = AsyncOpenAI(
     api_key=settings.GROQ_API_KEY,
     base_url="https://api.groq.com/openai/v1",
@@ -84,8 +81,7 @@ IMPORTANT — Output per-serving thresholds, NOT daily values:
 
 
 async def scrape_guidelines(url: str) -> str:
-    async with httpx.AsyncClient(timeout=30,verify=False,headers=HEADERS,
-    follow_redirects=True,) as client:
+    async with httpx.AsyncClient(timeout=30, headers=HEADERS, follow_redirects=True) as client:
         resp = await client.get(url)
         resp.raise_for_status()
     soup = BeautifulSoup(resp.text, "lxml")
