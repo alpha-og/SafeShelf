@@ -24,12 +24,12 @@ export function ProductDetailPage() {
   })
 
   const { result: suitability } = useSuitability(product ?? null)
-  const cartItem = product?.barcode ? items.find((i) => i.product.barcode === product.barcode) : undefined
+ const cartItem = product?.barcode ? items.find((i) => i.product.barcode === product.barcode) : undefined
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col bg-slate-950 text-slate-50">
-        <div className="flex-1 flex flex-col">
+      <div className="flex flex-col flex-1 min-h-0 bg-slate-950 text-slate-50">
+        <div className="flex-1 flex flex-col min-h-0">
           <div className="shrink-0 relative w-full h-56 bg-white/5 animate-pulse" />
           <div className="flex-1 px-4 pt-6 space-y-4">
             <div className="h-8 bg-white/5 rounded-lg w-3/4 animate-pulse" />
@@ -43,7 +43,7 @@ export function ProductDetailPage() {
 
   if (error || !product) {
     return (
-      <div className="min-h-screen flex flex-col bg-slate-950 text-slate-50">
+      <div className="flex flex-col flex-1 min-h-0 bg-slate-950 text-slate-50">
         <div className="flex-1 flex flex-col items-center justify-center text-center px-4">
           <p className="text-slate-400">Could not load product.</p>
         </div>
@@ -51,71 +51,67 @@ export function ProductDetailPage() {
     )
   }
 
-  return (
-    <div className="min-h-screen flex flex-col">
-      <AuroraBackground className="flex flex-col flex-1 min-h-0 relative overflow-visible">
-        <div className="absolute top-0 left-0 right-0 z-10">
-          <ProductHero
-            product={product}
-            suitability={suitability}
-            cartItem={cartItem}
-            addToCart={addToCart}
-            removeFromCart={removeFromCart}
-            updateQuantity={updateQuantity}
-            onBack={() => navigate({ to: '/' })}
-          />
-        </div>
+return (
+  <AuroraBackground className="h-full">
+    <ProductHero
+      product={product}
+      suitability={suitability}
+      cartItem={cartItem}
+      addToCart={addToCart}
+      removeFromCart={removeFromCart}
+      updateQuantity={updateQuantity}
+      onBack={() => navigate({ to: '/' })}
+    />
 
-        <div className="flex-1 overflow-y-auto px-4 mt-60 space-y-6 relative z-20 no-scrollbar min-h-0">
-          <ProductServingNote serving={suitability?.serving} />
+    <div className="flex-1 min-h-0 overflow-y-auto px-4 pt-4 space-y-6 z-20 pb-[calc(5rem+env(safe-area-inset-bottom))]">
+      <ProductServingNote serving={suitability?.serving} />
 
-          {suitability && suitability.checks.length > 0 && (
-            <section>
-              <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Suitability</h3>
-              <SuitabilityBreakdown checks={suitability.checks} />
-            </section>
-          )}
+      {suitability && suitability.checks.length > 0 && (
+        <section>
+          <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Suitability</h3>
+          <SuitabilityBreakdown checks={suitability.checks} />
+        </section>
+      )}
 
-          <ProductScoreBadges
-            nutriscoreGrade={product.nutriscoreGrade}
-            ecoscoreGrade={product.ecoscoreGrade}
-            novaGroup={product.novaGroup}
-            labels={product.labels}
-          />
+      <ProductScoreBadges
+        nutriscoreGrade={product.nutriscoreGrade}
+        ecoscoreGrade={product.ecoscoreGrade}
+        novaGroup={product.novaGroup}
+        labels={product.labels}
+      />
 
-          <section>
-            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Nutrition</h3>
-            <ProductNutrientTable
-              nutrients={product.nutrients}
-              servingInfo={suitability?.serving ?? null}
-              nutrientLevels={product.nutrientLevels}
-            />
-          </section>
+      <section>
+        <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Nutrition</h3>
+        <ProductNutrientTable
+          nutrients={product.nutrients}
+          servingInfo={suitability?.serving ?? null}
+          nutrientLevels={product.nutrientLevels}
+        />
+      </section>
 
-          <ProductInfoSections
-            categories={product.categories}
-            allergens={product.allergens}
-            allergenTraces={product.allergenTraces}
-            ingredients={product.ingredients}
-          />
+      <ProductInfoSections
+        categories={product.categories}
+        allergens={product.allergens}
+        allergenTraces={product.allergenTraces}
+        ingredients={product.ingredients}
+      />
 
-          <div className="flex justify-center pb-2">
-            <p className="text-[10px] text-white/30 font-mono tracking-widest uppercase">
-              Barcode: {product.barcode}
-            </p>
-          </div>
-        </div>
-
-        <div className="shrink-0 px-4 pt-8 pb-[calc(1rem+env(safe-area-inset-bottom))] bg-linear-to-t from-slate-950 via-slate-950/90 to-transparent z-30">
-          <CartCta
-            product={product}
-            cartItem={cartItem}
-            addToCart={addToCart}
-            removeFromCart={removeFromCart}
-            updateQuantity={updateQuantity}
-          />
-        </div>
-      </AuroraBackground>
+      <div className="flex justify-center pb-2">
+        <p className="text-[10px] text-white/30 font-mono tracking-widest uppercase">
+          Barcode: {product.barcode}
+        </p>
+      </div>
     </div>
-  )
+
+    <div className="absolute bottom-0 w-full shrink-0 px-4 pt-8 pb-[calc(1rem+env(safe-area-inset-bottom))] bg-linear-to-t from-slate-950 via-slate-950/90 to-transparent z-30">
+      <CartCta
+        product={product}
+        cartItem={cartItem}
+        addToCart={addToCart}
+        removeFromCart={removeFromCart}
+        updateQuantity={updateQuantity}
+      />
+    </div>
+  </AuroraBackground>
+)
 }
