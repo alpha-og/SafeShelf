@@ -100,7 +100,7 @@ export function SuitabilityBreakdown({ checks }: SuitabilityBreakdownProps) {
                 <span className={`w-2 h-2 rounded-full ${dotColor(group.status)}`} />
                 <span className="text-sm font-medium text-foreground">{group.name}</span>
               </span>
-              {isOpen ? <ChevronUp className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" /> : <ChevronDown className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />}
+              {isOpen ? <ChevronUp className="h-3.5 w-3.5 text-muted-foreground shrink-0" /> : <ChevronDown className="h-3.5 w-3.5 text-muted-foreground shrink-0" />}
             </Button>
             {isOpen && (
               <div className="ml-4 pl-3 border-l-2 border-border space-y-1.5 pb-1.5">
@@ -109,9 +109,9 @@ export function SuitabilityBreakdown({ checks }: SuitabilityBreakdownProps) {
                   .map((check, i) => (
                     <div key={i} className="flex items-start gap-2 text-sm py-0.5">
                       {check.status === 'fail' ? (
-                        <CircleX className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-red-600" />
+                        <CircleX className="h-3.5 w-3.5 mt-0.5 shrink-0 text-red-600" />
                       ) : (
-                        <CircleAlert className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-amber-600" />
+                        <CircleAlert className="h-3.5 w-3.5 mt-0.5 shrink-0 text-amber-600" />
                       )}
                       <div className="min-w-0">
                         <p className="font-medium text-foreground leading-tight">{check.label}</p>
