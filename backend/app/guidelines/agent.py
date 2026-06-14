@@ -71,6 +71,15 @@ Rules:
 - operator: "le" = <=, "ge" = >=, "lt" = <, "gt" = >, "eq" = exactly
 - Only extract thresholds explicitly mentioned in the text. Do not guess.
 - Create one entry per disease or condition mentioned. If none is specified, use "general".
+
+IMPORTANT — Output per-serving thresholds, NOT daily values:
+- If a guideline says "30g fiber per day", convert to per-serving: divide by 3 (≈10g per serving).
+  WRONG: {"nutrient": "fiber", "value": 30, "operator": "ge", "unit": "g"}
+  CORRECT: {"nutrient": "fiber", "value": 10, "operator": "ge", "unit": "g"}
+- For "limit" guidelines (e.g., "≤ 2000mg sodium/day"), divide by 3 and use operator "le".
+- For "recommend" guidelines (e.g., "≥ 25g fiber/day"), divide by 3 and use operator "ge".
+- If a value looks like a daily total and you are unsure how to convert, estimate by dividing by 3.
+
 - Return ONLY valid JSON, no markdown, no explanation."""
 
 

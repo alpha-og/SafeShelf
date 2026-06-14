@@ -10,6 +10,16 @@ class BarcodeResponse(BaseModel):
     nutrients: dict = {}
     allergens: list[str] = []
     image_url: str | None = None
+    nutriscore_grade: str | None = None
+    ecoscore_grade: str | None = None
+    nova_group: int | None = None
+    nutrient_levels: dict = {}
+    labels: list[str] = []
+    allergen_traces: list[str] = []
+    image_nutrition_url: str | None = None
+    image_ingredients_url: str | None = None
+    quantity: str | None = None
+    serving_size: str | None = None
 
 
 class SearchResponse(BaseModel):

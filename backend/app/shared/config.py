@@ -23,6 +23,12 @@ class Settings(BaseSettings):
     WHO_CLIENT_ID: str = ""
     WHO_CLIENT_SECRET: str = ""
 
+    REQUIRED_ENV_VARS: list[str] = [
+        "WHO_CLIENT_ID",
+        "WHO_CLIENT_SECRET",
+        "GROQ_API_KEY",
+    ]
+
     model_config = {
         "env_file": [
             ROOT_DIR / ".env",      # root shared config
@@ -32,4 +38,9 @@ class Settings(BaseSettings):
         "env_file_encoding": "utf-8",
         "extra": "ignore",
     }
+
+    def get_missing_required(self) -> list[str]:
+        return [key for key in self.REQUIRED_ENV_VARS if not getattr(self, key, "")]
+
+
 settings = Settings()

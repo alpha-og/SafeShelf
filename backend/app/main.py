@@ -1,4 +1,5 @@
 import logging
+import os
 import sys
 from contextlib import asynccontextmanager
 
@@ -22,12 +23,22 @@ from app.shared.middleware import setup_middleware
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    missing = settings.get_missing_required()
+    if missing:
+        logger.error(
+            "Required environment variables are missing:\n  %s\n"
+            "Set them in backend/.env.local or as environment variables.\n"
+            "Server startup aborted.",
+            "\n  ".join(f"- {k}" for k in missing),
+        )
+        os._exit(1)
+
     try:
         async with engine.begin() as conn:
             await conn.run_sync(SQLModel.metadata.create_all)
     except Exception:
         logger.exception("Failed to connect to database at %s", settings.DATABASE_URL)
-        sys.exit(1)
+        os._exit(1)
     yield
     await engine.dispose()
 

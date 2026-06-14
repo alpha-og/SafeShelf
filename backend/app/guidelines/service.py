@@ -5,6 +5,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from app.shared.who_icd import fetch_icd11_code, get_valid_who_token
 from app.guidelines.agent import URLS, extract_thresholds, scrape_guidelines
 from app.guidelines.models import ConditionThreshold, IngredientAlias
+from app.guidelines.schemas import sanitize_rules
 from app.shared.utils import utcnow
 
 
@@ -21,7 +22,7 @@ async def import_guidelines(session: AsyncSession) -> dict:
             standard_name = icd.get("standard_name", disease)
             icd_code = icd.get("icd11_code", "UNKNOWN")
             entry = {
-                "rules": ct.get("rules", []),
+                "rules": sanitize_rules(ct.get("rules", [])),
                 "recommendations": ct.get("recommendations", []),
                 "exclusions": ct.get("exclusions", []),
                 "interaction_rules": ct.get("interaction_rules", []),
@@ -78,6 +79,11 @@ async def get_guideline_by_code(code: str, session: AsyncSession) -> ConditionTh
     if not row:
         raise HTTPException(status_code=404, detail=f"Guideline for code '{code}' not found")
     return row
+
+
+async def get_aliases(session: AsyncSession) -> dict[str, str]:
+    result = await session.exec(select(IngredientAlias))
+    return {a.alias: a.trigger for a in result.all()}
 
 
 async def list_guidelines(session: AsyncSession) -> dict:
