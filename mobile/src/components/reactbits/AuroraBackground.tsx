@@ -16,7 +16,7 @@ export function AuroraBackground({
   return (
     <div
       className={cn(
-        'relative flex flex-col min-h-screen bg-slate-950 text-slate-50 overflow-hidden',
+        'relative flex flex-col min-h-0 bg-slate-950 text-slate-50',
         className
       )}
       {...props}
