@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
-import { motion, useAnimation, type PanInfo, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, ArrowRight, ShoppingCart, Check, AlertTriangle, ChevronDown } from 'lucide-react'
+import { motion, useAnimation, type PanInfo } from 'framer-motion'
+import { ArrowLeft, ArrowRight, ShoppingCart, AlertTriangle, Trash2, Minus, Plus } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/providers/CartProvider'
@@ -10,11 +10,7 @@ import { SuitabilityBadge } from '@/features/suitability/components/SuitabilityB
 import { SuitabilityBreakdown } from '@/features/suitability/components/SuitabilityBreakdown'
 
 import { AuroraBackground } from '@/components/reactbits/AuroraBackground'
-import { SpotlightCard } from '@/components/reactbits/SpotlightCard'
-import { TiltCard } from '@/components/reactbits/TiltCard'
-import { GradientText } from '@/components/reactbits/GradientText'
-import { AnimatedChip } from '@/components/reactbits/AnimatedChip'
-import { ShinyButton } from '@/components/reactbits/ShinyButton'
+import { CartCta } from '@/features/cart/components/CartCta'
 
 interface ProductSheetProps {
   isProcessing: boolean
@@ -26,55 +22,23 @@ interface ProductSheetProps {
 
 const OFFRANGE = typeof window !== 'undefined' ? window.innerHeight : 700
 
-function IngredientsAccordion({ ingredients }: { ingredients: string[] }) {
-  const [isOpen, setIsOpen] = useState(false)
-  return (
-    <div className="border border-white/10 rounded-2xl overflow-hidden bg-black/20 backdrop-blur-md">
-      <button 
-        className="w-full px-4 py-3 flex items-center justify-between font-semibold text-sm"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <span>Ingredients</span>
-        <motion.div animate={{ rotate: isOpen ? 180 : 0 }}>
-          <ChevronDown className="h-4 w-4 text-muted-foreground" />
-        </motion.div>
-      </button>
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden"
-          >
-            <div className="px-4 pb-4 text-sm text-foreground/80 leading-relaxed">
-              {ingredients.join(', ')}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  )
-}
-
 export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRef }: ProductSheetProps) {
   const navigate = useNavigate()
   const { result: suitability } = useSuitability(result)
-  const [peekY] = useState(() => (typeof window !== 'undefined' ? window.innerHeight * 0.1 : 100))
+  const [peekY] = useState(() => (typeof window !== 'undefined' ? window.innerHeight * 0.5 : 400))
   const controls = useAnimation()
   const [isFull, setIsFull] = useState(false)
-  const [isAdded, setIsAdded] = useState(false)
-  const { addToCart } = useCart()
+  const { items, addToCart, removeFromCart, updateQuantity } = useCart()
+  const cartItem = result?.barcode ? items.find((i) => i.product.barcode === result.barcode) : undefined
 
   useEffect(() => {
     if (result || isProcessing || error) {
-      setIsFull(true)
       controls.start({
-        y: 0,
+        y: peekY,
         transition: { type: 'spring', stiffness: 300, damping: 30 },
       })
     }
-  }, [result, isProcessing, error, controls])
+  }, [result, isProcessing, error, controls, peekY])
 
   const snapTo = useCallback((y: number) => {
     controls.start({
@@ -101,8 +65,13 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
     const { offset, velocity } = info
 
     if (isFull) {
-      if (offset.y > 150 || (offset.y > 50 && velocity.y > 800)) {
-        handleDismiss()
+      if (offset.y > 0) {
+        if (offset.y > 150 || (offset.y > 50 && velocity.y > 800)) {
+          handleDismiss()
+          return
+        }
+        setIsFull(false)
+        snapTo(peekY)
         return
       }
       snapTo(0)
@@ -126,7 +95,10 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="absolute inset-0 z-10 bg-background/60"
-          onClick={handleDismiss}
+          onClick={() => {
+            setIsFull(false)
+            snapTo(peekY)
+          }}
         />
       )}
 
@@ -140,129 +112,143 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
         animate={controls}
         onDragEnd={handleDragEnd}
       >
-        <AuroraBackground className="flex-1 rounded-t-3xl">
-          <div className="flex justify-center pt-3 pb-2 relative z-20">
-            <div className="w-12 h-1.5 rounded-full bg-white/30 backdrop-blur-md" />
-          </div>
-
-          <div className="flex items-center px-4 pb-3 relative z-20">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hover:bg-white/10"
-              onClick={handleDismiss}
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-          </div>
-
-          <div className="flex-1 px-4 pb-32 overflow-y-auto relative z-20 no-scrollbar">
-            {isProcessing ? (
-              <div className="space-y-4 pt-10">
-                <div className="w-48 h-48 mx-auto rounded-3xl bg-white/5 animate-pulse" />
+        <AuroraBackground className="flex-1 rounded-t-3xl flex flex-col min-h-0">
+          {isProcessing ? (
+            <>
+              <div className="flex justify-center pt-3 pb-2 relative z-20 shrink-0">
+                <div className="w-12 h-1.5 rounded-full bg-white/30 backdrop-blur-md" />
+              </div>
+              <div className="flex-1 px-4 space-y-4 pt-10">
+                <div className="w-full h-56 bg-white/5 animate-pulse" />
                 <div className="h-8 bg-white/5 rounded-lg w-3/4 mx-auto animate-pulse" />
                 <div className="h-4 bg-white/5 rounded w-1/2 mx-auto animate-pulse" />
               </div>
-            ) : error ? (
-              <div className="flex flex-col items-center justify-center py-20 text-center">
+            </>
+          ) : error ? (
+            <>
+              <div className="flex justify-center pt-3 pb-2 relative z-20 shrink-0">
+                <div className="w-12 h-1.5 rounded-full bg-white/30 backdrop-blur-md" />
+              </div>
+              <div className="flex-1 flex flex-col items-center justify-center py-20 text-center px-4">
                 <AlertTriangle className="h-12 w-12 text-destructive mb-4 opacity-80" />
                 <p className="text-destructive font-bold text-xl mb-2">Oops!</p>
-                <p className="text-white/60 text-sm max-w-[250px]">{error}</p>
+                <p className="text-white/60 text-sm max-w-62.5">{error}</p>
               </div>
-            ) : result ? (
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="space-y-8"
-              >
-                {/* Hero Section */}
-                <div className="flex flex-col items-center text-center space-y-6 pt-4">
-                  <TiltCard className="w-56 h-56 mx-auto">
-                    {result.imageUrl ? (
-                      <div className="w-full h-full rounded-3xl overflow-hidden bg-white/5 border border-white/10 shadow-2xl backdrop-blur-sm">
-                        <img src={result.imageUrl} alt={result.productName || 'Product'} className="w-full h-full object-contain p-4" />
-                      </div>
-                    ) : (
-                      <div className="w-full h-full rounded-3xl bg-white/5 flex items-center justify-center border border-white/10 shadow-2xl backdrop-blur-sm">
-                        <span className="text-white/40 text-sm font-medium">No Image</span>
-                      </div>
-                    )}
-                  </TiltCard>
-                  
-                  <div className="space-y-2">
-                    <GradientText className="text-3xl font-extrabold tracking-tight">
-                      {result.productName || 'Unknown Product'}
-                    </GradientText>
-                    {result.brand && (
-                      <p className="text-white/60 text-lg font-medium">{result.brand}</p>
-                    )}
-                    <div className="flex justify-center pt-1">
-                      <SuitabilityBadge result={suitability} />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Categories */}
-                {result.categories && result.categories.length > 0 && (
-                  <div className="space-y-3">
-                    <h4 className="text-sm font-bold text-white/80 uppercase tracking-wider pl-1">Categories</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {result.categories.map((c, i) => (
-                        <AnimatedChip key={i} index={i}>
-                          {c}
-                        </AnimatedChip>
-                      ))}
-                    </div>
+            </>
+          ) : result ? (
+            <div className="flex flex-col flex-1">
+              {/* Banner - fills top, drag indicator overlaid */}
+              <div className="shrink-0 relative w-full h-56">
+                {result.imageUrl ? (
+                  <img
+                    src={result.imageUrl}
+                    alt={result.productName || 'Product'}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-white/5 flex items-center justify-center">
+                    <span className="text-white/40 text-sm font-medium">No Image</span>
                   </div>
                 )}
 
-                {/* Serving size flag */}
+                {/* Top gradient — peek only */}
+                {!isFull && (
+                  <div className="absolute top-0 left-0 right-0 h-24 bg-linear-to-b from-black/60 to-transparent pointer-events-none z-10" />
+                )}
+
+                {/* Drag indicator overlaid on banner */}
+                <div className="absolute top-0 left-0 right-0 flex justify-center pt-3 pb-2 z-10">
+                  <div className="w-12 h-1.5 rounded-full bg-white/30 backdrop-blur-md" />
+                </div>
+
+                {/* Back button overlaid */}
+                <div className="absolute top-0 left-0 z-20 p-3">
+                  <button
+                    className="flex items-center justify-center w-9 h-9 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-colors border border-white/15"
+                    onClick={handleDismiss}
+                  >
+                    <ArrowLeft className="h-5 w-5" />
+                  </button>
+                </div>
+
+                {/* Cart icon — peek only */}
+                {!isFull && (
+                  <div className="absolute top-0 right-0 z-20 p-3">
+                    {cartItem ? (
+                      <div className="flex items-center gap-0.5 bg-white/10 backdrop-blur-md rounded-full px-1.5 py-1 border border-white/15">
+                        <button
+                          className="flex items-center justify-center w-7 h-7 rounded-full text-red-400 hover:bg-white/10 transition-colors"
+                          onClick={() => removeFromCart(cartItem.product.barcode!)}
+                          disabled={!result.barcode}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          className="flex items-center justify-center w-7 h-7 rounded-full text-white hover:bg-white/10 transition-colors"
+                          onClick={() => {
+                            if (cartItem.quantity <= 1) {
+                              removeFromCart(cartItem.product.barcode!)
+                            } else {
+                              updateQuantity(cartItem.product.barcode!, cartItem.quantity - 1)
+                            }
+                          }}
+                          disabled={!result.barcode}
+                        >
+                          <Minus className="h-3.5 w-3.5" />
+                        </button>
+                        <span className="text-white text-xs font-semibold tabular-nums min-w-5 text-center">
+                          {cartItem.quantity}
+                        </span>
+                        <button
+                          className="flex items-center justify-center w-7 h-7 rounded-full text-white hover:bg-white/10 transition-colors"
+                          onClick={() => addToCart(result)}
+                          disabled={!result.barcode}
+                        >
+                          <Plus className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        className="flex items-center justify-center w-9 h-9 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-colors border border-white/15"
+                        onClick={() => addToCart(result)}
+                        disabled={!result.barcode}
+                      >
+                        <ShoppingCart className="h-4 w-4" />
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent pointer-events-none" />
+
+                {/* Bottom info: name/brand left, badge right */}
+                <div className="absolute bottom-0 left-0 right-0 p-5 flex items-end justify-between gap-4">
+                  <div className="space-y-1 min-w-0">
+                    <h1 className="text-2xl font-bold text-white truncate">
+                      {result.productName || 'Unknown Product'}
+                    </h1>
+                    {result.brand && (
+                      <p className="text-white/70 text-base truncate">{result.brand}</p>
+                    )}
+                  </div>
+                  <div className="shrink-0">
+                    <SuitabilityBadge result={suitability} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Scrollable content */}
+              <div className="flex-1 overflow-y-auto px-4 pt-6 space-y-6 relative z-20 no-scrollbar">
                 {suitability?.serving?.flagged && (
                   <p className="text-xs text-amber-500 font-medium text-center">
                     Serving size ({suitability.serving.declaredQuantity}{suitability.serving.unit}) is unusually small
                   </p>
                 )}
 
-                {/* Suitability Breakdown */}
                 {suitability && suitability.checks.length > 0 && (
                   <SuitabilityBreakdown checks={suitability.checks} />
                 )}
 
-                {/* Allergens */}
-                {result.allergens && result.allergens.length > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.2 }}
-                  >
-                    <SpotlightCard spotlightColor="rgba(239, 68, 68, 0.15)" className="p-5 border-destructive/30">
-                      <div className="flex items-center gap-2 mb-3">
-                        <AlertTriangle className="h-5 w-5 text-destructive" />
-                        <h4 className="text-sm font-bold text-destructive uppercase tracking-wider">Allergens Warning</h4>
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {result.allergens.map((a, i) => (
-                          <span key={i} className="px-3 py-1.5 rounded-xl bg-destructive/20 text-destructive-foreground text-xs font-bold border border-destructive/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]">
-                            {a}
-                          </span>
-                        ))}
-                      </div>
-                    </SpotlightCard>
-                  </motion.div>
-                )}
-
-                {/* Ingredients Accordion */}
-                {result.ingredients && result.ingredients.length > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                  >
-                    <IngredientsAccordion ingredients={result.ingredients} />
-                  </motion.div>
-                )}
-
-                {/* View full details */}
                 {result.barcode && (
                   <Button
                     variant="outline"
@@ -274,47 +260,35 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
                   </Button>
                 )}
 
-                {/* Barcode */}
                 {result.barcode && (
-                  <div className="pt-4 flex justify-center">
+                  <div className="flex justify-center">
                     <p className="text-[10px] text-white/30 font-mono tracking-widest uppercase">
                       Barcode: {result.barcode}
                     </p>
                   </div>
                 )}
-              </motion.div>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-20 text-center text-white/40">
+              </div>
+
+              {/* Sticky CTA */}
+              <div className="shrink-0 h-14 px-4 mb-4 bg-linear-to-t from-slate-950 via-slate-950/90 to-transparent z-30">
+                <CartCta
+                  product={result}
+                  cartItem={cartItem}
+                  addToCart={addToCart}
+                  removeFromCart={removeFromCart}
+                  updateQuantity={updateQuantity}
+                />
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="flex justify-center pt-3 pb-2 relative z-20 shrink-0">
+                <div className="w-12 h-1.5 rounded-full bg-white/30 backdrop-blur-md" />
+              </div>
+              <div className="flex-1 flex flex-col items-center justify-center py-20 text-center text-white/40">
                 <p className="text-sm">No product information available.</p>
               </div>
-            )}
-          </div>
-
-          {/* Sticky CTA Bottom Bar */}
-          {result && (
-            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-slate-950 via-slate-950/90 to-transparent z-30 pt-12">
-              <ShinyButton 
-                className="w-full"
-                onClick={() => {
-                  addToCart(result)
-                  setIsAdded(true)
-                  setTimeout(() => setIsAdded(false), 2000)
-                }}
-                disabled={!result.barcode || isAdded}
-              >
-                {isAdded ? (
-                  <>
-                    <Check className="h-6 w-6 text-green-400" />
-                    Added to Cart
-                  </>
-                ) : (
-                  <>
-                    <ShoppingCart className="h-6 w-6" />
-                    Add to Cart
-                  </>
-                )}
-              </ShinyButton>
-            </div>
+            </>
           )}
         </AuroraBackground>
       </motion.div>
