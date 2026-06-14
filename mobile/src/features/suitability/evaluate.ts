@@ -248,6 +248,7 @@ function checkAllergens(
         status: 'fail',
         label: `Contains ${allergen}`,
         detail: `${allergen} is in your allergen list`,
+        group: 'Allergens',
       })
     }
   }
@@ -271,6 +272,7 @@ function checkAllergenTraces(
         status: 'warn',
         label: `May contain ${trace}`,
         detail: `${trace} is in your allergen list — product may contain traces`,
+        group: 'Allergens',
       })
     }
   }
@@ -304,6 +306,7 @@ function checkNutrients(
           status: 'fail',
           label: nutrientFailLabel(rule.operator, rule.nutrient, threshold.disease),
           detail: `${converted.toFixed(1)}${rule.unit}/serving — ${pct.toFixed(0)}% of the ${rule.value}${rule.unit}${dailyStr} ${limitWord}`,
+          group: threshold.disease,
         })
       }
     }
@@ -339,6 +342,7 @@ function checkExclusions(
           status: 'fail',
           label: `Contains excluded ingredient: ${exclusion}`,
           detail: `${exclusion} is excluded for ${threshold.disease}`,
+          group: threshold.disease,
         })
       }
     }
@@ -382,6 +386,7 @@ function checkDietary(
             status: 'fail',
             label: `Not ${pref}: contains ${item}`,
             detail: `This product contains ${item}, which is not compatible with a ${pref} diet`,
+            group: 'Dietary preferences',
           })
           break
         }
@@ -400,6 +405,7 @@ function checkDietary(
             status: 'fail',
             label: `Exceeds ${pref} limit`,
             detail: `${capitalize(nutrientCheck.nutrient)} is ${converted.toFixed(1)}${nutrientCheck.unit} per 100g, exceeding the ${pref} limit of ${nutrientCheck.max}${nutrientCheck.unit}`,
+            group: 'Dietary preferences',
           })
         }
       }
@@ -442,6 +448,40 @@ export function evaluate(
   checks.push(
     ...checkDietary(product.ingredients, product.nutrients, profile.dietaryPreferences, aliases, product.labels),
   )
+
+  const checkGroups = new Set(checks.map((c) => c.group).filter(Boolean))
+
+  for (const threshold of matchedConditions) {
+    if (!checkGroups.has(threshold.disease)) {
+      checks.push({
+        type: 'nutrient',
+        status: 'pass',
+        label: 'All guidelines met',
+        detail: `All nutrient and ingredient guidelines for ${threshold.disease} are satisfied`,
+        group: threshold.disease,
+      })
+    }
+  }
+
+  if (profile.allergens.length > 0 && !checkGroups.has('Allergens')) {
+    checks.push({
+      type: 'allergen',
+      status: 'pass',
+      label: 'No allergen conflicts',
+      detail: 'This product does not contain any of your listed allergens',
+      group: 'Allergens',
+    })
+  }
+
+  if (profile.dietaryPreferences.length > 0 && !checkGroups.has('Dietary preferences')) {
+    checks.push({
+      type: 'diet',
+      status: 'pass',
+      label: 'All dietary preferences met',
+      detail: 'This product satisfies your dietary preferences',
+      group: 'Dietary preferences',
+    })
+  }
 
   const hasFail = checks.some((c) => c.status === 'fail')
   const hasWarn = checks.some((c) => c.status === 'warn')

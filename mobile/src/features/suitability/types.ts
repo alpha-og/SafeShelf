@@ -58,6 +58,7 @@ export interface SuitabilityCheck {
   status: SuitabilityStatus
   label: string
   detail: string
+  group?: string
 }
 
 export interface SuitabilityResult {

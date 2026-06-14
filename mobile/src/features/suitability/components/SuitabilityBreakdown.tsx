@@ -1,60 +1,129 @@
-import { CircleCheck, CircleAlert, CircleX, ChevronDown, ChevronUp } from 'lucide-react'
-import { useState } from 'react'
-import type { SuitabilityCheck } from '../types'
+import { useMemo, useState } from 'react'
+import { ChevronDown, ChevronUp, CircleAlert, CircleX } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import type { SuitabilityCheck, SuitabilityStatus } from '../types'
 
 interface SuitabilityBreakdownProps {
   checks: SuitabilityCheck[]
 }
 
-const statusConfig = {
-  pass: { icon: CircleCheck, color: 'text-green-600 dark:text-green-400' },
-  warn: { icon: CircleAlert, color: 'text-amber-600 dark:text-amber-400' },
-  fail: { icon: CircleX, color: 'text-red-600 dark:text-red-400' },
-} as const
+interface GroupInfo {
+  name: string
+  status: SuitabilityStatus
+  checks: SuitabilityCheck[]
+}
+
+const GROUP_ORDER = ['Allergens', 'Dietary preferences']
+
+function groupSort(a: GroupInfo, b: GroupInfo): number {
+  const aIdx = GROUP_ORDER.indexOf(a.name)
+  const bIdx = GROUP_ORDER.indexOf(b.name)
+  if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx
+  if (aIdx !== -1) return -1
+  if (bIdx !== -1) return 1
+  return a.name.localeCompare(b.name)
+}
+
+function dotColor(status: SuitabilityStatus): string {
+  switch (status) {
+    case 'fail': return 'bg-red-500'
+    case 'warn': return 'bg-amber-500'
+    case 'pass': return 'bg-green-500'
+  }
+}
 
 export function SuitabilityBreakdown({ checks }: SuitabilityBreakdownProps) {
-  const hasIssues = checks.some((c) => c.status !== 'pass')
-  const [open, setOpen] = useState(hasIssues)
+  const groups = useMemo(() => {
+    const map = new Map<string, SuitabilityCheck[]>()
+    for (const check of checks) {
+      const key = check.group ?? 'Other'
+      if (!map.has(key)) map.set(key, [])
+      map.get(key)!.push(check)
+    }
+
+    const result: GroupInfo[] = []
+    for (const [name, groupChecks] of map) {
+      const status: SuitabilityStatus = groupChecks.some((c) => c.status === 'fail')
+        ? 'fail'
+        : groupChecks.some((c) => c.status === 'warn')
+          ? 'warn'
+          : 'pass'
+      result.push({ name, status, checks: groupChecks })
+    }
+
+    result.sort(groupSort)
+    return result
+  }, [checks])
+
+  const [openGroups, setOpenGroups] = useState<Set<string>>(() => {
+    const initial = new Set<string>()
+    for (const group of groups) {
+      if (group.status !== 'pass') initial.add(group.name)
+    }
+    return initial
+  })
+
+  const toggleGroup = (name: string) => {
+    setOpenGroups((prev) => {
+      const next = new Set(prev)
+      if (next.has(name)) next.delete(name)
+      else next.add(name)
+      return next
+    })
+  }
 
   if (!checks.length) return null
 
-  const failCount = checks.filter((c) => c.status === 'fail').length
-  const warnCount = checks.filter((c) => c.status === 'warn').length
-
-  const summary =
-    failCount > 0
-      ? `${failCount} issue${failCount > 1 ? 's' : ''} found`
-      : warnCount > 0
-        ? `${warnCount} warning${warnCount > 1 ? 's' : ''}`
-        : 'All checks passed'
-
   return (
-    <div>
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between py-2 text-sm"
-      >
-        <span className="font-semibold text-foreground">{summary}</span>
-        {open ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
-      </button>
+    <div className="space-y-0.5">
+      {groups.map((group) => {
+        const hasIssues = group.status !== 'pass'
+        const isOpen = hasIssues && openGroups.has(group.name)
 
-      {open && (
-        <div className="space-y-2 pt-1">
-          {checks.map((check, i) => {
-            const Icon = statusConfig[check.status].icon
-            return (
-              <div key={i} className="flex items-start gap-2.5 text-sm">
-                <Icon className={`h-4 w-4 mt-0.5 flex-shrink-0 ${statusConfig[check.status].color}`} />
-                <div className="min-w-0">
-                  <p className="font-medium text-foreground">{check.label}</p>
-                  <p className="text-muted-foreground text-xs mt-0.5">{check.detail}</p>
-                </div>
+        if (!hasIssues) {
+          return (
+            <div key={group.name} className="flex items-center gap-2 px-2 py-1">
+              <span className={`w-2 h-2 rounded-full ${dotColor(group.status)}`} />
+              <span className="text-sm font-medium text-foreground">{group.name}</span>
+            </div>
+          )
+        }
+
+        return (
+          <div key={group.name}>
+            <Button
+              variant="ghost"
+              onClick={() => toggleGroup(group.name)}
+              className="w-full flex items-center justify-between gap-2 h-auto py-1.5 px-2"
+            >
+              <span className="flex items-center gap-2">
+                <span className={`w-2 h-2 rounded-full ${dotColor(group.status)}`} />
+                <span className="text-sm font-medium text-foreground">{group.name}</span>
+              </span>
+              {isOpen ? <ChevronUp className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" /> : <ChevronDown className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />}
+            </Button>
+            {isOpen && (
+              <div className="ml-4 pl-3 border-l-2 border-border space-y-1.5 pb-1.5">
+                {group.checks
+                  .filter((c) => c.status !== 'pass')
+                  .map((check, i) => (
+                    <div key={i} className="flex items-start gap-2 text-sm py-0.5">
+                      {check.status === 'fail' ? (
+                        <CircleX className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-red-600" />
+                      ) : (
+                        <CircleAlert className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-amber-600" />
+                      )}
+                      <div className="min-w-0">
+                        <p className="font-medium text-foreground leading-tight">{check.label}</p>
+                        <p className="text-muted-foreground text-xs mt-0.5">{check.detail}</p>
+                      </div>
+                    </div>
+                  ))}
               </div>
-            )
-          })}
-        </div>
-      )}
+            )}
+          </div>
+        )
+      })}
     </div>
   )
 }
