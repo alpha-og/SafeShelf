@@ -1,6 +1,6 @@
 import { BarcodeDetector, type BarcodeFormat } from 'barcode-detector/ponyfill'
 import { api } from '@/lib/axios'
-import type { ProductInfo } from '@/features/products/services/product'
+import { mapResponse, type ProductInfo } from '@/features/products/services/product'
 
 type ScanMode = 'auto' | 'barcode' | 'image' | 'nutrient-label'
 
@@ -63,7 +63,7 @@ export async function identifyProduct(imageData: string, mode: ScanMode): Promis
     if (!data) {
       throw new Error('Product not found or barcode not readable')
     }
-    return data as ProductInfo
+    return mapResponse(data)
   } catch (err: any) {
     console.error('Failed to identify product:', err)
     throw new Error(err.response?.data?.detail || 'Failed to identify product from image')

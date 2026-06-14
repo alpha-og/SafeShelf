@@ -21,7 +21,7 @@ export interface ProductInfo {
   servingSize: string | null
 }
 
-function mapResponse(data: Record<string, unknown>): ProductInfo {
+export function mapResponse(data: Record<string, unknown>): ProductInfo {
   return {
     barcode: (data.barcode as string) ?? null,
     productName: (data.product_name as string) ?? null,
