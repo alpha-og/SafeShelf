@@ -72,7 +72,7 @@ export function SignInForm() {
         </p>
       )}
 
-      <Button type="submit" className="w-full" disabled={signInMutation.isPending}>
+      <Button type="submit" className="w-full hover:scale-[1.02]" disabled={signInMutation.isPending}>
         {signInMutation.isPending ? 'Signing in...' : 'Sign in'}
       </Button>
     </form>
