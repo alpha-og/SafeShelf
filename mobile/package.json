@@ -11,7 +11,11 @@
     "preview": "vite preview",
     "cap:sync": "cap sync",
     "cap:android": "cap open android",
-    "cap:ios": "cap open ios"
+    "cap:ios": "cap open ios",
+    "get-ip": "node scripts/get-local-ip.mjs",
+    "get-host": "node scripts/get-host.mjs",
+    "cap:dev:android": "node scripts/cap-run.mjs android",
+    "cap:dev:ios": "node scripts/cap-run.mjs ios"
   },
   "dependencies": {
     "@capacitor-community/sqlite": "^8.1.0",
@@ -19,6 +23,7 @@
     "@capacitor/camera": "^8.2.0",
     "@capacitor/core": "^8.4.0",
     "@capacitor/ios": "^8.4.0",
+    "@capacitor/status-bar": "^8.0.2",
     "@radix-ui/react-collapsible": "^1.1.13",
     "@radix-ui/react-dropdown-menu": "^2.1.17",
     "@radix-ui/react-separator": "^1.1.9",

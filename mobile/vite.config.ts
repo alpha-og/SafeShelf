@@ -19,6 +19,13 @@ export default defineConfig(({ mode }) => {
     mobileHost = env.MOBILE_HOST
   }
 
+  let allowedHosts: true | string[] | undefined = true
+  if (env.MOBILE_ALLOWED_HOSTS === 'false') {
+    allowedHosts = undefined
+  } else if (env.MOBILE_ALLOWED_HOSTS && env.MOBILE_ALLOWED_HOSTS !== 'true') {
+    allowedHosts = env.MOBILE_ALLOWED_HOSTS.split(',').map(h => h.trim())
+  }
+
   const enableTls = env.MOBILE_TLS_ENABLED !== 'false'
 
   const plugins = [
@@ -40,6 +47,7 @@ export default defineConfig(({ mode }) => {
     server: {
       host: mobileHost,
       port: mobilePort,
+      allowedHosts,
       proxy: {
         '/v1': env.VITE_PROXY_TARGET || 'http://localhost:8926',
       },
