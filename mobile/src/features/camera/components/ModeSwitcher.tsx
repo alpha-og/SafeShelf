@@ -93,14 +93,14 @@ export function ModeSwitcher({ mode, onModeChange, cameraAvailable }: ModeSwitch
               {modes.map((_, i) => (
                 <div
                   key={i}
-                  className={`rounded-full transition-all duration-200 shrink-0 ${
+                  className={`rounded-full transition-all duration-200 shrink-0 bg-white ${
                     i === currentIndex
                     ? cameraAvailable
-                      ? 'bg-primary-foreground/80 w-1 h-1'
-                      : 'bg-primary-foreground/50 w-1 h-1'
+                      ? 'opacity-80 w-1 h-1'
+                      : 'opacity-50 w-1 h-1'
                     : cameraAvailable
-                      ? 'bg-primary-foreground/30 w-[5px] h-[5px]'
-                      : 'bg-primary-foreground/15 w-[5px] h-[5px]'
+                      ? 'opacity-30 w-[5px] h-[5px]'
+                      : 'opacity-15 w-[5px] h-[5px]'
                   }`}
                 />
               ))}

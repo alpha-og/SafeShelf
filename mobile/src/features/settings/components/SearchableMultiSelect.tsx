@@ -92,23 +92,23 @@ export function SearchableMultiSelect({
         </form>
 
         {showDropdown && (
-          <div className="absolute z-10 mt-1 w-full rounded-md border border-border bg-popover shadow-md overflow-hidden">
+          <div className="absolute z-10 mt-1 w-full rounded-2xl border border-border bg-popover shadow-md overflow-hidden">
             {isFetching ? (
               <div className="flex items-center gap-2 px-3 py-3 text-sm text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Searching…
               </div>
             ) : results.length > 0 ? (
-              <ul className="max-h-56 overflow-y-auto py-1">
+              <ul className="max-h-56 overflow-y-auto overflow-x-hidden py-1 no-scrollbar">
                 {results.map((item) => (
                   <li key={item.id}>
                     <button
                       type="button"
                       onClick={() => add(item)}
-                      className="w-full flex items-center gap-2 px-3 py-2.5 text-sm text-foreground text-left transition-colors hover:bg-accent"
+                      className="group w-full flex items-center gap-2 px-3 py-2.5 text-sm text-foreground text-left transition-colors hover:bg-primary/[0.12] hover:scale-[1.02] rounded-xl"
                     >
-                      <Plus className="h-4 w-4 text-muted-foreground shrink-0" />
                       <span className="flex-1">{item.name}</span>
+                      <Plus className="h-4 w-4 text-muted-foreground shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </button>
                   </li>
                 ))}
@@ -127,7 +127,7 @@ export function SearchableMultiSelect({
           {selected.map((item) => (
             <span
               key={item.id}
-              className="inline-flex items-center gap-1.5 rounded-full bg-secondary text-secondary-foreground pl-3 pr-1.5 py-1 text-sm"
+              className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 text-primary border border-primary/20 pl-3 pr-1.5 py-1 text-sm"
             >
               {item.name}
               <button
