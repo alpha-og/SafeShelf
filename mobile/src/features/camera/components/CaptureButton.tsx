@@ -11,8 +11,8 @@ export function CaptureButton({ onClick, disabled, cameraAvailable }: CaptureBut
       disabled={disabled}
         className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full border-4 flex items-center justify-center disabled:cursor-not-allowed transition-all ${
           cameraAvailable
-            ? 'border-foreground shadow-lg shadow-foreground/20 hover:shadow-foreground/30 active:scale-95'
-            : 'border-foreground/40'
+            ? 'border-foreground shadow-lg shadow-foreground/20 hover:shadow-foreground/30 hover:scale-[1.02] active:scale-95'
+            : 'border-foreground/40 hover:scale-[1.02]'
         }`}
       >
         <div

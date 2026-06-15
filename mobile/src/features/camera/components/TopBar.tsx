@@ -16,22 +16,22 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(
         onClick={() => navigate({ to: '/settings' })}
         className={`flex items-center justify-center w-10 h-10 rounded-full backdrop-blur-md border transition-colors ${
           cameraAvailable
-            ? 'bg-black/20 hover:bg-black/30 text-white/80 border-white/10'
-            : 'bg-black/10 text-white/50 border-white/5'
+            ? 'bg-primary/30 hover:bg-primary/40 hover:scale-[1.02] text-white/80 border-primary/30'
+            : 'bg-primary/20 hover:scale-[1.02] text-white/50 border-primary/20'
         }`}
       >
         <Settings className="h-5 w-5" />
       </button>
 
       <div className={`flex backdrop-blur-md rounded-full p-1 gap-0.5 border ${
-        cameraAvailable ? 'bg-black/20 border-white/10' : 'bg-black/10 border-white/5'
+        cameraAvailable ? 'bg-primary/30 hover:scale-[1.02] border-primary/30' : 'bg-primary/20 hover:scale-[1.02] border-primary/20'
       }`}>
         <button
           onClick={() => navigate({ to: '/cart' })}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
             cameraAvailable
-              ? 'text-white/70 hover:text-white hover:bg-white/10'
-              : 'text-white/40 hover:text-white/60'
+              ? 'text-white/70 hover:text-white hover:bg-primary-foreground/10 hover:scale-[1.02]'
+              : 'text-white/40 hover:text-white/60 hover:scale-[1.02]'
           }`}
         >
           <ShoppingCart className="h-3.5 w-3.5" />
@@ -41,8 +41,8 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(
           onClick={() => navigate({ to: '/history' })}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
             cameraAvailable
-              ? 'text-white/70 hover:text-white hover:bg-white/10'
-              : 'text-white/40 hover:text-white/60'
+              ? 'text-white/70 hover:text-white hover:bg-primary-foreground/10 hover:scale-[1.02]'
+              : 'text-white/40 hover:text-white/60 hover:scale-[1.02]'
           }`}
         >
           <History className="h-3.5 w-3.5" />
