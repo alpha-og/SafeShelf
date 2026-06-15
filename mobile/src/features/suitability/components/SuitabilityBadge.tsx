@@ -5,21 +5,21 @@ interface SuitabilityBadgeProps {
   result: SuitabilityResult | null
 }
 
-const config: Record<OverallStatus, { label: string; dot: string; badge: string }> = {
+const config: Record<OverallStatus, { label: string; dot: string; glass: string }> = {
   suitable: {
     label: 'Suitable',
-    dot: 'bg-green-500',
-    badge: 'bg-green-600 text-white border-green-600 hover:bg-green-600',
+    dot: 'bg-secondary',
+    glass: 'bg-secondary/15 backdrop-blur-md border-secondary/25 text-overlay-foreground',
   },
   caution: {
     label: 'Caution',
-    dot: 'bg-amber-500',
-    badge: 'bg-amber-500 text-white border-amber-500 hover:bg-amber-500',
+    dot: 'bg-accent',
+    glass: 'bg-accent/15 backdrop-blur-md border-accent/25 text-overlay-foreground',
   },
   unsuitable: {
     label: 'Unsuitable',
-    dot: 'bg-red-500',
-    badge: 'bg-red-600 text-white border-red-600 hover:bg-red-600',
+    dot: 'bg-destructive',
+    glass: 'bg-destructive/15 backdrop-blur-md border-destructive/25 text-overlay-foreground',
   },
 }
 
@@ -29,8 +29,8 @@ export function SuitabilityBadge({ result }: SuitabilityBadgeProps) {
   const c = config[result.overall]
 
   return (
-    <Badge className={`gap-2 px-3 py-1 text-sm font-bold shadow-sm ${c.badge}`}>
-      <span className={`w-3 h-3 rounded-full shadow-sm ${c.dot}`} />
+    <Badge className={`gap-2 px-3 py-1.5 text-xs font-semibold rounded-full hover:scale-105 ${c.glass}`}>
+      <span className={`w-3 h-3 rounded-full ${c.dot}`} />
       {c.label}
     </Badge>
   )
