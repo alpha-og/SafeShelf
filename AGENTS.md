@@ -19,13 +19,16 @@ safeshelf/
 │   │   └── __init__.py
 │   └── pyproject.toml   # Entrypoint: `uv run python -m app`
 └── mobile/         # React 19 + TypeScript 6 + Vite 8 + TanStack Router
-    └── src/
-        ├── routes/       # File-based routes; routeTree.gen.ts is auto-generated
-        ├── features/     # Feature modules (e.g. auth/)
-        ├── components/   # shadcn/ui components (button, card, input)
-        ├── providers/    # React context providers (AuthProvider)
-        ├── lib/          # API client, storage, utils
-        └── hooks/        # Shared hooks (useAuth)
+    ├── src/
+    │   ├── routes/       # File-based routes; routeTree.gen.ts is auto-generated
+    │   ├── features/     # Feature modules (e.g. auth/)
+    │   ├── components/   # shadcn/ui components (button, card, input)
+    │   ├── providers/    # React context providers (AuthProvider)
+    │   ├── lib/          # API client, storage, utils
+    │   └── hooks/        # Shared hooks (useAuth)
+    └── scripts/
+        ├── dev.mjs       # Unified dev CLI (setup, android, ios)
+        └── lib/          # Supporting modules (logger, env, system, certs, device)
 ```
 
 ## Commands
@@ -33,12 +36,15 @@ safeshelf/
 | Action | Command |
 |---|---|
 | Setup everything | `pnpm setup` (pnpm install + uv sync) |
-| Mobile dev server (port 5173) | `pnpm dev` or `pnpm mobile:dev` |
+| Full dev setup + SSL certs | `pnpm dev:setup` or `node mobile/scripts/dev.mjs setup` |
+| Mobile dev server (port 8826) | `pnpm dev` or `pnpm mobile:dev` |
 | Mobile build | `pnpm build` |
 | TypeScript check | `pnpm typecheck` (runs `tsc -b`) |
 | Lint | `pnpm lint` (ESLint) |
 | Capacitor sync | `pnpm cap:sync` |
 | Capacitor Android | `pnpm cap:android` |
+| Deploy to Android device | `pnpm dev:android` or `node mobile/scripts/dev.mjs android` |
+| Deploy to iOS device | `pnpm dev:ios` or `node mobile/scripts/dev.mjs ios` |
 | Backend dev server (port 8926) | `pnpm backend:dev` or `pnpm backend:serve` |
 | Backend sync deps | `pnpm backend:sync` (uv sync) |
 
@@ -48,7 +54,7 @@ Environment variables are loaded hierarchically:
 
 1. **`/.env`** — shared defaults (root, tracked in `.env.example`)
 2. **`/backend/.env`** / **`/mobile/.env`** — sub-package overrides
-3. **`/backend/.env.local`** — local-only overrides (gitignored)
+3. **`/backend/.env.local`** / **`/mobile/.env.local`** — local-only overrides (gitignored)
 
 Later values override earlier ones. Each sub-package can have its own `.env` for private secrets. See `/.env.example` for all shared variables.
 
@@ -74,3 +80,6 @@ Later values override earlier ones. Each sub-package can have its own `.env` for
 - **shadcn/ui** — components in `src/components/ui/`. `components.json` at mobile root.
 - **Path alias**: `@/` → `src/` (Vite resolve + tsconfig paths).
 - **Vite proxy**: `/v1` → `http://localhost:8926` in dev.
+- **Dev scripts**: Unified `scripts/dev.mjs` with subcommands (`setup`, `android`, `ios`). Supports `MOBILE_TLS_ENABLED` and `DEV_CERTS_MODE` env vars for SSL opt-out.
+- **SSL certs**: `dev:setup` uses mkcert for trusted HTTPS. CA must be installed on Android device (pushed via adb). iOS simulator trusts macOS keychain.
+- **Android network config**: `res/xml/network_security_config.xml` trusts user-installed CAs in debug builds.
