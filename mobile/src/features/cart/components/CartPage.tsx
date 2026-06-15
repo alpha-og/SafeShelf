@@ -14,14 +14,14 @@ export function CartPage() {
       <header className="border-b border-border sticky top-0 bg-background/80 backdrop-blur-md z-10">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => navigate({ to: '/' })}>
+            <Button variant="outline" size="icon" className="bg-primary/10 backdrop-blur-md border-primary/20 hover:bg-primary/20 hover:scale-[1.02]" onClick={() => navigate({ to: '/' })}>
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <ShoppingCart className="h-5 w-5 text-foreground" />
             <h1 className="text-xl font-bold text-foreground">Cart</h1>
           </div>
           {items.length > 0 && (
-            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive hover:bg-destructive/10" onClick={clearCart}>
+            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive hover:bg-destructive/10 hover:scale-[1.02]" onClick={clearCart}>
               <Trash2 className="h-5 w-5" />
             </Button>
           )}
@@ -54,7 +54,7 @@ export function CartPage() {
                     <Button 
                       variant="outline" 
                       size="icon" 
-                      className="h-8 w-8 rounded-full"
+                      className="h-8 w-8 rounded-full hover:scale-[1.02]"
                       onClick={() => updateQuantity(item.product.barcode!, item.quantity + 1)}
                     >
                       <Plus className="h-4 w-4" />
@@ -63,7 +63,7 @@ export function CartPage() {
                     <Button 
                       variant="outline" 
                       size="icon" 
-                      className="h-8 w-8 rounded-full text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/20"
+                      className="h-8 w-8 rounded-full text-destructive hover:text-destructive hover:bg-destructive/10 hover:scale-[1.02] border-destructive/20"
                       onClick={() => updateQuantity(item.product.barcode!, item.quantity - 1)}
                     >
                       <Minus className="h-4 w-4" />
