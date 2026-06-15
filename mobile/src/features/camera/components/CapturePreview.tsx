@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useProductDetection } from '../hooks/useProductDetection'
 import type { ScanMode } from '../hooks/useCamera'
@@ -16,6 +16,14 @@ interface CapturePreviewProps {
 export function CapturePreview({ image, mode, isCameraReady, onRetake }: CapturePreviewProps) {
   const { isProcessing, result, error } = useProductDetection(image, mode)
   const dismissRef = useRef<(() => void) | null>(null)
+  const topBarRef = useRef<HTMLDivElement>(null)
+  const [topBarHeight, setTopBarHeight] = useState(0)
+
+  useEffect(() => {
+    if (topBarRef.current) {
+      setTopBarHeight(topBarRef.current.offsetHeight)
+    }
+  }, [])
 
   useEffect(() => {
     if (result) {
@@ -42,7 +50,7 @@ export function CapturePreview({ image, mode, isCameraReady, onRetake }: Capture
         onClick={handleImageTap}
       />
 
-      <TopBar cameraAvailable={isCameraReady} />
+      <TopBar ref={topBarRef} cameraAvailable={isCameraReady} />
 
       <ProductSheet
         isProcessing={isProcessing}
@@ -50,6 +58,7 @@ export function CapturePreview({ image, mode, isCameraReady, onRetake }: Capture
         error={error}
         onDismiss={onRetake}
         dismissRef={dismissRef}
+        topOffset={topBarHeight}
       />
     </motion.div>
   )

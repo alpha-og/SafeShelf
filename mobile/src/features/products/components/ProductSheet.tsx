@@ -17,11 +17,12 @@ interface ProductSheetProps {
   error: string | null
   onDismiss: () => void
   dismissRef?: React.MutableRefObject<(() => void) | null>
+  topOffset?: number
 }
 
 const OFFRANGE = typeof window !== 'undefined' ? window.innerHeight : 700
 
-export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRef }: ProductSheetProps) {
+export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRef, topOffset = 0 }: ProductSheetProps) {
   const navigate = useNavigate()
   const { result: suitability } = useSuitability(result)
   const [peekY] = useState(() => (typeof window !== 'undefined' ? window.innerHeight * 0.5 : 400))
@@ -102,8 +103,8 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
       )}
 
       <motion.div
-        className="absolute inset-x-0 bottom-0 z-20 flex flex-col rounded-t-3xl overflow-hidden shadow-[0_-10px_40px_rgba(0,0,0,0.3)] pb-[var(--sab)]"
-        style={{ height: '100dvh' }}
+        className="absolute inset-x-0 bottom-0 z-20 flex flex-col rounded-t-3xl overflow-hidden shadow-[0_-10px_40px_rgba(0,0,0,0.3)]"
+        style={{ height: `calc(100dvh - ${topOffset}px)` }}
         initial={{ y: OFFRANGE }}
         drag="y"
         dragConstraints={{ top: 0 }}
@@ -135,7 +136,7 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
               </div>
             </>
           ) : result ? (
-            <div className="flex flex-col flex-1">
+            <div className="flex flex-col flex-1 pb-(--sab)">
               <ProductHero
                 product={result}
                 suitability={suitability}
