@@ -12,10 +12,9 @@
     "cap:sync": "cap sync",
     "cap:android": "cap open android",
     "cap:ios": "cap open ios",
-    "get-ip": "node scripts/get-local-ip.mjs",
-    "get-host": "node scripts/get-host.mjs",
-    "cap:dev:android": "node scripts/cap-run.mjs android",
-    "cap:dev:ios": "node scripts/cap-run.mjs ios"
+    "dev:setup": "node scripts/dev.mjs setup",
+    "dev:android": "node scripts/dev.mjs android",
+    "dev:ios": "node scripts/dev.mjs ios"
   },
   "dependencies": {
     "@capacitor-community/sqlite": "^8.1.0",

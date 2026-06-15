@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import basicSsl from '@vitejs/plugin-basic-ssl'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import path from 'path'
+import fs from 'fs'
 
 export default defineConfig(({ mode }) => {
   const rootEnv = loadEnv(mode, path.resolve(__dirname, '..'), '')
@@ -28,13 +29,34 @@ export default defineConfig(({ mode }) => {
 
   const enableTls = env.MOBILE_TLS_ENABLED !== 'false'
 
+  const certDir = path.resolve(__dirname, 'dev-certs')
+  const certFile = path.join(certDir, 'hostname.local+2.pem')
+  const keyFile = path.join(certDir, 'hostname.local+2-key.pem')
+  const hasMkcert = fs.existsSync(certFile) && fs.existsSync(keyFile)
+
   const plugins = [
     tanstackRouter({ target: 'react', autoCodeSplitting: true }),
     react(),
     tailwindcss(),
   ]
-  if (enableTls) {
+  if (enableTls && !hasMkcert) {
     plugins.push(basicSsl())
+  }
+
+  const server: Record<string, unknown> = {
+    host: mobileHost,
+    port: mobilePort,
+    allowedHosts,
+    proxy: {
+      '/v1': env.VITE_PROXY_TARGET || 'http://localhost:8926',
+    },
+  }
+
+  if (enableTls && hasMkcert) {
+    server.https = {
+      key: fs.readFileSync(keyFile),
+      cert: fs.readFileSync(certFile),
+    }
   }
 
   return {
@@ -44,14 +66,7 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, './src'),
       },
     },
-    server: {
-      host: mobileHost,
-      port: mobilePort,
-      allowedHosts,
-      proxy: {
-        '/v1': env.VITE_PROXY_TARGET || 'http://localhost:8926',
-      },
-    },
+    server,
     build: {
       outDir: 'dist',
       emptyOutDir: true,
