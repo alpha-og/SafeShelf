@@ -10,7 +10,7 @@ export function CartPage() {
   const { items, isLoading, clearCart, updateQuantity } = useCart()
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="flex-1 min-h-0 bg-background flex flex-col">
       <header className="border-b border-border sticky top-0 bg-background/80 backdrop-blur-md z-10">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">

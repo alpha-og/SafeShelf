@@ -44,7 +44,7 @@ export function CameraViewfinder() {
 
         <TopBar cameraAvailable={isCameraReady} />
 
-        <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center pb-[calc(2rem_+_env(safe-area-inset-bottom))] sm:pb-[calc(4rem_+_env(safe-area-inset-bottom))] gap-4 sm:gap-6">
+        <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center pb-[calc(2rem_+_var(--sab))] sm:pb-[calc(4rem_+_var(--sab))] gap-4 sm:gap-6">
           <div className="flex items-center gap-6 sm:gap-8">
             <GalleryButton onClick={handleGalleryPick} cameraAvailable={isCameraReady} />
             <CaptureButton onClick={handleCapture} disabled={!isCameraReady} cameraAvailable={isCameraReady} />
