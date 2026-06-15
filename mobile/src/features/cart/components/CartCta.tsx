@@ -1,4 +1,5 @@
-import { ShoppingCart, Trash2, Plus, Minus } from 'lucide-react'
+import { ShoppingCart, Trash2 } from 'lucide-react'
+import { QuantityAdjuster } from '@/components/QuantityAdjuster'
 import { ShinyButton } from '@/components/reactbits/ShinyButton'
 import type { CartItem } from '@/providers/CartProvider'
 import type { ProductInfo } from '@/features/products/services/product'
@@ -30,26 +31,17 @@ export function CartCta({ product, cartItem, addToCart, removeFromCart, updateQu
           </span>
         </div>
 
-        <div className="flex items-stretch gap-0.5">
-          <button
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary/70 hover:bg-primary/20 hover:text-primary hover:scale-[1.02] transition-colors"
-            onClick={() => {
-              if (cartItem.quantity <= 1) {
-                removeFromCart(cartItem.product.barcode!)
-              } else {
-                updateQuantity(cartItem.product.barcode!, cartItem.quantity - 1)
-              }
-            }}
-          >
-            <Minus className="h-4 w-4" />
-          </button>
-          <button
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/20 text-primary hover:bg-primary/30 hover:scale-[1.02] transition-colors"
-            onClick={() => addToCart(product)}
-          >
-            <Plus className="h-4 w-4" />
-          </button>
-        </div>
+        <QuantityAdjuster
+          quantity={cartItem.quantity}
+          onDecrement={() => {
+            if (cartItem.quantity <= 1) {
+              removeFromCart(cartItem.product.barcode!)
+            } else {
+              updateQuantity(cartItem.product.barcode!, cartItem.quantity - 1)
+            }
+          }}
+          onIncrement={() => addToCart(product)}
+        />
       </div>
     )
   }

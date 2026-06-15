@@ -3,11 +3,15 @@ import { motion, useAnimation, type PanInfo } from 'framer-motion'
 import { ArrowRight, AlertTriangle } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
+import { DragHandle } from '@/components/DragHandle'
+import { Skeleton } from '@/components/ui/skeleton'
+import { BottomCta } from '@/components/BottomCta'
 import { useCart } from '@/providers/CartProvider'
 import type { ProductInfo } from '../services/product'
 import { useSuitability } from '@/features/suitability/hooks/useSuitability'
 import { SuitabilityBreakdown } from '@/features/suitability/components/SuitabilityBreakdown'
 import { CartCta } from '@/features/cart/components/CartCta'
+import { ProductServingNote } from './ProductServingNote'
 import { ProductHero } from './ProductHero'
 
 interface ProductSheetProps {
@@ -114,20 +118,16 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
         <div className="flex-1 rounded-t-3xl flex flex-col min-h-0 bg-background text-foreground">
           {isProcessing ? (
             <>
-              <div className="flex justify-center pt-3 pb-2 relative z-20 shrink-0">
-                <div className="w-12 h-1.5 rounded-full bg-muted-foreground/30 backdrop-blur-md" />
-              </div>
+              <DragHandle variant="dark" className="relative z-20" />
               <div className="flex-1 px-4 space-y-4 pt-10">
-                <div className="w-full h-56 bg-muted/50 animate-pulse rounded-xl" />
-                <div className="h-8 bg-muted/50 rounded-lg w-3/4 mx-auto animate-pulse" />
-                <div className="h-4 bg-muted/50 rounded w-1/2 mx-auto animate-pulse" />
+                <Skeleton className="w-full h-56" />
+                <Skeleton className="h-8 rounded-lg w-3/4 mx-auto" />
+                <Skeleton className="h-4 rounded w-1/2 mx-auto" />
               </div>
             </>
           ) : error ? (
             <>
-              <div className="flex justify-center pt-3 pb-2 relative z-20 shrink-0">
-                <div className="w-12 h-1.5 rounded-full bg-muted-foreground/30 backdrop-blur-md" />
-              </div>
+              <DragHandle variant="dark" className="relative z-20" />
               <div className="flex-1 flex flex-col items-center justify-center py-20 text-center px-4">
                 <AlertTriangle className="h-12 w-12 text-destructive mb-4 opacity-80" />
                 <p className="text-destructive font-bold text-xl mb-2">Oops!</p>
@@ -150,11 +150,7 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
               />
 
               <div className="flex-1 overflow-y-auto px-4 pt-6 space-y-6 relative z-20 no-scrollbar">
-                {suitability?.serving?.flagged && (
-                  <p className="text-xs text-accent-foreground font-medium text-center">
-                    Serving size ({suitability.serving.declaredQuantity}{suitability.serving.unit}) is unusually small
-                  </p>
-                )}
+                <ProductServingNote serving={suitability?.serving} />
 
                 {suitability && suitability.checks.length > 0 && (
                   <SuitabilityBreakdown checks={suitability.checks} />
@@ -180,7 +176,7 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
                 )}
               </div>
 
-              <div className="shrink-0 h-14 px-4 mb-4 bg-linear-to-t from-background via-background/90 to-transparent z-30">
+              <BottomCta variant="static">
                 <CartCta
                   product={result}
                   cartItem={cartItem}
@@ -188,7 +184,7 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
                   removeFromCart={removeFromCart}
                   updateQuantity={updateQuantity}
                 />
-              </div>
+              </BottomCta>
             </div>
           ) : (
             <>

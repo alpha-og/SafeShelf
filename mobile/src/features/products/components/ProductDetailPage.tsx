@@ -10,6 +10,9 @@ import { ProductHero } from './ProductHero'
 import { ProductScoreBadges } from './ProductScoreBadges'
 import { ProductServingNote } from './ProductServingNote'
 import { ProductInfoSections } from './ProductInfoSections'
+import { SectionHeader } from '@/components/SectionHeader'
+import { Skeleton } from '@/components/ui/skeleton'
+import { BottomCta } from '@/components/BottomCta'
 
 export function ProductDetailPage() {
   const { barcode } = useParams({ from: '/_authenticated/product/$barcode' })
@@ -29,11 +32,11 @@ export function ProductDetailPage() {
     return (
       <div className="flex flex-col flex-1 min-h-0 bg-background text-foreground">
         <div className="flex-1 flex flex-col min-h-0">
-          <div className="shrink-0 relative w-full h-56 bg-muted/50 animate-pulse" />
+          <Skeleton className="shrink-0 w-full h-56 !rounded-none" />
           <div className="flex-1 px-4 pt-6 space-y-4">
-            <div className="h-8 bg-muted/50 rounded-lg w-3/4 animate-pulse" />
-            <div className="h-4 bg-muted/50 rounded w-1/2 animate-pulse" />
-            <div className="h-32 bg-muted/50 rounded-xl animate-pulse" />
+            <Skeleton className="h-8 rounded-lg w-3/4" />
+            <Skeleton className="h-4 rounded w-1/2" />
+            <Skeleton className="h-32" />
           </div>
         </div>
       </div>
@@ -67,7 +70,7 @@ export function ProductDetailPage() {
 
         {suitability && suitability.checks.length > 0 && (
           <section>
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Suitability</h3>
+            <SectionHeader>Suitability</SectionHeader>
             <SuitabilityBreakdown checks={suitability.checks} />
           </section>
         )}
@@ -80,7 +83,7 @@ export function ProductDetailPage() {
         />
 
         <section>
-          <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Nutrition</h3>
+          <SectionHeader>Nutrition</SectionHeader>
           <ProductNutrientTable
             nutrients={product.nutrients}
             servingInfo={suitability?.serving ?? null}
@@ -102,7 +105,7 @@ export function ProductDetailPage() {
         </div>
       </div>
 
-      <div className="absolute bottom-0 shrink-0 px-4 pt-8 pb-4 w-full bg-linear-to-t from-background via-background/90 to-transparent z-30">
+      <BottomCta>
         <CartCta
           product={product}
           cartItem={cartItem}
@@ -110,7 +113,7 @@ export function ProductDetailPage() {
           removeFromCart={removeFromCart}
           updateQuantity={updateQuantity}
         />
-      </div>
+      </BottomCta>
     </div>
   )
 }

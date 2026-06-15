@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
-import { ArrowLeft, Check } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
+import { PageHeader } from '@/components/PageHeader'
+import { SectionHeader } from '@/components/SectionHeader'
+import { CardList } from '@/components/CardList'
 import { getItem, setItem } from '@/lib/storage'
 import type { ServingSettings } from '@/features/suitability/types'
 import { DEFAULT_SERVING_SETTINGS } from '@/features/suitability/types'
@@ -84,39 +86,20 @@ export function PreferencesPage() {
 
   return (
     <div className="flex-1 min-h-0 bg-background flex flex-col overflow-hidden">
-      <header className="border-b border-border shrink-0">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
-          <Button variant="outline" size="icon" className="bg-primary/10 backdrop-blur-md border-primary/20 hover:bg-primary/20 hover:scale-[1.02]" onClick={() => navigate({ to: '/settings' })}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <h1 className="text-xl font-bold text-foreground">Preferences</h1>
-        </div>
-      </header>
+      <PageHeader title="Preferences" onBack={() => navigate({ to: '/settings' })} />
 
       <main className="max-w-7xl mx-auto px-4 py-6 space-y-8 flex-1 min-h-0 overflow-y-auto">
         <section>
-          <label className="text-sm font-medium text-foreground mb-2 block">Dietary choices</label>
-          <Card className="overflow-hidden">
-            {DIETARY_OPTIONS.map((option) => {
-              const checked = selected.includes(option.id)
-              return (
-                <button
-                  key={option.id}
-                  onClick={() => toggle(option.id)}
-                  className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-foreground transition-colors hover:bg-accent hover:scale-[1.02] border-b border-border last:border-b-0"
-                >
-                  <span className="flex-1 text-left">{option.label}</span>
-                  {checked && <Check className="h-4 w-4 text-foreground shrink-0" />}
-                </button>
-              )
-            })}
-          </Card>
+          <SectionHeader variant="default">Dietary choices</SectionHeader>
+          <CardList
+            items={DIETARY_OPTIONS.map((o) => ({ id: o.id, label: o.label }))}
+            selectedIds={new Set(selected)}
+            onToggle={toggle}
+          />
         </section>
 
         <section>
-          <label htmlFor="budget" className="text-sm font-medium text-foreground mb-2 block">
-            Budget
-          </label>
+          <SectionHeader variant="default">Budget</SectionHeader>
           <form
             className="flex items-center gap-2"
             onSubmit={(e) => {
@@ -139,7 +122,7 @@ export function PreferencesPage() {
         </section>
 
         <section>
-          <h2 className="text-sm font-medium text-foreground mb-2">Serving size thresholds</h2>
+          <SectionHeader variant="default">Serving size thresholds</SectionHeader>
           <p className="text-xs text-muted-foreground mb-4">
             Products with declared serving sizes below these values will be flagged as potentially misleading.
           </p>
