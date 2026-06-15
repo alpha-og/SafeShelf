@@ -30,5 +30,8 @@ class StoreProductsResponse(BaseModel):
 class InventoryResponse(BaseModel):
     store_id: str
     product_id: str
+    product_name: str | None = None
+    product_image: str | None = None
     in_stock: bool
     quantity: int = 0
+    price: float = 0.0

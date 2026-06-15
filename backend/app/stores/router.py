@@ -1,7 +1,10 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.stores.schemas import InventoryResponse, NearbyResponse, StoreProductsResponse, StoreResponse
 from app.stores.service import get_nearby_stores, get_store, get_store_inventory, get_store_products
+from app.stores.models import StoreInventory  # noqa: F401
+from app.shared.deps import get_session
 
 router = APIRouter(prefix="/stores", tags=["stores"])
 
@@ -20,7 +23,11 @@ async def store_detail(store_id: str):
 async def store_products(store_id: str):
     return await get_store_products(store_id)
 
+@router.get("/{store_id}/inventory", response_model=list[InventoryResponse])
+async def all_inventory(store_id: str, session: AsyncSession = Depends(get_session)):
+    from app.stores.service import get_all_store_inventory
+    return await get_all_store_inventory(store_id, session)
 
 @router.get("/{store_id}/inventory/{product_id}", response_model=InventoryResponse)
-async def inventory(store_id: str, product_id: str):
-    return await get_store_inventory(store_id, product_id)
+async def inventory(store_id: str, product_id: str, session: AsyncSession = Depends(get_session)):
+    return await get_store_inventory(store_id, product_id, session)

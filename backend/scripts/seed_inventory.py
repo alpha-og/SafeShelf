@@ -1,0 +1,88 @@
+import asyncio
+import os
+import kagglehub
+import pandas as pd
+from sqlmodel import SQLModel
+from app.shared.db import engine, async_session
+from app.stores.models import StoreInventory
+
+async def seed_inventory():
+    print("Initializing database...")
+    async with engine.begin() as conn:
+        await conn.run_sync(SQLModel.metadata.create_all)
+        
+    print("Downloading Open Food Facts dataset (this might take a minute)...")
+    path = kagglehub.dataset_download('openfoodfacts/world-food-facts')
+    tsv_files = [f for f in os.listdir(path) if f.endswith('.tsv') or f.endswith('.csv')]
+    
+    if not tsv_files:
+        print("No TSV/CSV found in dataset.")
+        return
+        
+    file_path = os.path.join(path, tsv_files[0])
+    print(f"Reading {file_path} (loading first 10000 rows)...")
+    
+    import random
+    
+    # OpenFoodFacts is a massive TSV file. We only read the first 10,000 rows.
+    # It uses tabs as separators, but we fallback to comma just in case.
+    # We use on_bad_lines='skip' to avoid parsing errors.
+    try:
+        df = pd.read_csv(file_path, sep='\t', nrows=10000, on_bad_lines='skip', low_memory=False)
+    except:
+        df = pd.read_csv(file_path, nrows=10000, on_bad_lines='skip', low_memory=False)
+        
+    # Filter out rows without a product name
+    if 'product_name' in df.columns:
+        df = df[df['product_name'].notna()]
+    
+    print(f"Seeding {len(df)} records into StoreInventory...")
+    async with async_session() as session:
+        for idx, row in df.iterrows():
+            # Get code (barcode)
+            product_id = str(row.get("code", f"PROD_{idx}"))
+            if product_id == "nan" or not product_id.strip():
+                continue
+                
+            # Get name
+            product_name = str(row.get("product_name", f"Unknown Product {idx}"))
+            
+            # Get image URL if available
+            product_image = row.get("image_url", None)
+            if pd.isna(product_image):
+                product_image = None
+            else:
+                product_image = str(product_image)
+                
+            # Mock stock and price since OFF doesn't have them
+            stock_qty = random.randint(0, 100)
+            # Generate realistic INR prices (e.g. ₹20 to ₹1500)
+            price = round(random.uniform(20.0, 1500.0))
+            
+            inv = StoreInventory(
+                product_id=product_id,
+                product_name=product_name,
+                product_image=product_image,
+                stock_quantity=stock_qty,
+                price=float(price),
+                in_stock=(stock_qty > 0)
+            )
+            await session.merge(inv)
+            
+        # Hardcode a Nutella entry just to guarantee it's available for your test
+        # Barcode for Nutella 400g is often 3017624010701
+        nutella = StoreInventory(
+            product_id="3017624010701", # Nutella barcode shown in your screenshot!
+            product_name="Nutella Ferrero",
+            product_image="https://images.openfoodfacts.org/images/products/301/762/401/0701/front_en.189.400.jpg",
+            stock_quantity=50,
+            price=399.0, # Realistic INR price for 400g Nutella
+            in_stock=True
+        )
+        await session.merge(nutella)
+        
+        await session.commit()
+    print("Seeding complete!")
+
+if __name__ == "__main__":
+    asyncio.run(seed_inventory())
