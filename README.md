@@ -30,7 +30,7 @@ pnpm dev:setup          # full setup: prereqs + deps + SSL certs
 pnpm dev                # start backend and mobile dev servers
 ```
 
-Open `http://localhost:5173` in a browser, or deploy to a device:
+Open `http://localhost:8826` in a browser, or deploy to a device:
 
 ```sh
 pnpm dev:android        # build and deploy to Android device
