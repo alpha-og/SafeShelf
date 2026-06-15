@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react'
-import { api, setAccessToken, restoreToken, setOnLogout } from '@/lib/axios'
+import { api, setAccessToken, restoreToken, setOnLogout, getAccessToken } from '@/lib/axios'
 import { setToken } from '@/lib/storage'
 
 interface User {
@@ -56,7 +56,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const { data } = await api.get<{ id: number; email: string; created_at: string }>('/v1/auth/me')
         setUser(data)
-        setAccessTokenState(accessToken)
+        setAccessTokenState(getAccessToken())
       } catch {
         await setToken(null)
         setAccessToken(null)

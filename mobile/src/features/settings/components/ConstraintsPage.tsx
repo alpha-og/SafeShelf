@@ -4,36 +4,41 @@ import { useNavigate } from '@tanstack/react-router'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { SearchableMultiSelect } from './SearchableMultiSelect'
-import { setItem } from '@/lib/storage'
+import { getItem, setItem } from '@/lib/storage'
 import type { ConstraintItem } from '../services/constraints'
 
 const CONDITIONS_KEY = 'constraints:conditions'
 const ALLERGENS_KEY = 'constraints:allergens'
 
-function load(key: string): ConstraintItem[] {
-  try {
-    const raw = localStorage.getItem(key)
-    return raw ? (JSON.parse(raw) as ConstraintItem[]) : []
-  } catch {
-    return []
-  }
-}
-
 export function ConstraintsPage() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const [conditions, setConditions] = useState<ConstraintItem[]>(() => load(CONDITIONS_KEY))
-  const [allergens, setAllergens] = useState<ConstraintItem[]>(() => load(ALLERGENS_KEY))
+  const [conditions, setConditions] = useState<ConstraintItem[]>([])
+  const [allergens, setAllergens] = useState<ConstraintItem[]>([])
+  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
+    Promise.all([
+      getItem<ConstraintItem[]>(CONDITIONS_KEY),
+      getItem<ConstraintItem[]>(ALLERGENS_KEY),
+    ]).then(([c, a]) => {
+      if (c) setConditions(c)
+      if (a) setAllergens(a)
+      setLoaded(true)
+    })
+  }, [])
+
+  useEffect(() => {
+    if (!loaded) return
     setItem(CONDITIONS_KEY, conditions)
     queryClient.invalidateQueries({ queryKey: ['userProfile'] })
-  }, [conditions, queryClient])
+  }, [conditions, queryClient, loaded])
 
   useEffect(() => {
+    if (!loaded) return
     setItem(ALLERGENS_KEY, allergens)
     queryClient.invalidateQueries({ queryKey: ['userProfile'] })
-  }, [allergens, queryClient])
+  }, [allergens, queryClient, loaded])
 
   return (
     <div className="flex-1 min-h-0 bg-background flex flex-col overflow-hidden">
