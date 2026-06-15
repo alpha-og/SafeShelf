@@ -102,7 +102,7 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
       )}
 
       <motion.div
-        className="absolute inset-x-0 bottom-0 z-20 flex flex-col rounded-t-3xl overflow-hidden shadow-[0_-10px_40px_rgba(0,0,0,0.3)]"
+        className="absolute inset-x-0 bottom-0 z-20 flex flex-col rounded-t-3xl overflow-hidden shadow-[0_-10px_40px_rgba(0,0,0,0.3)] pb-[var(--sab)]"
         style={{ height: '100dvh' }}
         initial={{ y: OFFRANGE }}
         drag="y"
