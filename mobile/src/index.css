@@ -21,6 +21,10 @@
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
   --radius-DEFAULT: var(--radius);
+
+  --color-overlay: #2D3A47;
+  --color-overlay-foreground: #FFF7E6;
+  --color-overlay-muted: #A9B7C6;
 }
 
 @layer base {
@@ -30,48 +34,48 @@
     --sab: env(safe-area-inset-bottom, 0px);
     --sal: env(safe-area-inset-left, 0px);
 
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --background: 41 100% 95%;        /* Vanilla Cream */
+    --foreground: 210 23% 23%;        /* Midnight Lagoon */
+    --card: 0 0% 100%;                /* White */
+    --card-foreground: 210 23% 23%;   /* Midnight Lagoon */
+    --popover: 0 0% 100%;             /* White */
+    --popover-foreground: 210 23% 23%; /* Midnight Lagoon */
+    --primary: 354 33% 56%;           /* Rosewood */
+    --primary-foreground: 0 0% 100%;  /* White */
+    --secondary: 78 23% 63%;          /* Sage Leaf */
+    --secondary-foreground: 210 23% 23%; /* Midnight Lagoon */
+    --muted: 211 20% 72%;             /* Misty Sky */
+    --muted-foreground: 211 15% 45%;  /* darker Misty Sky */
+    --accent: 346 75% 88%;            /* Blush Petal */
+    --accent-foreground: 210 23% 23%; /* Midnight Lagoon */
+    --destructive: 0 84% 60%;         /* Red (keep) */
+    --destructive-foreground: 0 0% 100%; /* White */
+    --border: 211 20% 88%;            /* light Misty Sky */
+    --input: 211 20% 72%;             /* Misty Sky */
+    --ring: 354 33% 56%;              /* Rosewood */
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --background: 210 23% 23%;         /* Midnight Lagoon */
+    --foreground: 41 100% 90%;         /* Vanilla Cream */
+    --card: 210 20% 28%;               /* lighter Midnight Lagoon */
+    --card-foreground: 41 100% 90%;    /* Vanilla Cream */
+    --popover: 210 20% 28%;            /* lighter Midnight Lagoon */
+    --popover-foreground: 41 100% 90%; /* Vanilla Cream */
+    --primary: 354 40% 65%;            /* lighter Rosewood */
+    --primary-foreground: 210 23% 23%; /* Midnight Lagoon */
+    --secondary: 78 20% 40%;           /* darker Sage Leaf */
+    --secondary-foreground: 41 100% 90%; /* Vanilla Cream */
+    --muted: 210 18% 30%;              /* muted dark */
+    --muted-foreground: 211 20% 65%;   /* lighter Misty Sky */
+    --accent: 346 50% 50%;             /* muted Blush Petal */
+    --accent-foreground: 41 100% 90%;  /* Vanilla Cream */
+    --destructive: 0 75% 52%;          /* brighter red for legibility */
+    --destructive-foreground: 41 100% 90%; /* Vanilla Cream */
+    --border: 210 18% 33%;             /* lighter Midnight Lagoon */
+    --input: 210 18% 33%;              /* lighter Midnight Lagoon */
+    --ring: 354 40% 65%;               /* lighter Rosewood */
   }
 }
 
@@ -84,5 +88,11 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  button {
+    transition: transform 150ms ease;
+  }
+  button:active {
+    transform: scale(0.97);
   }
 }
