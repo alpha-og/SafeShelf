@@ -82,9 +82,9 @@ export function ProductNutrientTable({
   if (rows.length === 0) return null
 
   const levelBadge = (lvl: string | null) => {
-    if (lvl === 'high') return <Badge variant="destructive" className="text-[10px] px-1 py-0 h-4">{lvl}</Badge>
-    if (lvl === 'moderate') return <Badge variant="secondary" className="text-[10px] px-1 py-0 h-4 bg-amber-500/10 text-amber-600 border-amber-500/20">{lvl}</Badge>
-    if (lvl === 'low') return <Badge variant="secondary" className="text-[10px] px-1 py-0 h-4 bg-green-500/10 text-green-600 border-green-500/20">{lvl}</Badge>
+    if (lvl === 'high') return <Badge variant="outline" className="text-[10px] px-1 py-0 h-4 bg-destructive/10 text-destructive border-destructive/20 hover:scale-105">{lvl}</Badge>
+    if (lvl === 'moderate') return <Badge variant="outline" className="text-[10px] px-1 py-0 h-4 bg-primary/10 text-primary border-primary/20 hover:scale-105">{lvl}</Badge>
+    if (lvl === 'low') return <Badge variant="outline" className="text-[10px] px-1 py-0 h-4 bg-secondary/10 text-secondary border-secondary/20 hover:scale-105">{lvl}</Badge>
     return null
   }
 
@@ -93,25 +93,25 @@ export function ProductNutrientTable({
 
   return (
     <div>
-      <h4 className="text-sm font-semibold mb-3">Nutrition Facts</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-3">Nutrition Facts</h4>
       <div className="rounded-xl border">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-xs">Per</TableHead>
-              <TableHead className="text-xs text-right">100g</TableHead>
+              <TableHead className="text-xs text-foreground">Per</TableHead>
+              <TableHead className="text-xs text-right text-foreground">100g</TableHead>
               {showServing && (
-                <TableHead className="text-xs text-right">{servingInfo!.declaredQuantity}{servingInfo!.unit}</TableHead>
+                <TableHead className="text-xs text-right text-foreground">{servingInfo!.declaredQuantity}{servingInfo!.unit}</TableHead>
               )}
               {showRacc && (
-                <TableHead className="text-xs text-right">{servingInfo!.racc}{servingInfo!.raccUnit}</TableHead>
+                <TableHead className="text-xs text-right text-foreground">{servingInfo!.racc}{servingInfo!.raccUnit}</TableHead>
               )}
             </TableRow>
           </TableHeader>
           <TableBody>
             {rows.map((row) => (
               <TableRow key={row.label}>
-                <TableCell className="py-1.5 text-xs">
+                <TableCell className="py-1.5 flex gap-1 text-xs">
                   {row.label}
                   {levelBadge(row.level)}
                 </TableCell>
@@ -134,7 +134,7 @@ export function ProductNutrientTable({
         </Table>
       </div>
       {showRacc && (
-        <p className="text-xs text-amber-500 mt-2">
+        <p className="text-xs text-accent-foreground mt-2">
           Serving adjusted to RACC baseline ({servingInfo!.racc}{servingInfo!.raccUnit}) — declared serving is less than 50% of standard
         </p>
       )}
