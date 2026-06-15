@@ -70,8 +70,8 @@ export function PreferencesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border">
+    <div className="flex-1 min-h-0 bg-background flex flex-col overflow-hidden">
+      <header className="border-b border-border shrink-0">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => navigate({ to: '/settings' })}>
             <ArrowLeft className="h-5 w-5" />
@@ -80,7 +80,7 @@ export function PreferencesPage() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-6 space-y-8">
+      <main className="max-w-7xl mx-auto px-4 py-6 space-y-8 flex-1 min-h-0 overflow-y-auto">
         <section>
           <label className="text-sm font-medium text-foreground mb-2 block">Dietary choices</label>
           <Card className="overflow-hidden">

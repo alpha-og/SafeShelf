@@ -9,7 +9,7 @@ export function TopBar({ cameraAvailable }: TopBarProps) {
   const navigate = useNavigate()
 
   return (
-    <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-4">
+    <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-4 pt-[calc(var(--sat)_+_1rem)]">
       <button
         onClick={() => navigate({ to: '/settings' })}
         className={`flex items-center justify-center w-10 h-10 rounded-full backdrop-blur-md border transition-colors ${

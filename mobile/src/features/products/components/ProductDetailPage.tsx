@@ -63,7 +63,7 @@ return (
       onBack={() => navigate({ to: '/' })}
     />
 
-    <div className="flex-1 min-h-0 overflow-y-auto px-4 pt-4 space-y-6 z-20 pb-[calc(5rem+env(safe-area-inset-bottom))]">
+    <div className="flex-1 min-h-0 overflow-y-auto px-4 pt-4 space-y-6 z-20 pb-20">
       <ProductServingNote serving={suitability?.serving} />
 
       {suitability && suitability.checks.length > 0 && (
@@ -103,7 +103,7 @@ return (
       </div>
     </div>
 
-    <div className="absolute bottom-0 w-full shrink-0 px-4 pt-8 pb-[calc(1rem+env(safe-area-inset-bottom))] bg-linear-to-t from-slate-950 via-slate-950/90 to-transparent z-30">
+    <div className="absolute bottom-0 w-full shrink-0 px-4 pt-8 pb-4 bg-linear-to-t from-slate-950 via-slate-950/90 to-transparent z-30">
       <CartCta
         product={product}
         cartItem={cartItem}

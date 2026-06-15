@@ -6,6 +6,9 @@ const config: CapacitorConfig = {
   webDir: 'dist',
   server: {
     androidScheme: 'https',
+    ...(process.env.CAP_SERVER_URL
+      ? { url: process.env.CAP_SERVER_URL, cleartext: true }
+      : {}),
   },
 };
 

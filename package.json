@@ -11,6 +11,10 @@
     "lint": "pnpm --filter mobile lint",
     "cap:sync": "pnpm --filter mobile cap:sync",
     "cap:android": "pnpm --filter mobile cap:android",
+    "cap:dev:android": "pnpm --filter mobile cap:dev:android",
+    "cap:dev:ios": "pnpm --filter mobile cap:dev:ios",
+    "get-ip": "pnpm --filter mobile get-ip",
+    "get-host": "pnpm --filter mobile get-host",
     "backend:dev": "cd backend && uv run python -m app",
     "backend:serve": "cd backend && uv run python -m app",
     "backend:sync": "cd backend && uv sync"

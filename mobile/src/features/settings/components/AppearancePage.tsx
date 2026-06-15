@@ -24,7 +24,7 @@ export function AppearancePage() {
   const CurrentIcon = current.icon
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex-1 min-h-0 bg-background">
       <header className="border-b border-border">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => navigate({ to: '/settings' })}>
