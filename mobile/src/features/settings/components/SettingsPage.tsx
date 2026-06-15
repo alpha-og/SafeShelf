@@ -15,7 +15,7 @@ export function SettingsPage() {
     <div className="flex-1 min-h-0 bg-background">
       <header className="border-b border-border">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate({ to: '/' })}>
+          <Button variant="outline" size="icon" className="bg-primary/10 backdrop-blur-md border-primary/20 hover:bg-primary/20 hover:scale-[1.02]" onClick={() => navigate({ to: '/' })}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <h1 className="text-xl font-bold text-foreground">Settings</h1>
@@ -30,7 +30,7 @@ export function SettingsPage() {
               <button
                 key={item.to}
                 onClick={() => navigate({ to: item.to })}
-                className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-foreground transition-colors hover:bg-accent"
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-foreground transition-colors hover:bg-accent hover:scale-[1.02]"
               >
                 <Icon className="h-5 w-5 text-muted-foreground" />
                 <span className="flex-1 text-left">{item.label}</span>

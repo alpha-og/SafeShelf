@@ -86,7 +86,7 @@ export function PreferencesPage() {
     <div className="flex-1 min-h-0 bg-background flex flex-col overflow-hidden">
       <header className="border-b border-border shrink-0">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate({ to: '/settings' })}>
+          <Button variant="outline" size="icon" className="bg-primary/10 backdrop-blur-md border-primary/20 hover:bg-primary/20 hover:scale-[1.02]" onClick={() => navigate({ to: '/settings' })}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <h1 className="text-xl font-bold text-foreground">Preferences</h1>
@@ -103,7 +103,7 @@ export function PreferencesPage() {
                 <button
                   key={option.id}
                   onClick={() => toggle(option.id)}
-                  className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-foreground transition-colors hover:bg-accent border-b border-border last:border-b-0"
+                  className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-foreground transition-colors hover:bg-accent hover:scale-[1.02] border-b border-border last:border-b-0"
                 >
                   <span className="flex-1 text-left">{option.label}</span>
                   {checked && <Check className="h-4 w-4 text-foreground shrink-0" />}
@@ -132,7 +132,7 @@ export function PreferencesPage() {
               placeholder="e.g. 100"
               onChange={(e) => setBudgetDraft(e.target.value.replace(/\D/g, ''))}
             />
-            <Button type="submit" disabled={budgetDraft === budget}>
+            <Button type="submit" className="hover:scale-[1.02]" disabled={budgetDraft === budget}>
               Enter
             </Button>
           </form>
@@ -174,6 +174,7 @@ export function PreferencesPage() {
               onClick={saveServing}
               disabled={solidDraft === String(servingSettings.minSolidG) && liquidDraft === String(servingSettings.minLiquidMl)}
               size="sm"
+              className="hover:scale-[1.02]"
             >
               Save
             </Button>

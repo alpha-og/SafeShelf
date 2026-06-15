@@ -134,7 +134,7 @@ export function SearchableMultiSelect({
                 type="button"
                 onClick={() => remove(item.id)}
                 aria-label={`Remove ${item.name}`}
-                className="rounded-full p-0.5 transition-colors hover:bg-background/50"
+                className="rounded-full p-0.5 transition-colors hover:bg-background/50 hover:scale-105"
               >
                 <X className="h-3.5 w-3.5" />
               </button>

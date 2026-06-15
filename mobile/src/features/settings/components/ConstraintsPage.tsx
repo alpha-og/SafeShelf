@@ -44,7 +44,7 @@ export function ConstraintsPage() {
     <div className="flex-1 min-h-0 bg-background flex flex-col overflow-hidden">
       <header className="border-b border-border shrink-0">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate({ to: '/settings' })}>
+          <Button variant="outline" size="icon" className="bg-primary/10 backdrop-blur-md border-primary/20 hover:bg-primary/20 hover:scale-[1.02]" onClick={() => navigate({ to: '/settings' })}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <h1 className="text-xl font-bold text-foreground">Constraints</h1>
