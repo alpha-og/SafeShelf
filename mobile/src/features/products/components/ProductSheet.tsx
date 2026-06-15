@@ -7,7 +7,6 @@ import { useCart } from '@/providers/CartProvider'
 import type { ProductInfo } from '../services/product'
 import { useSuitability } from '@/features/suitability/hooks/useSuitability'
 import { SuitabilityBreakdown } from '@/features/suitability/components/SuitabilityBreakdown'
-import { AuroraBackground } from '@/components/reactbits/AuroraBackground'
 import { CartCta } from '@/features/cart/components/CartCta'
 import { ProductHero } from './ProductHero'
 
@@ -112,27 +111,27 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
         animate={controls}
         onDragEnd={handleDragEnd}
       >
-        <AuroraBackground className="flex-1 rounded-t-3xl flex flex-col min-h-0">
+        <div className="flex-1 rounded-t-3xl flex flex-col min-h-0 bg-background text-foreground">
           {isProcessing ? (
             <>
               <div className="flex justify-center pt-3 pb-2 relative z-20 shrink-0">
-                <div className="w-12 h-1.5 rounded-full bg-white/30 backdrop-blur-md" />
+                <div className="w-12 h-1.5 rounded-full bg-muted-foreground/30 backdrop-blur-md" />
               </div>
               <div className="flex-1 px-4 space-y-4 pt-10">
-                <div className="w-full h-56 bg-white/5 animate-pulse" />
-                <div className="h-8 bg-white/5 rounded-lg w-3/4 mx-auto animate-pulse" />
-                <div className="h-4 bg-white/5 rounded w-1/2 mx-auto animate-pulse" />
+                <div className="w-full h-56 bg-muted/50 animate-pulse rounded-xl" />
+                <div className="h-8 bg-muted/50 rounded-lg w-3/4 mx-auto animate-pulse" />
+                <div className="h-4 bg-muted/50 rounded w-1/2 mx-auto animate-pulse" />
               </div>
             </>
           ) : error ? (
             <>
               <div className="flex justify-center pt-3 pb-2 relative z-20 shrink-0">
-                <div className="w-12 h-1.5 rounded-full bg-white/30 backdrop-blur-md" />
+                <div className="w-12 h-1.5 rounded-full bg-muted-foreground/30 backdrop-blur-md" />
               </div>
               <div className="flex-1 flex flex-col items-center justify-center py-20 text-center px-4">
                 <AlertTriangle className="h-12 w-12 text-destructive mb-4 opacity-80" />
                 <p className="text-destructive font-bold text-xl mb-2">Oops!</p>
-                <p className="text-white/60 text-sm max-w-62.5">{error}</p>
+                <p className="text-muted-foreground text-sm max-w-62.5">{error}</p>
               </div>
             </>
           ) : result ? (
@@ -152,7 +151,7 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
 
               <div className="flex-1 overflow-y-auto px-4 pt-6 space-y-6 relative z-20 no-scrollbar">
                 {suitability?.serving?.flagged && (
-                  <p className="text-xs text-amber-500 font-medium text-center">
+                  <p className="text-xs text-accent-foreground font-medium text-center">
                     Serving size ({suitability.serving.declaredQuantity}{suitability.serving.unit}) is unusually small
                   </p>
                 )}
@@ -164,7 +163,7 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
                 {result.barcode && (
                   <Button
                     variant="outline"
-                    className="w-full gap-2 text-sm font-medium"
+                    className="w-full gap-2 text-sm font-medium hover:scale-[1.02]"
                     onClick={() => navigate({ to: '/product/$barcode', params: { barcode: result.barcode! } })}
                   >
                     View full details
@@ -174,14 +173,14 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
 
                 {result.barcode && (
                   <div className="flex justify-center">
-                    <p className="text-[10px] text-white/30 font-mono tracking-widest uppercase">
+                    <p className="text-[10px] text-muted-foreground font-mono tracking-widest uppercase">
                       Barcode: {result.barcode}
                     </p>
                   </div>
                 )}
               </div>
 
-              <div className="shrink-0 h-14 px-4 mb-4 bg-linear-to-t from-slate-950 via-slate-950/90 to-transparent z-30">
+              <div className="shrink-0 h-14 px-4 mb-4 bg-linear-to-t from-background via-background/90 to-transparent z-30">
                 <CartCta
                   product={result}
                   cartItem={cartItem}
@@ -193,15 +192,12 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
             </div>
           ) : (
             <>
-              <div className="flex justify-center pt-3 pb-2 relative z-20 shrink-0">
-                <div className="w-12 h-1.5 rounded-full bg-white/30 backdrop-blur-md" />
-              </div>
-              <div className="flex-1 flex flex-col items-center justify-center py-20 text-center text-white/40">
+              <div className="flex-1 flex flex-col items-center justify-center py-20 text-center text-muted-foreground">
                 <p className="text-sm">No product information available.</p>
               </div>
             </>
           )}
-        </AuroraBackground>
+        </div>
       </motion.div>
     </>
   )
