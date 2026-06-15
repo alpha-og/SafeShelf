@@ -5,7 +5,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
-import { setItem } from '@/lib/storage'
+import { getItem, setItem } from '@/lib/storage'
 import type { ServingSettings } from '@/features/suitability/types'
 import { DEFAULT_SERVING_SETTINGS } from '@/features/suitability/types'
 
@@ -25,29 +25,42 @@ const DIETARY_OPTIONS = [
   { id: 'low-sodium', label: 'Low sodium' },
 ] as const
 
-function load<T>(key: string, fallback: T): T {
-  try {
-    const raw = localStorage.getItem(key)
-    return raw ? (JSON.parse(raw) as T) : fallback
-  } catch {
-    return fallback
-  }
-}
-
 export function PreferencesPage() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const [selected, setSelected] = useState<string[]>(() => load(PREFERENCES_KEY, []))
-  const [budget, setBudget] = useState<string>(() => load(BUDGET_KEY, ''))
-  const [budgetDraft, setBudgetDraft] = useState<string>(() => load(BUDGET_KEY, ''))
-  const [servingSettings, setServingSettings] = useState<ServingSettings>(() => load(SERVING_SETTINGS_KEY, DEFAULT_SERVING_SETTINGS))
-  const [solidDraft, setSolidDraft] = useState<string>(String(load(SERVING_SETTINGS_KEY, DEFAULT_SERVING_SETTINGS).minSolidG))
-  const [liquidDraft, setLiquidDraft] = useState<string>(String(load(SERVING_SETTINGS_KEY, DEFAULT_SERVING_SETTINGS).minLiquidMl))
+  const [selected, setSelected] = useState<string[]>([])
+  const [budget, setBudget] = useState<string>('')
+  const [budgetDraft, setBudgetDraft] = useState<string>('')
+  const [servingSettings, setServingSettings] = useState<ServingSettings>(DEFAULT_SERVING_SETTINGS)
+  const [solidDraft, setSolidDraft] = useState<string>(String(DEFAULT_SERVING_SETTINGS.minSolidG))
+  const [liquidDraft, setLiquidDraft] = useState<string>(String(DEFAULT_SERVING_SETTINGS.minLiquidMl))
+  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
+    Promise.all([
+      getItem<string[]>(PREFERENCES_KEY),
+      getItem<string>(BUDGET_KEY),
+      getItem<ServingSettings>(SERVING_SETTINGS_KEY),
+    ]).then(([dietary, bgt, svc]) => {
+      if (dietary) setSelected(dietary)
+      if (bgt) {
+        setBudget(bgt)
+        setBudgetDraft(bgt)
+      }
+      if (svc) {
+        setServingSettings(svc)
+        setSolidDraft(String(svc.minSolidG))
+        setLiquidDraft(String(svc.minLiquidMl))
+      }
+      setLoaded(true)
+    })
+  }, [])
+
+  useEffect(() => {
+    if (!loaded) return
     setItem(PREFERENCES_KEY, selected)
     queryClient.invalidateQueries({ queryKey: ['userProfile'] })
-  }, [selected, queryClient])
+  }, [selected, queryClient, loaded])
 
   function saveBudget() {
     setBudget(budgetDraft)

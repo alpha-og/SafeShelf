@@ -22,7 +22,8 @@ async function initNative(): Promise<boolean> {
       close: () => db.close(),
     }
     return true
-  } catch {
+  } catch (e) {
+    console.error('SQLite init failed, falling back to localStorage:', e)
     return false
   }
 }
