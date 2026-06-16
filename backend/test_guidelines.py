@@ -6,13 +6,13 @@ from app.shared.who_icd import fetch_icd11_code, get_valid_who_token
 
 
 async def main() -> int:
-    print(f'Testing {len(URLS)} guideline URLs\n')
-
+    print(f"Testing {len(URLS)} guideline URLs\n")
+   
     try:
         who_token = await get_valid_who_token()
-        print('✓ WHO token obtained\n')
+        print("[OK] WHO token obtained\n")
     except Exception as exc:
-        print(f'✗ WHO token fetch failed: {exc}')
+        print(f"[FAIL] WHO token fetch failed: {exc}")
         return 1
 
     imported_count = 0
