@@ -5,6 +5,7 @@ import { StrictMode, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import { AuthProvider, useAuth } from '@/providers/AuthProvider'
 import { CartProvider } from '@/providers/CartProvider'
+import { ProfilesProvider, useProfiles } from '@/providers/ProfilesProvider'
 import { ThemeProvider } from '@/providers/ThemeProvider'
 import { routeTree } from './routeTree.gen'
 import './index.css'
@@ -17,7 +18,7 @@ const queryClient = new QueryClient({
 
 const router = createRouter({
   routeTree,
-  context: { auth: undefined! },
+  context: { auth: undefined!, profiles: undefined! },
 })
 
 declare module '@tanstack/react-router' {
@@ -28,6 +29,7 @@ declare module '@tanstack/react-router' {
 
 function InnerApp() {
   const auth = useAuth()
+  const profiles = useProfiles()
 
   useEffect(() => {
     if (Capacitor.isNativePlatform()) {
@@ -37,14 +39,14 @@ function InnerApp() {
       })
     }
   }, [])
-  if (auth.isLoading) {
+  if (auth.isLoading || profiles.isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <p className="text-muted-foreground">Loading...</p>
       </div>
     )
   }
-  return <RouterProvider router={router} context={{ auth }} />
+  return <RouterProvider router={router} context={{ auth, profiles }} />
 }
 
 createRoot(document.getElementById('root')!).render(
@@ -52,9 +54,11 @@ createRoot(document.getElementById('root')!).render(
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <CartProvider>
-            <InnerApp />
-          </CartProvider>
+          <ProfilesProvider>
+            <CartProvider>
+              <InnerApp />
+            </CartProvider>
+          </ProfilesProvider>
         </AuthProvider>
       </QueryClientProvider>
     </ThemeProvider>

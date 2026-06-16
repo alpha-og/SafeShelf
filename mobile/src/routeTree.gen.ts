@@ -9,20 +9,28 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OnboardingRouteImport } from './routes/_onboarding'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated.index'
+import { Route as OnboardingOnboardingRouteImport } from './routes/_onboarding.onboarding'
 import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticated.history'
 import { Route as AuthenticatedCartRouteImport } from './routes/_authenticated.cart'
 import { Route as AuthSignupRouteImport } from './routes/_auth.signup'
 import { Route as AuthSigninRouteImport } from './routes/_auth.signin'
-import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
-import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
-import { Route as AuthenticatedSettingsPreferencesRouteImport } from './routes/_authenticated/settings/preferences'
-import { Route as AuthenticatedSettingsConstraintsRouteImport } from './routes/_authenticated/settings/constraints'
-import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
+import { Route as AuthenticatedProfileRouteRouteImport } from './routes/_authenticated/profile/route'
+import { Route as AuthenticatedProfileIndexRouteImport } from './routes/_authenticated/profile/index'
+import { Route as AuthenticatedProfileNewRouteImport } from './routes/_authenticated/profile/new'
+import { Route as AuthenticatedProfileProfileIdRouteImport } from './routes/_authenticated/profile/$profileId'
 import { Route as AuthenticatedProductBarcodeRouteImport } from './routes/_authenticated/product/$barcode'
+import { Route as AuthenticatedProfileGroupsRouteRouteImport } from './routes/_authenticated/profile/groups/route'
+import { Route as AuthenticatedProfileGroupsNewRouteImport } from './routes/_authenticated/profile/groups/new'
+import { Route as AuthenticatedProfileGroupsGroupIdRouteImport } from './routes/_authenticated/profile/groups/$groupId'
 
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/_onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -35,6 +43,11 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedRoute,
+} as any)
+const OnboardingOnboardingRoute = OnboardingOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => OnboardingRoute,
 } as any)
 const AuthenticatedHistoryRoute = AuthenticatedHistoryRouteImport.update({
   id: '/history',
@@ -56,35 +69,28 @@ const AuthSigninRoute = AuthSigninRouteImport.update({
   path: '/signin',
   getParentRoute: () => AuthRoute,
 } as any)
-const AuthenticatedSettingsRouteRoute =
-  AuthenticatedSettingsRouteRouteImport.update({
-    id: '/settings',
-    path: '/settings',
+const AuthenticatedProfileRouteRoute =
+  AuthenticatedProfileRouteRouteImport.update({
+    id: '/profile',
+    path: '/profile',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
-const AuthenticatedSettingsIndexRoute =
-  AuthenticatedSettingsIndexRouteImport.update({
+const AuthenticatedProfileIndexRoute =
+  AuthenticatedProfileIndexRouteImport.update({
     id: '/',
     path: '/',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+    getParentRoute: () => AuthenticatedProfileRouteRoute,
   } as any)
-const AuthenticatedSettingsPreferencesRoute =
-  AuthenticatedSettingsPreferencesRouteImport.update({
-    id: '/preferences',
-    path: '/preferences',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
-  } as any)
-const AuthenticatedSettingsConstraintsRoute =
-  AuthenticatedSettingsConstraintsRouteImport.update({
-    id: '/constraints',
-    path: '/constraints',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
-  } as any)
-const AuthenticatedSettingsAppearanceRoute =
-  AuthenticatedSettingsAppearanceRouteImport.update({
-    id: '/appearance',
-    path: '/appearance',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+const AuthenticatedProfileNewRoute = AuthenticatedProfileNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AuthenticatedProfileRouteRoute,
+} as any)
+const AuthenticatedProfileProfileIdRoute =
+  AuthenticatedProfileProfileIdRouteImport.update({
+    id: '/$profileId',
+    path: '/$profileId',
+    getParentRoute: () => AuthenticatedProfileRouteRoute,
   } as any)
 const AuthenticatedProductBarcodeRoute =
   AuthenticatedProductBarcodeRouteImport.update({
@@ -92,19 +98,40 @@ const AuthenticatedProductBarcodeRoute =
     path: '/product/$barcode',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedProfileGroupsRouteRoute =
+  AuthenticatedProfileGroupsRouteRouteImport.update({
+    id: '/groups',
+    path: '/groups',
+    getParentRoute: () => AuthenticatedProfileRouteRoute,
+  } as any)
+const AuthenticatedProfileGroupsNewRoute =
+  AuthenticatedProfileGroupsNewRouteImport.update({
+    id: '/new',
+    path: '/new',
+    getParentRoute: () => AuthenticatedProfileGroupsRouteRoute,
+  } as any)
+const AuthenticatedProfileGroupsGroupIdRoute =
+  AuthenticatedProfileGroupsGroupIdRouteImport.update({
+    id: '/$groupId',
+    path: '/$groupId',
+    getParentRoute: () => AuthenticatedProfileGroupsRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
-  '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
+  '/profile': typeof AuthenticatedProfileRouteRouteWithChildren
   '/signin': typeof AuthSigninRoute
   '/signup': typeof AuthSignupRoute
   '/cart': typeof AuthenticatedCartRoute
   '/history': typeof AuthenticatedHistoryRoute
+  '/onboarding': typeof OnboardingOnboardingRoute
+  '/profile/groups': typeof AuthenticatedProfileGroupsRouteRouteWithChildren
   '/product/$barcode': typeof AuthenticatedProductBarcodeRoute
-  '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/settings/constraints': typeof AuthenticatedSettingsConstraintsRoute
-  '/settings/preferences': typeof AuthenticatedSettingsPreferencesRoute
-  '/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/profile/$profileId': typeof AuthenticatedProfileProfileIdRoute
+  '/profile/new': typeof AuthenticatedProfileNewRoute
+  '/profile/': typeof AuthenticatedProfileIndexRoute
+  '/profile/groups/$groupId': typeof AuthenticatedProfileGroupsGroupIdRoute
+  '/profile/groups/new': typeof AuthenticatedProfileGroupsNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
@@ -112,42 +139,52 @@ export interface FileRoutesByTo {
   '/signup': typeof AuthSignupRoute
   '/cart': typeof AuthenticatedCartRoute
   '/history': typeof AuthenticatedHistoryRoute
+  '/onboarding': typeof OnboardingOnboardingRoute
+  '/profile/groups': typeof AuthenticatedProfileGroupsRouteRouteWithChildren
   '/product/$barcode': typeof AuthenticatedProductBarcodeRoute
-  '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/settings/constraints': typeof AuthenticatedSettingsConstraintsRoute
-  '/settings/preferences': typeof AuthenticatedSettingsPreferencesRoute
-  '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/profile/$profileId': typeof AuthenticatedProfileProfileIdRoute
+  '/profile/new': typeof AuthenticatedProfileNewRoute
+  '/profile': typeof AuthenticatedProfileIndexRoute
+  '/profile/groups/$groupId': typeof AuthenticatedProfileGroupsGroupIdRoute
+  '/profile/groups/new': typeof AuthenticatedProfileGroupsNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_auth': typeof AuthRouteWithChildren
   '/_authenticated': typeof AuthenticatedRouteWithChildren
-  '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
+  '/_onboarding': typeof OnboardingRouteWithChildren
+  '/_authenticated/profile': typeof AuthenticatedProfileRouteRouteWithChildren
   '/_auth/signin': typeof AuthSigninRoute
   '/_auth/signup': typeof AuthSignupRoute
   '/_authenticated/cart': typeof AuthenticatedCartRoute
   '/_authenticated/history': typeof AuthenticatedHistoryRoute
+  '/_onboarding/onboarding': typeof OnboardingOnboardingRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/profile/groups': typeof AuthenticatedProfileGroupsRouteRouteWithChildren
   '/_authenticated/product/$barcode': typeof AuthenticatedProductBarcodeRoute
-  '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/_authenticated/settings/constraints': typeof AuthenticatedSettingsConstraintsRoute
-  '/_authenticated/settings/preferences': typeof AuthenticatedSettingsPreferencesRoute
-  '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/profile/$profileId': typeof AuthenticatedProfileProfileIdRoute
+  '/_authenticated/profile/new': typeof AuthenticatedProfileNewRoute
+  '/_authenticated/profile/': typeof AuthenticatedProfileIndexRoute
+  '/_authenticated/profile/groups/$groupId': typeof AuthenticatedProfileGroupsGroupIdRoute
+  '/_authenticated/profile/groups/new': typeof AuthenticatedProfileGroupsNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/settings'
+    | '/profile'
     | '/signin'
     | '/signup'
     | '/cart'
     | '/history'
+    | '/onboarding'
+    | '/profile/groups'
     | '/product/$barcode'
-    | '/settings/appearance'
-    | '/settings/constraints'
-    | '/settings/preferences'
-    | '/settings/'
+    | '/profile/$profileId'
+    | '/profile/new'
+    | '/profile/'
+    | '/profile/groups/$groupId'
+    | '/profile/groups/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -155,35 +192,50 @@ export interface FileRouteTypes {
     | '/signup'
     | '/cart'
     | '/history'
+    | '/onboarding'
+    | '/profile/groups'
     | '/product/$barcode'
-    | '/settings/appearance'
-    | '/settings/constraints'
-    | '/settings/preferences'
-    | '/settings'
+    | '/profile/$profileId'
+    | '/profile/new'
+    | '/profile'
+    | '/profile/groups/$groupId'
+    | '/profile/groups/new'
   id:
     | '__root__'
     | '/_auth'
     | '/_authenticated'
-    | '/_authenticated/settings'
+    | '/_onboarding'
+    | '/_authenticated/profile'
     | '/_auth/signin'
     | '/_auth/signup'
     | '/_authenticated/cart'
     | '/_authenticated/history'
+    | '/_onboarding/onboarding'
     | '/_authenticated/'
+    | '/_authenticated/profile/groups'
     | '/_authenticated/product/$barcode'
-    | '/_authenticated/settings/appearance'
-    | '/_authenticated/settings/constraints'
-    | '/_authenticated/settings/preferences'
-    | '/_authenticated/settings/'
+    | '/_authenticated/profile/$profileId'
+    | '/_authenticated/profile/new'
+    | '/_authenticated/profile/'
+    | '/_authenticated/profile/groups/$groupId'
+    | '/_authenticated/profile/groups/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  OnboardingRoute: typeof OnboardingRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_onboarding': {
+      id: '/_onboarding'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -204,6 +256,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/_onboarding/onboarding': {
+      id: '/_onboarding/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingOnboardingRouteImport
+      parentRoute: typeof OnboardingRoute
     }
     '/_authenticated/history': {
       id: '/_authenticated/history'
@@ -233,40 +292,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSigninRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/_authenticated/settings': {
-      id: '/_authenticated/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof AuthenticatedSettingsRouteRouteImport
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/settings/': {
-      id: '/_authenticated/settings/'
+    '/_authenticated/profile/': {
+      id: '/_authenticated/profile/'
       path: '/'
-      fullPath: '/settings/'
-      preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
+      fullPath: '/profile/'
+      preLoaderRoute: typeof AuthenticatedProfileIndexRouteImport
+      parentRoute: typeof AuthenticatedProfileRouteRoute
     }
-    '/_authenticated/settings/preferences': {
-      id: '/_authenticated/settings/preferences'
-      path: '/preferences'
-      fullPath: '/settings/preferences'
-      preLoaderRoute: typeof AuthenticatedSettingsPreferencesRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    '/_authenticated/profile/new': {
+      id: '/_authenticated/profile/new'
+      path: '/new'
+      fullPath: '/profile/new'
+      preLoaderRoute: typeof AuthenticatedProfileNewRouteImport
+      parentRoute: typeof AuthenticatedProfileRouteRoute
     }
-    '/_authenticated/settings/constraints': {
-      id: '/_authenticated/settings/constraints'
-      path: '/constraints'
-      fullPath: '/settings/constraints'
-      preLoaderRoute: typeof AuthenticatedSettingsConstraintsRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
-    }
-    '/_authenticated/settings/appearance': {
-      id: '/_authenticated/settings/appearance'
-      path: '/appearance'
-      fullPath: '/settings/appearance'
-      preLoaderRoute: typeof AuthenticatedSettingsAppearanceRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    '/_authenticated/profile/$profileId': {
+      id: '/_authenticated/profile/$profileId'
+      path: '/$profileId'
+      fullPath: '/profile/$profileId'
+      preLoaderRoute: typeof AuthenticatedProfileProfileIdRouteImport
+      parentRoute: typeof AuthenticatedProfileRouteRoute
     }
     '/_authenticated/product/$barcode': {
       id: '/_authenticated/product/$barcode'
@@ -274,6 +326,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/product/$barcode'
       preLoaderRoute: typeof AuthenticatedProductBarcodeRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/profile/groups': {
+      id: '/_authenticated/profile/groups'
+      path: '/groups'
+      fullPath: '/profile/groups'
+      preLoaderRoute: typeof AuthenticatedProfileGroupsRouteRouteImport
+      parentRoute: typeof AuthenticatedProfileRouteRoute
+    }
+    '/_authenticated/profile/groups/new': {
+      id: '/_authenticated/profile/groups/new'
+      path: '/new'
+      fullPath: '/profile/groups/new'
+      preLoaderRoute: typeof AuthenticatedProfileGroupsNewRouteImport
+      parentRoute: typeof AuthenticatedProfileGroupsRouteRoute
+    }
+    '/_authenticated/profile/groups/$groupId': {
+      id: '/_authenticated/profile/groups/$groupId'
+      path: '/$groupId'
+      fullPath: '/profile/groups/$groupId'
+      preLoaderRoute: typeof AuthenticatedProfileGroupsGroupIdRouteImport
+      parentRoute: typeof AuthenticatedProfileGroupsRouteRoute
     }
   }
 }
@@ -290,30 +363,46 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
-interface AuthenticatedSettingsRouteRouteChildren {
-  AuthenticatedSettingsAppearanceRoute: typeof AuthenticatedSettingsAppearanceRoute
-  AuthenticatedSettingsConstraintsRoute: typeof AuthenticatedSettingsConstraintsRoute
-  AuthenticatedSettingsPreferencesRoute: typeof AuthenticatedSettingsPreferencesRoute
-  AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
+interface AuthenticatedProfileGroupsRouteRouteChildren {
+  AuthenticatedProfileGroupsGroupIdRoute: typeof AuthenticatedProfileGroupsGroupIdRoute
+  AuthenticatedProfileGroupsNewRoute: typeof AuthenticatedProfileGroupsNewRoute
 }
 
-const AuthenticatedSettingsRouteRouteChildren: AuthenticatedSettingsRouteRouteChildren =
+const AuthenticatedProfileGroupsRouteRouteChildren: AuthenticatedProfileGroupsRouteRouteChildren =
   {
-    AuthenticatedSettingsAppearanceRoute: AuthenticatedSettingsAppearanceRoute,
-    AuthenticatedSettingsConstraintsRoute:
-      AuthenticatedSettingsConstraintsRoute,
-    AuthenticatedSettingsPreferencesRoute:
-      AuthenticatedSettingsPreferencesRoute,
-    AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
+    AuthenticatedProfileGroupsGroupIdRoute:
+      AuthenticatedProfileGroupsGroupIdRoute,
+    AuthenticatedProfileGroupsNewRoute: AuthenticatedProfileGroupsNewRoute,
   }
 
-const AuthenticatedSettingsRouteRouteWithChildren =
-  AuthenticatedSettingsRouteRoute._addFileChildren(
-    AuthenticatedSettingsRouteRouteChildren,
+const AuthenticatedProfileGroupsRouteRouteWithChildren =
+  AuthenticatedProfileGroupsRouteRoute._addFileChildren(
+    AuthenticatedProfileGroupsRouteRouteChildren,
+  )
+
+interface AuthenticatedProfileRouteRouteChildren {
+  AuthenticatedProfileGroupsRouteRoute: typeof AuthenticatedProfileGroupsRouteRouteWithChildren
+  AuthenticatedProfileProfileIdRoute: typeof AuthenticatedProfileProfileIdRoute
+  AuthenticatedProfileNewRoute: typeof AuthenticatedProfileNewRoute
+  AuthenticatedProfileIndexRoute: typeof AuthenticatedProfileIndexRoute
+}
+
+const AuthenticatedProfileRouteRouteChildren: AuthenticatedProfileRouteRouteChildren =
+  {
+    AuthenticatedProfileGroupsRouteRoute:
+      AuthenticatedProfileGroupsRouteRouteWithChildren,
+    AuthenticatedProfileProfileIdRoute: AuthenticatedProfileProfileIdRoute,
+    AuthenticatedProfileNewRoute: AuthenticatedProfileNewRoute,
+    AuthenticatedProfileIndexRoute: AuthenticatedProfileIndexRoute,
+  }
+
+const AuthenticatedProfileRouteRouteWithChildren =
+  AuthenticatedProfileRouteRoute._addFileChildren(
+    AuthenticatedProfileRouteRouteChildren,
   )
 
 interface AuthenticatedRouteChildren {
-  AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
+  AuthenticatedProfileRouteRoute: typeof AuthenticatedProfileRouteRouteWithChildren
   AuthenticatedCartRoute: typeof AuthenticatedCartRoute
   AuthenticatedHistoryRoute: typeof AuthenticatedHistoryRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
@@ -321,7 +410,7 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-  AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
+  AuthenticatedProfileRouteRoute: AuthenticatedProfileRouteRouteWithChildren,
   AuthenticatedCartRoute: AuthenticatedCartRoute,
   AuthenticatedHistoryRoute: AuthenticatedHistoryRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
@@ -332,9 +421,22 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
+interface OnboardingRouteChildren {
+  OnboardingOnboardingRoute: typeof OnboardingOnboardingRoute
+}
+
+const OnboardingRouteChildren: OnboardingRouteChildren = {
+  OnboardingOnboardingRoute: OnboardingOnboardingRoute,
+}
+
+const OnboardingRouteWithChildren = OnboardingRoute._addFileChildren(
+  OnboardingRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  OnboardingRoute: OnboardingRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
