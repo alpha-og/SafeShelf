@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated.index'
+import { Route as AuthenticatedStoresRouteImport } from './routes/_authenticated.stores'
 import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticated.history'
 import { Route as AuthenticatedCartRouteImport } from './routes/_authenticated.cart'
 import { Route as AuthSignupRouteImport } from './routes/_auth.signup'
@@ -34,6 +35,11 @@ const AuthRoute = AuthRouteImport.update({
 const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedStoresRoute = AuthenticatedStoresRouteImport.update({
+  id: '/stores',
+  path: '/stores',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedHistoryRoute = AuthenticatedHistoryRouteImport.update({
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof AuthSignupRoute
   '/cart': typeof AuthenticatedCartRoute
   '/history': typeof AuthenticatedHistoryRoute
+  '/stores': typeof AuthenticatedStoresRoute
   '/product/$barcode': typeof AuthenticatedProductBarcodeRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/constraints': typeof AuthenticatedSettingsConstraintsRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/signup': typeof AuthSignupRoute
   '/cart': typeof AuthenticatedCartRoute
   '/history': typeof AuthenticatedHistoryRoute
+  '/stores': typeof AuthenticatedStoresRoute
   '/product/$barcode': typeof AuthenticatedProductBarcodeRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/constraints': typeof AuthenticatedSettingsConstraintsRoute
@@ -127,6 +135,7 @@ export interface FileRoutesById {
   '/_auth/signup': typeof AuthSignupRoute
   '/_authenticated/cart': typeof AuthenticatedCartRoute
   '/_authenticated/history': typeof AuthenticatedHistoryRoute
+  '/_authenticated/stores': typeof AuthenticatedStoresRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/product/$barcode': typeof AuthenticatedProductBarcodeRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -143,6 +152,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/cart'
     | '/history'
+    | '/stores'
     | '/product/$barcode'
     | '/settings/appearance'
     | '/settings/constraints'
@@ -155,6 +165,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/cart'
     | '/history'
+    | '/stores'
     | '/product/$barcode'
     | '/settings/appearance'
     | '/settings/constraints'
@@ -169,6 +180,7 @@ export interface FileRouteTypes {
     | '/_auth/signup'
     | '/_authenticated/cart'
     | '/_authenticated/history'
+    | '/_authenticated/stores'
     | '/_authenticated/'
     | '/_authenticated/product/$barcode'
     | '/_authenticated/settings/appearance'
@@ -203,6 +215,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/stores': {
+      id: '/_authenticated/stores'
+      path: '/stores'
+      fullPath: '/stores'
+      preLoaderRoute: typeof AuthenticatedStoresRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/history': {
@@ -316,6 +335,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedCartRoute: typeof AuthenticatedCartRoute
   AuthenticatedHistoryRoute: typeof AuthenticatedHistoryRoute
+  AuthenticatedStoresRoute: typeof AuthenticatedStoresRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedProductBarcodeRoute: typeof AuthenticatedProductBarcodeRoute
 }
@@ -324,6 +344,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedCartRoute: AuthenticatedCartRoute,
   AuthenticatedHistoryRoute: AuthenticatedHistoryRoute,
+  AuthenticatedStoresRoute: AuthenticatedStoresRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedProductBarcodeRoute: AuthenticatedProductBarcodeRoute,
 }

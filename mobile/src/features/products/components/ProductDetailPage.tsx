@@ -7,6 +7,7 @@ import { CartCta } from '@/features/cart/components/CartCta'
 import { SuitabilityBreakdown } from '@/features/suitability/components/SuitabilityBreakdown'
 import { useSuitability } from '@/features/suitability/hooks/useSuitability'
 import { useCart } from '@/providers/CartProvider'
+import { useStore } from '@/providers/StoreProvider'
 import { lookupByBarcode } from '../services/product'
 import { ProductHero } from './ProductHero'
 import { ProductInfoSections } from './ProductInfoSections'
@@ -17,6 +18,7 @@ import { ProductServingNote } from './ProductServingNote'
 export function ProductDetailPage() {
   const { barcode } = useParams({ from: '/_authenticated/product/$barcode' })
   const navigate = useNavigate()
+  const { selectedStoreId } = useStore()
   const { items, addToCart, removeFromCart, updateQuantity } = useCart()
 
   const {
@@ -24,8 +26,8 @@ export function ProductDetailPage() {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['product', barcode],
-    queryFn: () => lookupByBarcode(barcode),
+    queryKey: ['product', barcode, selectedStoreId],
+    queryFn: () => lookupByBarcode(barcode, selectedStoreId),
     enabled: !!barcode,
   })
 

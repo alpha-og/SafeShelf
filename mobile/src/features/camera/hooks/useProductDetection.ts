@@ -3,6 +3,7 @@ import type { ProductInfo } from '@/features/products/services/product'
 import { lookupByBarcode } from '@/features/products/services/product'
 import { decodeBarcode, identifyProduct } from '../services/detection'
 import type { ScanMode } from './useCamera'
+import { useStore } from '@/providers/StoreProvider'
 
 interface UseProductDetectionReturn {
   isProcessing: boolean
@@ -17,6 +18,7 @@ export function useProductDetection(
   const [isProcessing, setIsProcessing] = useState(false)
   const [result, setResult] = useState<ProductInfo | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const { selectedStoreId } = useStore()
 
   useEffect(() => {
     if (!imageData) return
@@ -36,7 +38,7 @@ export function useProductDetection(
 
           if (barcode) {
             console.log(`[scan] Barcode detected: ${barcode}`)
-            setResult(await lookupByBarcode(barcode))
+            setResult(await lookupByBarcode(barcode, selectedStoreId))
           } else {
             console.log(
               '[scan] No barcode detected locally (barcode mode) → sending for backend identification',
@@ -52,7 +54,7 @@ export function useProductDetection(
 
           if (barcode) {
             console.log(`[scan] Barcode detected (auto mode): ${barcode}`)
-            setResult(await lookupByBarcode(barcode))
+            setResult(await lookupByBarcode(barcode, selectedStoreId))
           } else {
             console.log('[scan] No barcode detected (auto mode) → sending for image identification')
             setResult(await identifyProduct(data, mode))
@@ -87,7 +89,7 @@ export function useProductDetection(
     return () => {
       cancelled = true
     }
-  }, [imageData, mode])
+  }, [imageData, mode, selectedStoreId])
 
   return { isProcessing, result, error }
 }

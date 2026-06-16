@@ -1,6 +1,7 @@
-import { createFileRoute, Outlet, redirect, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, Outlet, redirect, useNavigate, useRouterState } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
+import { useStore } from '@/providers/StoreProvider'
 
 export const Route = createFileRoute('/_authenticated')({
   beforeLoad: ({ context }) => {
@@ -13,10 +14,18 @@ export const Route = createFileRoute('/_authenticated')({
 
 function RouteComponent() {
   const auth = useAuth()
+  const { selectedStoreId, isInitialized } = useStore()
   const navigate = useNavigate()
+  const currentPath = useRouterState({ select: (s) => s.location.pathname })
+
   useEffect(() => {
-    if (!auth.isAuthenticated) navigate({ to: '/signin' })
-  }, [auth.isAuthenticated, navigate])
-  if (!auth.isAuthenticated) return null
+    if (!auth.isAuthenticated) {
+      navigate({ to: '/signin' })
+    } else if (isInitialized && !selectedStoreId && currentPath !== '/stores') {
+      navigate({ to: '/stores' })
+    }
+  }, [auth.isAuthenticated, isInitialized, selectedStoreId, currentPath, navigate])
+
+  if (!auth.isAuthenticated || !isInitialized) return null
   return <Outlet />
 }
