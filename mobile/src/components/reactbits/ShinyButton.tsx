@@ -1,8 +1,8 @@
-import React from 'react'
-import { motion, type HTMLMotionProps } from 'framer-motion'
+import { type HTMLMotionProps, motion } from 'framer-motion'
+import type React from 'react'
 import { cn } from '@/lib/utils'
 
-interface ShinyButtonProps extends HTMLMotionProps<"button"> {
+interface ShinyButtonProps extends HTMLMotionProps<'button'> {
   shimmerColor?: string
   children?: React.ReactNode
 }
@@ -19,7 +19,7 @@ export function ShinyButton({
       whileTap={{ scale: 0.98 }}
       className={cn(
         'group relative inline-flex items-center justify-center overflow-hidden rounded-2xl bg-primary px-8 py-4 font-bold text-primary-foreground shadow-lg transition-all hover:shadow-xl',
-        className
+        className,
       )}
       {...props}
     >

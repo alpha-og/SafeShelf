@@ -1,4 +1,12 @@
-import { createContext, useContext, useEffect, useMemo, useState, useCallback, type ReactNode } from 'react'
+import {
+  createContext,
+  type ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 
 const STORAGE_KEY = 'safeshelf-theme-mode'
 
@@ -61,11 +69,7 @@ function ThemeProvider({ children }: { children: ReactNode }) {
     document.documentElement.classList.toggle('dark', theme === 'dark')
   }, [theme])
 
-  return (
-    <ThemeContext.Provider value={{ mode, theme, setMode }}>
-      {children}
-    </ThemeContext.Provider>
-  )
+  return <ThemeContext.Provider value={{ mode, theme, setMode }}>{children}</ThemeContext.Provider>
 }
 
 function useTheme(): ThemeState {
@@ -74,5 +78,5 @@ function useTheme(): ThemeState {
   return ctx
 }
 
-export { ThemeProvider, useTheme }
 export type { ThemeMode }
+export { ThemeProvider, useTheme }

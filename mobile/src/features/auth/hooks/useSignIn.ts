@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { useAuth } from '@/hooks/useAuth'
-import { authApi } from '../services/auth'
 import type { SignInInput } from '../schemas/auth'
+import { authApi } from '../services/auth'
 
 export function useSignIn() {
   const auth = useAuth()

@@ -1,44 +1,115 @@
 import type { ProductInfo } from '@/features/products/services/product'
+import { getRacc, getRaccCategoryName } from './racc'
 import type {
   ConditionThreshold,
+  ServingInfo,
+  ServingSettings,
   SuitabilityCheck,
   SuitabilityResult,
   UserProfile,
-  ServingInfo,
-  ServingSettings,
 } from './types'
 import { DEFAULT_SERVING_SETTINGS } from './types'
-import { getRacc, getRaccCategoryName } from './racc'
 
 const DIETARY_INGREDIENT_MAP: Record<string, string[]> = {
   vegan: [
-    'meat', 'beef', 'pork', 'lamb', 'chicken', 'turkey', 'duck', 'fish', 'seafood',
-    'milk', 'cream', 'cheese', 'butter', 'yogurt', 'eggs', 'honey', 'gelatin',
-    'lard', 'tallow', 'whey', 'casein', 'shellac', 'carmine',
+    'meat',
+    'beef',
+    'pork',
+    'lamb',
+    'chicken',
+    'turkey',
+    'duck',
+    'fish',
+    'seafood',
+    'milk',
+    'cream',
+    'cheese',
+    'butter',
+    'yogurt',
+    'eggs',
+    'honey',
+    'gelatin',
+    'lard',
+    'tallow',
+    'whey',
+    'casein',
+    'shellac',
+    'carmine',
   ],
   vegetarian: [
-    'meat', 'beef', 'pork', 'lamb', 'chicken', 'turkey', 'duck', 'fish', 'seafood',
-    'gelatin', 'lard', 'tallow',
+    'meat',
+    'beef',
+    'pork',
+    'lamb',
+    'chicken',
+    'turkey',
+    'duck',
+    'fish',
+    'seafood',
+    'gelatin',
+    'lard',
+    'tallow',
   ],
   pescatarian: [
-    'meat', 'beef', 'pork', 'lamb', 'chicken', 'turkey', 'duck',
-    'gelatin', 'lard', 'tallow',
+    'meat',
+    'beef',
+    'pork',
+    'lamb',
+    'chicken',
+    'turkey',
+    'duck',
+    'gelatin',
+    'lard',
+    'tallow',
   ],
   halal: [
-    'pork', 'bacon', 'ham', 'alcohol', 'ethanol', 'gelatin', 'lard',
-    'non-halal meat', 'rennet',
+    'pork',
+    'bacon',
+    'ham',
+    'alcohol',
+    'ethanol',
+    'gelatin',
+    'lard',
+    'non-halal meat',
+    'rennet',
   ],
   kosher: [
-    'pork', 'bacon', 'ham', 'shellfish', 'shrimp', 'crab', 'lobster',
-    'gelatin', 'lard', 'rabbit',
+    'pork',
+    'bacon',
+    'ham',
+    'shellfish',
+    'shrimp',
+    'crab',
+    'lobster',
+    'gelatin',
+    'lard',
+    'rabbit',
   ],
   'gluten-free': [
-    'wheat', 'barley', 'rye', 'malt', 'brewers yeast', 'triticale',
-    'semolina', 'spelt', 'farro', 'durum', 'bulgur',
+    'wheat',
+    'barley',
+    'rye',
+    'malt',
+    'brewers yeast',
+    'triticale',
+    'semolina',
+    'spelt',
+    'farro',
+    'durum',
+    'bulgur',
   ],
   'dairy-free': [
-    'milk', 'cream', 'cheese', 'butter', 'yogurt', 'whey', 'casein',
-    'lactose', 'milk solids', 'buttermilk', 'ghee',
+    'milk',
+    'cream',
+    'cheese',
+    'butter',
+    'yogurt',
+    'whey',
+    'casein',
+    'lactose',
+    'milk solids',
+    'buttermilk',
+    'ghee',
   ],
 }
 
@@ -124,16 +195,33 @@ function applyOperator(value: number, threshold: number, operator: string): bool
 }
 
 const NUTRIENT_NAMES = new Set([
-  'sodium', 'salt',
-  'saturated_fat', 'saturated-fat', 'saturated fat',
-  'trans_fat', 'trans-fat', 'trans fat',
-  'added_sugars', 'added-sugars', 'added sugars',
-  'sugars', 'sugar',
-  'fiber', 'dietary_fiber', 'dietary-fiber', 'dietary fiber',
-  'fat', 'total_fat', 'total-fat', 'total fat',
-  'carbohydrates', 'carbs',
-  'protein', 'proteins',
-  'energy', 'cholesterol',
+  'sodium',
+  'salt',
+  'saturated_fat',
+  'saturated-fat',
+  'saturated fat',
+  'trans_fat',
+  'trans-fat',
+  'trans fat',
+  'added_sugars',
+  'added-sugars',
+  'added sugars',
+  'sugars',
+  'sugar',
+  'fiber',
+  'dietary_fiber',
+  'dietary-fiber',
+  'dietary fiber',
+  'fat',
+  'total_fat',
+  'total-fat',
+  'total fat',
+  'carbohydrates',
+  'carbs',
+  'protein',
+  'proteins',
+  'energy',
+  'cholesterol',
 ])
 
 const DAILY_VALUE_HINTS: Record<string, { max: number; unit: string }> = {
@@ -154,26 +242,40 @@ const DAILY_VALUE_HINTS: Record<string, { max: number; unit: string }> = {
 function getDailyHint(nutrient: string, value: number, unit: string): string | null {
   const hint = DAILY_VALUE_HINTS[nutrient]
   if (!hint) return null
-  const converted = unit === hint.unit ? value
-    : unit === 'g' && hint.unit === 'mg' ? value * 1000
-    : unit === 'mg' && hint.unit === 'g' ? value / 1000
-    : unit === 'mcg' && hint.unit === 'mg' ? value / 1000
-    : unit === 'mg' && hint.unit === 'mcg' ? value * 1000
-    : unit === 'g' && hint.unit === 'mcg' ? value * 1_000_000
-    : unit === 'mcg' && hint.unit === 'g' ? value / 1_000_000
-    : value
+  const converted =
+    unit === hint.unit
+      ? value
+      : unit === 'g' && hint.unit === 'mg'
+        ? value * 1000
+        : unit === 'mg' && hint.unit === 'g'
+          ? value / 1000
+          : unit === 'mcg' && hint.unit === 'mg'
+            ? value / 1000
+            : unit === 'mg' && hint.unit === 'mcg'
+              ? value * 1000
+              : unit === 'g' && hint.unit === 'mcg'
+                ? value * 1_000_000
+                : unit === 'mcg' && hint.unit === 'g'
+                  ? value / 1_000_000
+                  : value
   if (converted > hint.max) return 'daily'
   return null
 }
 
 function nutrientFailLabel(operator: string, nutrient: string, disease: string): string {
   switch (operator) {
-    case 'le': return `${capitalize(nutrient)} exceeds limit for ${disease}`
-    case 'ge': return `${capitalize(nutrient)} below minimum for ${disease}`
-    case 'lt': return `${capitalize(nutrient)} at or above limit for ${disease}`
-    case 'gt': return `${capitalize(nutrient)} below minimum for ${disease}`
-    case 'eq': return `${capitalize(nutrient)} does not match ${disease} guideline`
-    default: return `${capitalize(nutrient)} violates guideline for ${disease}`
+    case 'le':
+      return `${capitalize(nutrient)} exceeds limit for ${disease}`
+    case 'ge':
+      return `${capitalize(nutrient)} below minimum for ${disease}`
+    case 'lt':
+      return `${capitalize(nutrient)} at or above limit for ${disease}`
+    case 'gt':
+      return `${capitalize(nutrient)} below minimum for ${disease}`
+    case 'eq':
+      return `${capitalize(nutrient)} does not match ${disease} guideline`
+    default:
+      return `${capitalize(nutrient)} violates guideline for ${disease}`
   }
 }
 
@@ -181,7 +283,9 @@ function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1).replace(/_/g, ' ')
 }
 
-function parseServingSize(servingSize: string | null): { quantity: number; unit: 'g' | 'ml' } | null {
+function parseServingSize(
+  servingSize: string | null,
+): { quantity: number; unit: 'g' | 'ml' } | null {
   if (!servingSize) return null
   const pattern = /\(?(\d+(?:\.\d+)?)\s*(g|ml|mL)\)?/i
   const match = servingSize.match(pattern)
@@ -203,9 +307,8 @@ function buildServingInfo(
 
   const racc = getRacc(categories)
   const raccName = getRaccCategoryName(categories)
-  const ratio = parsed.unit === racc.unit
-    ? parsed.quantity / racc.value
-    : parsed.quantity / racc.value
+  const ratio =
+    parsed.unit === racc.unit ? parsed.quantity / racc.value : parsed.quantity / racc.value
 
   const isLiquid = parsed.unit === 'ml' || racc.unit === 'ml'
   const minThreshold = isLiquid ? settings.minLiquidMl : settings.minSolidG
@@ -232,10 +335,7 @@ function buildServingInfo(
   }
 }
 
-function checkAllergens(
-  productAllergens: string[],
-  userAllergens: string[],
-): SuitabilityCheck[] {
+function checkAllergens(productAllergens: string[], userAllergens: string[]): SuitabilityCheck[] {
   if (!userAllergens.length || !productAllergens.length) return []
 
   const userLower = userAllergens.map((a) => a.toLowerCase())
@@ -256,10 +356,7 @@ function checkAllergens(
   return checks
 }
 
-function checkAllergenTraces(
-  productTraces: string[],
-  userAllergens: string[],
-): SuitabilityCheck[] {
+function checkAllergenTraces(productTraces: string[], userAllergens: string[]): SuitabilityCheck[] {
   if (!userAllergens.length || !productTraces.length) return []
 
   const userLower = userAllergens.map((a) => a.toLowerCase())
@@ -300,7 +397,12 @@ function checkNutrients(
         const pct = (converted / rule.value) * 100
         const dailyHint = getDailyHint(rule.nutrient, rule.value, rule.unit)
         const dailyStr = dailyHint ? ` ${dailyHint}` : ''
-        const limitWord = rule.operator === 'le' || rule.operator === 'lt' ? 'limit' : rule.operator === 'eq' ? 'target' : 'minimum'
+        const limitWord =
+          rule.operator === 'le' || rule.operator === 'lt'
+            ? 'limit'
+            : rule.operator === 'eq'
+              ? 'target'
+              : 'minimum'
         checks.push({
           type: 'nutrient',
           status: 'fail',
@@ -376,9 +478,7 @@ function checkDietary(
         const trigger = aliases[item.toLowerCase()] ?? item
         const triggerLower = trigger.toLowerCase()
         const matched = ingredientLower.some(
-          (ing) =>
-            ing.includes(triggerLower) ||
-            ing.includes(item.toLowerCase()),
+          (ing) => ing.includes(triggerLower) || ing.includes(item.toLowerCase()),
         )
         if (matched) {
           checks.push({
@@ -440,13 +540,17 @@ export function evaluate(
 
   for (const threshold of matchedConditions) {
     checks.push(...checkNutrients(product.nutrients, [threshold], scaleFactor))
-    checks.push(
-      ...checkExclusions(product.ingredients, [threshold], aliases),
-    )
+    checks.push(...checkExclusions(product.ingredients, [threshold], aliases))
   }
 
   checks.push(
-    ...checkDietary(product.ingredients, product.nutrients, profile.dietaryPreferences, aliases, product.labels),
+    ...checkDietary(
+      product.ingredients,
+      product.nutrients,
+      profile.dietaryPreferences,
+      aliases,
+      product.labels,
+    ),
   )
 
   const checkGroups = new Set(checks.map((c) => c.group).filter(Boolean))

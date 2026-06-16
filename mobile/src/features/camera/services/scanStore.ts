@@ -11,10 +11,18 @@ const store: ScanStore = {
 }
 
 export const scanStore = {
-  get capturedImage() { return store.capturedImage },
-  set capturedImage(val: string | null) { store.capturedImage = val },
-  get lastResult() { return store.lastResult },
-  set lastResult(val: ProductInfo | null) { store.lastResult = val },
+  get capturedImage() {
+    return store.capturedImage
+  },
+  set capturedImage(val: string | null) {
+    store.capturedImage = val
+  },
+  get lastResult() {
+    return store.lastResult
+  },
+  set lastResult(val: ProductInfo | null) {
+    store.lastResult = val
+  },
   clearAll() {
     store.capturedImage = null
     store.lastResult = null

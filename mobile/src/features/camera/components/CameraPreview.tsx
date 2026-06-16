@@ -23,7 +23,6 @@ export function CameraPreview({ videoRef, isCameraReady, error }: CameraPreviewP
         ref={videoRef}
         playsInline
         muted
-        autoFocus
         className="absolute inset-0 w-full h-full object-cover"
       />
       {!isCameraReady && (

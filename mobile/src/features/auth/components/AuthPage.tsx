@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface AuthPageProps {
   title: string
@@ -10,7 +10,7 @@ interface AuthPageProps {
 
 export function AuthPage({ title, description, children, toggle }: AuthPageProps) {
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
+    <div className="flex flex-1 min-h-0 items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">SafeShelf</CardTitle>

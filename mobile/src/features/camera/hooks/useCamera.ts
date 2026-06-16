@@ -1,5 +1,5 @@
-import { useRef, useState, useCallback, useEffect } from 'react'
 import { Camera } from '@capacitor/camera'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 export type ScanMode = 'auto' | 'barcode' | 'image' | 'nutrient-label'
 

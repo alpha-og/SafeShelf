@@ -1,6 +1,6 @@
 import { BarcodeDetector, type BarcodeFormat } from 'barcode-detector/ponyfill'
-import { api } from '@/lib/axios'
 import { mapResponse, type ProductInfo } from '@/features/products/services/product'
+import { api } from '@/lib/axios'
 
 type ScanMode = 'auto' | 'barcode' | 'image' | 'nutrient-label'
 
@@ -53,7 +53,10 @@ export async function decodeBarcode(imageData: string): Promise<string | null> {
   }
 }
 
-export async function identifyProduct(imageData: string, mode: ScanMode): Promise<ProductInfo | null> {
+export async function identifyProduct(
+  imageData: string,
+  mode: ScanMode,
+): Promise<ProductInfo | null> {
   try {
     const response = await api.post('/v1/products/identify', {
       image: imageData,

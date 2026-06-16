@@ -1,5 +1,5 @@
-import type { LucideIcon } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
+import type { LucideIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 interface EmptyStateProps {
@@ -10,7 +10,13 @@ interface EmptyStateProps {
   onAction?: () => void
 }
 
-export function EmptyState({ icon: Icon, title, description, actionLabel, onAction }: EmptyStateProps) {
+export function EmptyState({
+  icon: Icon,
+  title,
+  description,
+  actionLabel,
+  onAction,
+}: EmptyStateProps) {
   const navigate = useNavigate()
 
   return (
@@ -23,7 +29,7 @@ export function EmptyState({ icon: Icon, title, description, actionLabel, onActi
       {actionLabel && (
         <Button
           onClick={onAction ?? (() => navigate({ to: '/' }))}
-          className="mt-6"
+          className="mt-6 hover:scale-[1.02]"
         >
           {actionLabel}
         </Button>

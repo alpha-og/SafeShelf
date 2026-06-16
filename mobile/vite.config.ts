@@ -1,9 +1,10 @@
-import { defineConfig, loadEnv } from 'vite'
-import react from '@vitejs/plugin-react'
+import fs from 'node:fs'
+import path from 'node:path'
 import tailwindcss from '@tailwindcss/vite'
-import basicSsl from '@vitejs/plugin-basic-ssl'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
-import path from 'path'
+import basicSsl from '@vitejs/plugin-basic-ssl'
+import react from '@vitejs/plugin-react'
+import { defineConfig, loadEnv } from 'vite'
 
 export default defineConfig(({ mode }) => {
   const rootEnv = loadEnv(mode, path.resolve(__dirname, '..'), '')
@@ -19,15 +20,43 @@ export default defineConfig(({ mode }) => {
     mobileHost = env.MOBILE_HOST
   }
 
+  let allowedHosts: true | string[] | undefined = true
+  if (env.MOBILE_ALLOWED_HOSTS === 'false') {
+    allowedHosts = undefined
+  } else if (env.MOBILE_ALLOWED_HOSTS && env.MOBILE_ALLOWED_HOSTS !== 'true') {
+    allowedHosts = env.MOBILE_ALLOWED_HOSTS.split(',').map((h) => h.trim())
+  }
+
   const enableTls = env.MOBILE_TLS_ENABLED !== 'false'
+
+  const certDir = path.resolve(__dirname, 'dev-certs')
+  const certFile = path.join(certDir, 'hostname.local+2.pem')
+  const keyFile = path.join(certDir, 'hostname.local+2-key.pem')
+  const hasMkcert = fs.existsSync(certFile) && fs.existsSync(keyFile)
 
   const plugins = [
     tanstackRouter({ target: 'react', autoCodeSplitting: true }),
     react(),
     tailwindcss(),
   ]
-  if (enableTls) {
+  if (enableTls && !hasMkcert) {
     plugins.push(basicSsl())
+  }
+
+  const server: Record<string, unknown> = {
+    host: mobileHost,
+    port: mobilePort,
+    allowedHosts,
+    proxy: {
+      '/v1': env.VITE_PROXY_TARGET || 'http://localhost:8926',
+    },
+  }
+
+  if (enableTls && hasMkcert) {
+    server.https = {
+      key: fs.readFileSync(keyFile),
+      cert: fs.readFileSync(certFile),
+    }
   }
 
   return {
@@ -37,13 +66,7 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, './src'),
       },
     },
-    server: {
-      host: mobileHost,
-      port: mobilePort,
-      proxy: {
-        '/v1': env.VITE_PROXY_TARGET || 'http://localhost:8926',
-      },
-    },
+    server,
     build: {
       outDir: 'dist',
       emptyOutDir: true,

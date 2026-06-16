@@ -1,15 +1,22 @@
-import React, { useRef } from 'react'
-import { motion, useMotionValue, useSpring, useTransform, type HTMLMotionProps } from 'framer-motion'
+import {
+  type HTMLMotionProps,
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from 'framer-motion'
+import type React from 'react'
+import { useRef } from 'react'
 import { cn } from '@/lib/utils'
 
-interface TiltCardProps extends HTMLMotionProps<"div"> {
+interface TiltCardProps extends HTMLMotionProps<'div'> {
   maxTilt?: number
   children?: React.ReactNode
 }
 
 export function TiltCard({ children, className, maxTilt = 15, ...props }: TiltCardProps) {
   const ref = useRef<HTMLDivElement>(null)
-  
+
   const x = useMotionValue(0)
   const y = useMotionValue(0)
 
@@ -51,7 +58,10 @@ export function TiltCard({ children, className, maxTilt = 15, ...props }: TiltCa
       className={cn('relative', className)}
       {...props}
     >
-      <div style={{ transform: 'translateZ(50px)', transformStyle: 'preserve-3d' }} className="w-full h-full">
+      <div
+        style={{ transform: 'translateZ(50px)', transformStyle: 'preserve-3d' }}
+        className="w-full h-full"
+      >
         {children}
       </div>
     </motion.div>

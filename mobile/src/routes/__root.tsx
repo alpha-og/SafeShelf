@@ -9,7 +9,7 @@ interface RouterContext {
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: () => (
-    <div className="h-dvh overflow-hidden flex flex-col bg-background text-foreground antialiased font-sans selection:bg-primary/20">
+    <div className="h-dvh overflow-hidden flex flex-col bg-background text-foreground antialiased font-sans selection:bg-primary/20 pt-[var(--sat)] pb-[var(--sab)] box-border">
       <Outlet />
       <Toaster theme="dark" position="top-center" richColors />
       {import.meta.env.DEV && <TanStackRouterDevtools />}

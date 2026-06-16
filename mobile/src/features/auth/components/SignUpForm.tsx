@@ -1,8 +1,10 @@
 import { useForm } from '@tanstack/react-form'
-import { signUpSchema, type SignUpInput } from '../schemas/auth'
-import { useSignUp } from '../hooks/useSignUp'
-import { Input } from '@/components/ui/input'
+import { FormError } from '@/components/FormError'
+import { FormField } from '@/components/FormField'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { useSignUp } from '../hooks/useSignUp'
+import { type SignUpInput, signUpSchema } from '../schemas/auth'
 
 export function SignUpForm() {
   const signUpMutation = useSignUp()
@@ -28,8 +30,16 @@ export function SignUpForm() {
     >
       <form.Field name="email">
         {(field) => (
-          <div className="space-y-1">
-            <label className="text-sm font-medium">Email</label>
+          <FormField
+            label="Email"
+            error={
+              field.state.meta.errors
+                ? field.state.meta.errors
+                    .map((e) => (typeof e === 'string' ? e : (e as { message: string }).message))
+                    .join(', ')
+                : null
+            }
+          >
             <Input
               type="email"
               placeholder="you@example.com"
@@ -37,19 +47,22 @@ export function SignUpForm() {
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
             />
-            {field.state.meta.errors ? (
-              <p className="text-sm text-destructive">
-                {field.state.meta.errors.map((e) => (typeof e === 'string' ? e : (e as { message: string }).message)).join(', ')}
-              </p>
-            ) : null}
-          </div>
+          </FormField>
         )}
       </form.Field>
 
       <form.Field name="password">
         {(field) => (
-          <div className="space-y-1">
-            <label className="text-sm font-medium">Password</label>
+          <FormField
+            label="Password"
+            error={
+              field.state.meta.errors
+                ? field.state.meta.errors
+                    .map((e) => (typeof e === 'string' ? e : (e as { message: string }).message))
+                    .join(', ')
+                : null
+            }
+          >
             <Input
               type="password"
               placeholder="••••••••"
@@ -57,22 +70,20 @@ export function SignUpForm() {
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
             />
-            {field.state.meta.errors ? (
-              <p className="text-sm text-destructive">
-                {field.state.meta.errors.map((e) => (typeof e === 'string' ? e : (e as { message: string }).message)).join(', ')}
-              </p>
-            ) : null}
-          </div>
+          </FormField>
         )}
       </form.Field>
 
-      {signUpMutation.isError && (
-        <p className="text-sm text-destructive">
-          {((signUpMutation.error as { response?: { data?: { detail?: string } } })?.response?.data?.detail) ?? signUpMutation.error.message ?? 'Sign up failed'}
-        </p>
-      )}
+      <FormError
+        error={signUpMutation.isError ? signUpMutation.error : null}
+        fallback="Sign up failed"
+      />
 
-      <Button type="submit" className="w-full" disabled={signUpMutation.isPending}>
+      <Button
+        type="submit"
+        className="w-full hover:scale-[1.02]"
+        disabled={signUpMutation.isPending}
+      >
         {signUpMutation.isPending ? 'Creating account...' : 'Create account'}
       </Button>
     </form>

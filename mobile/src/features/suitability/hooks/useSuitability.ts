@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import type { ProductInfo } from '@/features/products/services/product'
 import { evaluate } from '../evaluate'
-import { useConditionRules, useAliases } from '../services/rules'
-import { useUserProfile } from './useUserProfile'
+import { useAliases, useConditionRules } from '../services/rules'
 import type { SuitabilityResult, UserProfile } from '../types'
+import { useUserProfile } from './useUserProfile'
 
 interface UseSuitabilityReturn {
   result: SuitabilityResult | null

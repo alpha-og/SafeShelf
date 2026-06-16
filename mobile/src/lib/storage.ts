@@ -22,21 +22,24 @@ async function initNative(): Promise<boolean> {
       close: () => db.close(),
     }
     return true
-  } catch {
+  } catch (e) {
+    console.error('SQLite init failed, falling back to localStorage:', e)
     return false
   }
 }
 
 const initPromise: Promise<boolean> = initNative()
 
-function isBrowser(): boolean {
+function _isBrowser(): boolean {
   return typeof window !== 'undefined' && !Capacitor.isNativePlatform()
 }
 
 async function getToken(): Promise<string | null> {
   const native = await initPromise
   if (native && nativeDb) {
-    const res = await nativeDb.query('SELECT value FROM key_value WHERE key = ?', [ACCESS_TOKEN_KEY])
+    const res = await nativeDb.query('SELECT value FROM key_value WHERE key = ?', [
+      ACCESS_TOKEN_KEY,
+    ])
     const rows = res.values
     if (rows && rows.length > 0 && rows[0].length > 0) {
       return String(rows[0][0])
@@ -110,4 +113,4 @@ async function removeItem(key: string): Promise<void> {
   localStorage.removeItem(key)
 }
 
-export { getToken, setToken, getItem, setItem, removeItem }
+export { getItem, getToken, removeItem, setItem, setToken }

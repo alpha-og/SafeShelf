@@ -1,5 +1,5 @@
+import type { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios'
 import axios from 'axios'
-import type { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios'
 import { getToken, setToken } from './storage'
 
 let accessToken: string | null = null
@@ -108,4 +108,4 @@ function setOnLogout(cb: () => void): void {
   onLogout = cb
 }
 
-export { api, setAccessToken, getAccessToken, restoreToken, setOnLogout }
+export { api, getAccessToken, restoreToken, setAccessToken, setOnLogout }

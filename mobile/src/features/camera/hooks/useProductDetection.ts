@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import type { ScanMode } from './useCamera'
-import { decodeBarcode, identifyProduct } from '../services/detection'
-import { lookupByBarcode } from '@/features/products/services/product'
 import type { ProductInfo } from '@/features/products/services/product'
+import { lookupByBarcode } from '@/features/products/services/product'
+import { decodeBarcode, identifyProduct } from '../services/detection'
+import type { ScanMode } from './useCamera'
 
 interface UseProductDetectionReturn {
   isProcessing: boolean
@@ -38,7 +38,9 @@ export function useProductDetection(
             console.log(`[scan] Barcode detected: ${barcode}`)
             setResult(await lookupByBarcode(barcode))
           } else {
-            console.log('[scan] No barcode detected locally (barcode mode) → sending for backend identification')
+            console.log(
+              '[scan] No barcode detected locally (barcode mode) → sending for backend identification',
+            )
             setResult(await identifyProduct(data, mode))
           }
           return
