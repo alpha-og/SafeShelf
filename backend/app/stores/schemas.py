@@ -5,6 +5,7 @@ class StoreItem(BaseModel):
     id: str
     name: str
     address: str
+    city: str | None = None
     lat: float
     lon: float
 
@@ -17,6 +18,7 @@ class StoreResponse(BaseModel):
     id: str
     name: str
     address: str
+    city: str | None = None
     lat: float
     lon: float
     hours: str | None = None
@@ -29,7 +31,7 @@ class StoreProductsResponse(BaseModel):
 
 class InventoryResponse(BaseModel):
     store_id: str
-    product_id: str
+    barcode: str
     product_name: str | None = None
     product_image: str | None = None
     in_stock: bool

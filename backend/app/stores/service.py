@@ -28,7 +28,7 @@ async def get_store_inventory(store_id: str, product_id: str, session: AsyncSess
     if not row:
         return {
             "store_id": store_id,
-            "product_id": product_id,
+            "barcode": product_id,
             "product_name": None,
             "product_image": None,
             "in_stock": False,
@@ -40,7 +40,7 @@ async def get_store_inventory(store_id: str, product_id: str, session: AsyncSess
         
     return {
         "store_id": store_id,
-        "product_id": prod.barcode,
+        "barcode": prod.barcode,
         "product_name": prod.product_name,
         "product_image": prod.product_image,
         "in_stock": inv.in_stock,
@@ -58,7 +58,7 @@ async def get_all_store_inventory(store_id: str, session: AsyncSession) -> list[
     return [
         {
             "store_id": store_id,
-            "product_id": prod.barcode,
+            "barcode": prod.barcode,
             "product_name": prod.product_name,
             "product_image": prod.product_image,
             "in_stock": inv.in_stock,
