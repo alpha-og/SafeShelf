@@ -11,7 +11,7 @@ from app.recipes.router import router as recipes_router
 from app.sessions.router import router as sessions_router
 from app.stores.router import router as stores_router
 
-v1_router = APIRouter(prefix="/v1")
+v1_router = APIRouter(prefix='/v1')
 v1_router.include_router(analysis_router)
 v1_router.include_router(auth_router)
 v1_router.include_router(cart_router)

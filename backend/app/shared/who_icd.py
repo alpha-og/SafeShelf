@@ -1,8 +1,7 @@
+import re
 import time
-from urllib import response
 
 import httpx
-import re
 from fastapi import HTTPException
 
 from app.shared.config import settings
@@ -11,6 +10,7 @@ from app.shared.config import settings
 _cached_who_token: str = None
 _token_expires_at: float = 0.0
 
+
 async def get_valid_who_token() -> str:
     global _cached_who_token, _token_expires_at
     current_time = time.time()
@@ -18,16 +18,16 @@ async def get_valid_who_token() -> str:
     if _cached_who_token and current_time < (_token_expires_at - 30):
         return _cached_who_token
 
-    WHO_TOKEN_URL = "https://icdaccessmanagement.who.int/connect/token"
+    WHO_TOKEN_URL = 'https://icdaccessmanagement.who.int/connect/token'
     data = {
-        "grant_type": "client_credentials",
-        "scope": "icdapi_access",
+        'grant_type': 'client_credentials',
+        'scope': 'icdapi_access',
     }
 
     if not settings.WHO_CLIENT_ID or not settings.WHO_CLIENT_SECRET:
         raise HTTPException(
             status_code=500,
-            detail="WHO client credentials are missing. Set WHO_CLIENT_ID and WHO_CLIENT_SECRET.",
+            detail='WHO client credentials are missing. Set WHO_CLIENT_ID and WHO_CLIENT_SECRET.',
         )
 
     async with httpx.AsyncClient(timeout=20.0) as client:
@@ -36,39 +36,40 @@ async def get_valid_who_token() -> str:
             data=data,
             auth=(settings.WHO_CLIENT_ID, settings.WHO_CLIENT_SECRET),
         )
-       
+
         if response.status_code != 200:
-            raise HTTPException(status_code=500, detail="Failed to retrieve WHO API session token")
+            raise HTTPException(status_code=500, detail='Failed to retrieve WHO API session token')
 
         payload = response.json()
-        _cached_who_token = payload["access_token"]
-        _token_expires_at = current_time + float(payload.get("expires_in", 3600))
+        _cached_who_token = payload['access_token']
+        _token_expires_at = current_time + float(payload.get('expires_in', 3600))
         return _cached_who_token
 
+
 async def fetch_icd11_code(disease_name: str, token: str) -> dict[str, str]:
-    WHO_SEARCH_URL = "https://id.who.int/icd/release/11/2024-01/mms/search"
+    WHO_SEARCH_URL = 'https://id.who.int/icd/release/11/2024-01/mms/search'
     headers = {
-        "Authorization": f"Bearer {token}",
-        "API-Version": "v2",
-        "Accept-Language": "en",
-        "Accept": "application/json",
+        'Authorization': f'Bearer {token}',
+        'API-Version': 'v2',
+        'Accept-Language': 'en',
+        'Accept': 'application/json',
     }
     params = {
-        "q": disease_name,
-        #"flatResults": "true",
+        'q': disease_name,
+        # "flatResults": "true",
     }
     async with httpx.AsyncClient() as client:
         response = await client.get(WHO_SEARCH_URL, headers=headers, params=params)
         if response.status_code != 200:
-            return {"icd11_code": "UNKNOWN", "standard_name": disease_name}
-    
-        entities = response.json().get("destinationEntities", [])
+            return {'icd11_code': 'UNKNOWN', 'standard_name': disease_name}
+
+        entities = response.json().get('destinationEntities', [])
         if not entities:
-            return {"icd11_code": "UNKNOWN", "standard_name": disease_name}
+            return {'icd11_code': 'UNKNOWN', 'standard_name': disease_name}
         top_match = entities[0]
-        raw_title = top_match.get("title", disease_name)
+        raw_title = top_match.get('title', disease_name)
         clean_title = re.sub(r'<[^>]+>', '', raw_title)
         return {
-            "icd11_code": top_match.get("theCode", "UNKNOWN"),
-            "standard_name": clean_title,
+            'icd11_code': top_match.get('theCode', 'UNKNOWN'),
+            'standard_name': clean_title,
         }

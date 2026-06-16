@@ -1,7 +1,7 @@
-import { getItem } from '@/lib/storage'
-import type { UserProfile, ServingSettings } from '../types'
-import { DEFAULT_SERVING_SETTINGS } from '../types'
 import type { ConstraintItem } from '@/features/settings/services/constraints'
+import { getItem } from '@/lib/storage'
+import type { ServingSettings, UserProfile } from '../types'
+import { DEFAULT_SERVING_SETTINGS } from '../types'
 
 const CONDITIONS_KEY = 'constraints:conditions'
 const ALLERGENS_KEY = 'constraints:allergens'
@@ -14,7 +14,8 @@ export async function readUserProfile(): Promise<UserProfile> {
   const allergens = (await getItem<ConstraintItem[]>(ALLERGENS_KEY)) ?? []
   const dietaryPreferences = (await getItem<string[]>(PREFERENCES_KEY)) ?? []
   const budget = (await getItem<string>(BUDGET_KEY)) ?? ''
-  const servingSettings = (await getItem<ServingSettings>(SERVING_SETTINGS_KEY)) ?? DEFAULT_SERVING_SETTINGS
+  const servingSettings =
+    (await getItem<ServingSettings>(SERVING_SETTINGS_KEY)) ?? DEFAULT_SERVING_SETTINGS
 
   return {
     allergens: allergens.map((a) => a.name),

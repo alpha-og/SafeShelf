@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react'
-import { useNavigate } from '@tanstack/react-router'
 import { useQueryClient } from '@tanstack/react-query'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card } from '@/components/ui/card'
+import { useNavigate } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
+import { CardList } from '@/components/CardList'
 import { PageHeader } from '@/components/PageHeader'
 import { SectionHeader } from '@/components/SectionHeader'
-import { CardList } from '@/components/CardList'
-import { getItem, setItem } from '@/lib/storage'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import type { ServingSettings } from '@/features/suitability/types'
 import { DEFAULT_SERVING_SETTINGS } from '@/features/suitability/types'
+import { getItem, setItem } from '@/lib/storage'
 
 const PREFERENCES_KEY = 'preferences:dietary'
 const BUDGET_KEY = 'preferences:budget'
@@ -35,7 +35,9 @@ export function PreferencesPage() {
   const [budgetDraft, setBudgetDraft] = useState<string>('')
   const [servingSettings, setServingSettings] = useState<ServingSettings>(DEFAULT_SERVING_SETTINGS)
   const [solidDraft, setSolidDraft] = useState<string>(String(DEFAULT_SERVING_SETTINGS.minSolidG))
-  const [liquidDraft, setLiquidDraft] = useState<string>(String(DEFAULT_SERVING_SETTINGS.minLiquidMl))
+  const [liquidDraft, setLiquidDraft] = useState<string>(
+    String(DEFAULT_SERVING_SETTINGS.minLiquidMl),
+  )
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
@@ -124,11 +126,15 @@ export function PreferencesPage() {
         <section>
           <SectionHeader variant="default">Serving size thresholds</SectionHeader>
           <p className="text-xs text-muted-foreground mb-4">
-            Products with declared serving sizes below these values will be flagged as potentially misleading.
+            Products with declared serving sizes below these values will be flagged as potentially
+            misleading.
           </p>
           <Card className="p-4 space-y-4">
             <div>
-              <label htmlFor="min-solid" className="text-xs font-medium text-foreground block mb-1.5">
+              <label
+                htmlFor="min-solid"
+                className="text-xs font-medium text-foreground block mb-1.5"
+              >
                 Min solid serving (g)
               </label>
               <Input
@@ -141,7 +147,10 @@ export function PreferencesPage() {
               />
             </div>
             <div>
-              <label htmlFor="min-liquid" className="text-xs font-medium text-foreground block mb-1.5">
+              <label
+                htmlFor="min-liquid"
+                className="text-xs font-medium text-foreground block mb-1.5"
+              >
                 Min liquid serving (ml)
               </label>
               <Input
@@ -155,7 +164,10 @@ export function PreferencesPage() {
             </div>
             <Button
               onClick={saveServing}
-              disabled={solidDraft === String(servingSettings.minSolidG) && liquidDraft === String(servingSettings.minLiquidMl)}
+              disabled={
+                solidDraft === String(servingSettings.minSolidG) &&
+                liquidDraft === String(servingSettings.minLiquidMl)
+              }
               size="sm"
               className="hover:scale-[1.02]"
             >

@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react'
-import { useNavigate } from '@tanstack/react-router'
 import { useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
 import { PageHeader } from '@/components/PageHeader'
-import { SearchableMultiSelect } from './SearchableMultiSelect'
 import { getItem, setItem } from '@/lib/storage'
 import type { ConstraintItem } from '../services/constraints'
+import { SearchableMultiSelect } from './SearchableMultiSelect'
 
 const CONDITIONS_KEY = 'constraints:conditions'
 const ALLERGENS_KEY = 'constraints:allergens'

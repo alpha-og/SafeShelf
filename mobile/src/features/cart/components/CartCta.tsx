@@ -1,8 +1,8 @@
 import { ShoppingCart, Trash2 } from 'lucide-react'
 import { QuantityAdjuster } from '@/components/QuantityAdjuster'
 import { ShinyButton } from '@/components/reactbits/ShinyButton'
-import type { CartItem } from '@/providers/CartProvider'
 import type { ProductInfo } from '@/features/products/services/product'
+import type { CartItem } from '@/providers/CartProvider'
 
 interface CartCtaProps {
   product: ProductInfo
@@ -12,7 +12,13 @@ interface CartCtaProps {
   updateQuantity: (barcode: string, quantity: number) => void
 }
 
-export function CartCta({ product, cartItem, addToCart, removeFromCart, updateQuantity }: CartCtaProps) {
+export function CartCta({
+  product,
+  cartItem,
+  addToCart,
+  removeFromCart,
+  updateQuantity,
+}: CartCtaProps) {
   if (!product.barcode) return null
 
   if (cartItem) {
@@ -26,9 +32,7 @@ export function CartCta({ product, cartItem, addToCart, removeFromCart, updateQu
         </button>
 
         <div className="flex-1 text-center">
-          <span className="text-primary text-sm font-bold">
-            {cartItem.quantity} in cart
-          </span>
+          <span className="text-primary text-sm font-bold">{cartItem.quantity} in cart</span>
         </div>
 
         <QuantityAdjuster
@@ -47,10 +51,7 @@ export function CartCta({ product, cartItem, addToCart, removeFromCart, updateQu
   }
 
   return (
-    <ShinyButton
-      className="h-14 w-full"
-      onClick={() => addToCart(product)}
-    >
+    <ShinyButton className="h-14 w-full" onClick={() => addToCart(product)}>
       <ShoppingCart className="h-6 w-6" />
       Add to Cart
     </ShinyButton>

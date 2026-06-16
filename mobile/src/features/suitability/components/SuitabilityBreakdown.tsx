@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react'
 import { ChevronDown, ChevronUp, CircleAlert, CircleX } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { useMemo, useState } from 'react'
 import { StatusDot } from '@/components/StatusDot'
+import { Button } from '@/components/ui/button'
 import type { SuitabilityCheck, SuitabilityStatus } from '../types'
 
 interface SuitabilityBreakdownProps {
@@ -31,7 +31,7 @@ export function SuitabilityBreakdown({ checks }: SuitabilityBreakdownProps) {
     for (const check of checks) {
       const key = check.group ?? 'Other'
       if (!map.has(key)) map.set(key, [])
-      map.get(key)!.push(check)
+      map.get(key)?.push(check)
     }
 
     const result: GroupInfo[] = []
@@ -94,7 +94,11 @@ export function SuitabilityBreakdown({ checks }: SuitabilityBreakdownProps) {
                 <StatusDot status={group.status} />
                 <span className="text-sm font-medium text-foreground">{group.name}</span>
               </span>
-              {isOpen ? <ChevronUp className="h-3.5 w-3.5 text-muted-foreground shrink-0" /> : <ChevronDown className="h-3.5 w-3.5 text-muted-foreground shrink-0" />}
+              {isOpen ? (
+                <ChevronUp className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+              ) : (
+                <ChevronDown className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+              )}
             </Button>
             {isOpen && (
               <div className="ml-4 pl-3 border-l-2 border-border space-y-1.5 pb-1.5">

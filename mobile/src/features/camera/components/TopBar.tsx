@@ -1,17 +1,22 @@
-import { forwardRef } from 'react'
-import { Settings, ShoppingCart, History } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
+import { History, Settings, ShoppingCart } from 'lucide-react'
+import { forwardRef } from 'react'
 
 interface TopBarProps {
   cameraAvailable: boolean
 }
 
-export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(
-  function TopBar({ cameraAvailable }, ref) {
+export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar(
+  { cameraAvailable },
+  ref,
+) {
   const navigate = useNavigate()
 
   return (
-    <div ref={ref} className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-4 pt-[calc(var(--sat)_+_1rem)]">
+    <div
+      ref={ref}
+      className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-4 pt-[calc(var(--sat)_+_1rem)]"
+    >
       <button
         onClick={() => navigate({ to: '/settings' })}
         className={`flex items-center justify-center w-10 h-10 rounded-full backdrop-blur-md border transition-colors ${
@@ -23,9 +28,13 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(
         <Settings className="h-5 w-5" />
       </button>
 
-      <div className={`flex backdrop-blur-md rounded-full p-1 gap-0.5 border ${
-        cameraAvailable ? 'bg-primary/30 hover:scale-[1.02] border-primary/30' : 'bg-primary/20 hover:scale-[1.02] border-primary/20'
-      }`}>
+      <div
+        className={`flex backdrop-blur-md rounded-full p-1 gap-0.5 border ${
+          cameraAvailable
+            ? 'bg-primary/30 hover:scale-[1.02] border-primary/30'
+            : 'bg-primary/20 hover:scale-[1.02] border-primary/20'
+        }`}
+      >
         <button
           onClick={() => navigate({ to: '/cart' })}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${

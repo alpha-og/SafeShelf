@@ -1,10 +1,10 @@
-import { defineConfig, loadEnv } from 'vite'
-import react from '@vitejs/plugin-react'
+import fs from 'node:fs'
+import path from 'node:path'
 import tailwindcss from '@tailwindcss/vite'
-import basicSsl from '@vitejs/plugin-basic-ssl'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
-import path from 'path'
-import fs from 'fs'
+import basicSsl from '@vitejs/plugin-basic-ssl'
+import react from '@vitejs/plugin-react'
+import { defineConfig, loadEnv } from 'vite'
 
 export default defineConfig(({ mode }) => {
   const rootEnv = loadEnv(mode, path.resolve(__dirname, '..'), '')
@@ -24,7 +24,7 @@ export default defineConfig(({ mode }) => {
   if (env.MOBILE_ALLOWED_HOSTS === 'false') {
     allowedHosts = undefined
   } else if (env.MOBILE_ALLOWED_HOSTS && env.MOBILE_ALLOWED_HOSTS !== 'true') {
-    allowedHosts = env.MOBILE_ALLOWED_HOSTS.split(',').map(h => h.trim())
+    allowedHosts = env.MOBILE_ALLOWED_HOSTS.split(',').map((h) => h.trim())
   }
 
   const enableTls = env.MOBILE_TLS_ENABLED !== 'false'

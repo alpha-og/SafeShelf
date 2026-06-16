@@ -1,6 +1,6 @@
-import { useRef, useState, useCallback } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Scan, ScanLine, Image, FileText } from 'lucide-react'
+import { FileText, Image, Scan, ScanLine } from 'lucide-react'
+import { useCallback, useRef, useState } from 'react'
 import type { ScanMode } from '../hooks/useCamera'
 
 interface ModeOption {
@@ -84,9 +84,13 @@ export function ModeSwitcher({ mode, onModeChange, cameraAvailable }: ModeSwitch
           exit="exit"
           transition={{ duration: 0.15, ease: 'easeInOut' }}
         >
-          <Icon className={`h-5 w-5 shrink-0 ${cameraAvailable ? 'text-white/80' : 'text-white/50'}`} />
+          <Icon
+            className={`h-5 w-5 shrink-0 ${cameraAvailable ? 'text-white/80' : 'text-white/50'}`}
+          />
           <div className="flex flex-col items-center gap-1">
-            <span className={`text-xs font-medium leading-tight ${cameraAvailable ? 'text-white/80' : 'text-white/50'}`}>
+            <span
+              className={`text-xs font-medium leading-tight ${cameraAvailable ? 'text-white/80' : 'text-white/50'}`}
+            >
               {current.label}
             </span>
             <div className="flex items-center gap-1">
@@ -95,12 +99,12 @@ export function ModeSwitcher({ mode, onModeChange, cameraAvailable }: ModeSwitch
                   key={i}
                   className={`rounded-full transition-all duration-200 shrink-0 bg-white ${
                     i === currentIndex
-                    ? cameraAvailable
-                      ? 'opacity-80 w-1 h-1'
-                      : 'opacity-50 w-1 h-1'
-                    : cameraAvailable
-                      ? 'opacity-30 w-[5px] h-[5px]'
-                      : 'opacity-15 w-[5px] h-[5px]'
+                      ? cameraAvailable
+                        ? 'opacity-80 w-1 h-1'
+                        : 'opacity-50 w-1 h-1'
+                      : cameraAvailable
+                        ? 'opacity-30 w-[5px] h-[5px]'
+                        : 'opacity-15 w-[5px] h-[5px]'
                   }`}
                 />
               ))}

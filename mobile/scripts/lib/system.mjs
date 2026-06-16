@@ -1,4 +1,4 @@
-import { execSync } from 'child_process'
+import { execSync } from 'node:child_process'
 
 function tryExec(cmd) {
   try {
@@ -46,7 +46,10 @@ export function checkMkcert() {
       linux: 'sudo apt install mkcert || sudo pacman -S mkcert',
       windows: 'winget install mkcert || scoop install mkcert',
     }
-    return { ok: false, message: `mkcert not found (optional). Install: ${tips[plat] || tips.linux}` }
+    return {
+      ok: false,
+      message: `mkcert not found (optional). Install: ${tips[plat] || tips.linux}`,
+    }
   }
   const version = getOutput('mkcert -version')
   return { ok: true, message: version ? `mkcert ${version}` : 'mkcert available' }
@@ -54,7 +57,12 @@ export function checkMkcert() {
 
 export function checkAdb() {
   const ok = tryExec('adb version')
-  if (!ok) return { ok: false, message: 'adb not found. Install Android platform tools (brew install android-platform-tools)' }
+  if (!ok)
+    return {
+      ok: false,
+      message:
+        'adb not found. Install Android platform tools (brew install android-platform-tools)',
+    }
   return { ok: true, message: 'adb available' }
 }
 
@@ -63,7 +71,8 @@ export function checkXcodebuild() {
     return { ok: false, message: 'iOS development requires macOS' }
   }
   const version = getOutput('xcodebuild -version')
-  if (!version) return { ok: false, message: 'xcodebuild not found. Install Xcode from the App Store' }
+  if (!version)
+    return { ok: false, message: 'xcodebuild not found. Install Xcode from the App Store' }
   return { ok: true, message: `Xcode ${version.split('\n')[0]}` }
 }
 

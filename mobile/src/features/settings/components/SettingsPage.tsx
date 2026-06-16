@@ -1,7 +1,7 @@
-import { Sun, Settings2, Info } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
-import { PageHeader } from '@/components/PageHeader'
+import { Info, Settings2, Sun } from 'lucide-react'
 import { CardList } from '@/components/CardList'
+import { PageHeader } from '@/components/PageHeader'
 
 const settingsItems = [
   { to: '/settings/appearance' as const, label: 'Appearance', icon: Sun },
@@ -19,7 +19,15 @@ export function SettingsPage() {
       <main className="max-w-7xl mx-auto px-4 py-6">
         <CardList
           items={settingsItems.map((item) => ({ id: item.to, label: item.label, icon: item.icon }))}
-          onToggle={(id) => navigate({ to: id as '/' | '/settings/appearance' | '/settings/preferences' | '/settings/constraints' })}
+          onToggle={(id) =>
+            navigate({
+              to: id as
+                | '/'
+                | '/settings/appearance'
+                | '/settings/preferences'
+                | '/settings/constraints',
+            })
+          }
         />
       </main>
     </div>

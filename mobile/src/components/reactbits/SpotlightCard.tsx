@@ -1,5 +1,6 @@
-import React, { useRef, useState, useEffect } from 'react'
 import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
+import type React from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
 
 interface SpotlightCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -44,7 +45,7 @@ export function SpotlightCard({
       ref={cardRef}
       className={cn(
         'group relative overflow-hidden rounded-3xl border border-white/10 bg-black/40 backdrop-blur-md',
-        className
+        className,
       )}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}

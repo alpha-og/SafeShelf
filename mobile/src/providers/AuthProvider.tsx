@@ -1,5 +1,5 @@
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react'
-import { api, setAccessToken, restoreToken, setOnLogout, getAccessToken } from '@/lib/axios'
+import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from 'react'
+import { api, getAccessToken, restoreToken, setAccessToken, setOnLogout } from '@/lib/axios'
 import { setToken } from '@/lib/storage'
 
 interface User {
@@ -54,7 +54,9 @@ function AuthProvider({ children }: { children: ReactNode }) {
         return
       }
       try {
-        const { data } = await api.get<{ id: number; email: string; created_at: string }>('/v1/auth/me')
+        const { data } = await api.get<{ id: number; email: string; created_at: string }>(
+          '/v1/auth/me',
+        )
         setUser(data)
         setAccessTokenState(getAccessToken())
       } catch {
@@ -64,24 +66,36 @@ function AuthProvider({ children }: { children: ReactNode }) {
         setIsLoading(false)
       }
     })()
-  }, [accessToken])
+  }, [])
 
-  const signUp = useCallback(async (email: string, password: string) => {
-    const { data } = await api.post<{
-      id: number
-      email: string
-      created_at: string
-      access_token: string
-    }>('/v1/auth/signup', { email, password })
-    restoreSession(data.access_token, { id: data.id, email: data.email, created_at: data.created_at })
-  }, [restoreSession])
+  const signUp = useCallback(
+    async (email: string, password: string) => {
+      const { data } = await api.post<{
+        id: number
+        email: string
+        created_at: string
+        access_token: string
+      }>('/v1/auth/signup', { email, password })
+      restoreSession(data.access_token, {
+        id: data.id,
+        email: data.email,
+        created_at: data.created_at,
+      })
+    },
+    [restoreSession],
+  )
 
   const signIn = useCallback(async (email: string, password: string) => {
-    const { data } = await api.post<{ access_token: string }>('/v1/auth/signin', { email, password })
+    const { data } = await api.post<{ access_token: string }>('/v1/auth/signin', {
+      email,
+      password,
+    })
     setAccessToken(data.access_token)
     setAccessTokenState(data.access_token)
     setToken(data.access_token)
-    const { data: userData } = await api.get<{ id: number; email: string; created_at: string }>('/v1/auth/me')
+    const { data: userData } = await api.get<{ id: number; email: string; created_at: string }>(
+      '/v1/auth/me',
+    )
     setUser(userData)
   }, [])
 
@@ -118,5 +132,5 @@ function useAuth(): AuthState {
   return ctx
 }
 
-export { AuthProvider, useAuth }
 export type { AuthState, User }
+export { AuthProvider, useAuth }

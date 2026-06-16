@@ -1,32 +1,38 @@
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams } from '@tanstack/react-router'
-import { lookupByBarcode } from '../services/product'
-import { useSuitability } from '@/features/suitability/hooks/useSuitability'
-import { SuitabilityBreakdown } from '@/features/suitability/components/SuitabilityBreakdown'
-import { ProductNutrientTable } from './ProductNutrientTable'
-import { useCart } from '@/providers/CartProvider'
-import { CartCta } from '@/features/cart/components/CartCta'
-import { ProductHero } from './ProductHero'
-import { ProductScoreBadges } from './ProductScoreBadges'
-import { ProductServingNote } from './ProductServingNote'
-import { ProductInfoSections } from './ProductInfoSections'
+import { BottomCta } from '@/components/BottomCta'
 import { SectionHeader } from '@/components/SectionHeader'
 import { Skeleton } from '@/components/ui/skeleton'
-import { BottomCta } from '@/components/BottomCta'
+import { CartCta } from '@/features/cart/components/CartCta'
+import { SuitabilityBreakdown } from '@/features/suitability/components/SuitabilityBreakdown'
+import { useSuitability } from '@/features/suitability/hooks/useSuitability'
+import { useCart } from '@/providers/CartProvider'
+import { lookupByBarcode } from '../services/product'
+import { ProductHero } from './ProductHero'
+import { ProductInfoSections } from './ProductInfoSections'
+import { ProductNutrientTable } from './ProductNutrientTable'
+import { ProductScoreBadges } from './ProductScoreBadges'
+import { ProductServingNote } from './ProductServingNote'
 
 export function ProductDetailPage() {
   const { barcode } = useParams({ from: '/_authenticated/product/$barcode' })
   const navigate = useNavigate()
   const { items, addToCart, removeFromCart, updateQuantity } = useCart()
 
-  const { data: product, isLoading, error } = useQuery({
+  const {
+    data: product,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['product', barcode],
     queryFn: () => lookupByBarcode(barcode),
     enabled: !!barcode,
   })
 
   const { result: suitability } = useSuitability(product ?? null)
-  const cartItem = product?.barcode ? items.find((i) => i.product.barcode === product.barcode) : undefined
+  const cartItem = product?.barcode
+    ? items.find((i) => i.product.barcode === product.barcode)
+    : undefined
 
   if (isLoading) {
     return (

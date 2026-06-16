@@ -57,7 +57,13 @@ export function ProductScoreBadges({
         </Badge>
       )}
       {labels.map((label, i) => (
-        <Badge key={i} variant="outline" className="bg-muted/30 text-muted-foreground border-border hover:scale-105">{label}</Badge>
+        <Badge
+          key={i}
+          variant="outline"
+          className="bg-muted/30 text-muted-foreground border-border hover:scale-105"
+        >
+          {label}
+        </Badge>
       ))}
     </section>
   )

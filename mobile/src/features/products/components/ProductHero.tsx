@@ -1,9 +1,9 @@
-import { ArrowLeft, ShoppingCart, Trash2, Minus, Plus } from 'lucide-react'
+import { ArrowLeft, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react'
 import { DragHandle } from '@/components/DragHandle'
-import type { ProductInfo } from '../services/product'
-import type { SuitabilityResult } from '@/features/suitability/types'
 import { SuitabilityBadge } from '@/features/suitability/components/SuitabilityBadge'
+import type { SuitabilityResult } from '@/features/suitability/types'
 import type { CartItem } from '@/providers/CartProvider'
+import type { ProductInfo } from '../services/product'
 
 interface ProductHeroProps {
   product: ProductInfo
@@ -48,7 +48,9 @@ export function ProductHero({
         <div className="absolute top-0 left-0 right-0 h-24 bg-linear-to-b from-overlay/60 to-transparent pointer-events-none z-10" />
       )}
 
-      {dragIndicator && <DragHandle variant="light" className="absolute top-0 left-0 right-0 z-10" />}
+      {dragIndicator && (
+        <DragHandle variant="light" className="absolute top-0 left-0 right-0 z-10" />
+      )}
 
       <div className="absolute top-0 left-0 z-20 p-3">
         <button

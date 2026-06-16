@@ -17,4 +17,4 @@ type ApiResponse<T, M extends { timestamp: string } = { timestamp: string }> =
   | SuccessApiResponse<T, M>
   | ErrorApiResponse
 
-export type { ApiResponse, SuccessApiResponse, ErrorApiResponse }
+export type { ApiResponse, ErrorApiResponse, SuccessApiResponse }

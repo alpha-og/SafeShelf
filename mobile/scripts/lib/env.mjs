@@ -1,5 +1,5 @@
-import { readFileSync, existsSync } from 'fs'
-import { resolve } from 'path'
+import { existsSync, readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 
 export function loadEnv(rootDir) {
   const env = {}
@@ -17,12 +17,14 @@ export function loadEnv(rootDir) {
       if (!trimmed || trimmed.startsWith('#')) continue
       const eq = trimmed.indexOf('=')
       if (eq === -1) continue
-      let key = trimmed.slice(0, eq).trim()
+      const key = trimmed.slice(0, eq).trim()
       let value = trimmed.slice(eq + 1).trim()
       const comment = value.indexOf('#')
       if (comment !== -1) value = value.slice(0, comment).trim()
-      if ((value.startsWith('"') && value.endsWith('"')) ||
-          (value.startsWith("'") && value.endsWith("'"))) {
+      if (
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))
+      ) {
         value = value.slice(1, -1)
       }
       env[key] = value

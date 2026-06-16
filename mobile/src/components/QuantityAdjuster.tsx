@@ -16,7 +16,9 @@ export function QuantityAdjuster({ quantity, onIncrement, onDecrement }: Quantit
       >
         <Minus className="h-4 w-4" />
       </button>
-      <span className="font-semibold text-sm w-6 text-center flex items-center justify-center">{quantity}</span>
+      <span className="font-semibold text-sm w-6 text-center flex items-center justify-center">
+        {quantity}
+      </span>
       <button
         className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/20 text-primary hover:bg-primary/30 hover:scale-[1.02] transition-colors"
         onClick={onIncrement}

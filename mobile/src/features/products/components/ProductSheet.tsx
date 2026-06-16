@@ -1,18 +1,18 @@
-import { useState, useEffect, useCallback } from 'react'
-import { motion, useAnimation, type PanInfo } from 'framer-motion'
-import { ArrowRight, AlertTriangle } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
-import { Button } from '@/components/ui/button'
-import { DragHandle } from '@/components/DragHandle'
-import { Skeleton } from '@/components/ui/skeleton'
+import { motion, type PanInfo, useAnimation } from 'framer-motion'
+import { AlertTriangle, ArrowRight } from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react'
 import { BottomCta } from '@/components/BottomCta'
+import { DragHandle } from '@/components/DragHandle'
+import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
+import { CartCta } from '@/features/cart/components/CartCta'
+import { SuitabilityBreakdown } from '@/features/suitability/components/SuitabilityBreakdown'
+import { useSuitability } from '@/features/suitability/hooks/useSuitability'
 import { useCart } from '@/providers/CartProvider'
 import type { ProductInfo } from '../services/product'
-import { useSuitability } from '@/features/suitability/hooks/useSuitability'
-import { SuitabilityBreakdown } from '@/features/suitability/components/SuitabilityBreakdown'
-import { CartCta } from '@/features/cart/components/CartCta'
-import { ProductServingNote } from './ProductServingNote'
 import { ProductHero } from './ProductHero'
+import { ProductServingNote } from './ProductServingNote'
 
 interface ProductSheetProps {
   isProcessing: boolean
@@ -25,14 +25,23 @@ interface ProductSheetProps {
 
 const OFFRANGE = typeof window !== 'undefined' ? window.innerHeight : 700
 
-export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRef, topOffset = 0 }: ProductSheetProps) {
+export function ProductSheet({
+  isProcessing,
+  result,
+  error,
+  onDismiss,
+  dismissRef,
+  topOffset = 0,
+}: ProductSheetProps) {
   const navigate = useNavigate()
   const { result: suitability } = useSuitability(result)
   const [peekY] = useState(() => (typeof window !== 'undefined' ? window.innerHeight * 0.5 : 400))
   const controls = useAnimation()
   const [isFull, setIsFull] = useState(false)
   const { items, addToCart, removeFromCart, updateQuantity } = useCart()
-  const cartItem = result?.barcode ? items.find((i) => i.product.barcode === result.barcode) : undefined
+  const cartItem = result?.barcode
+    ? items.find((i) => i.product.barcode === result.barcode)
+    : undefined
 
   useEffect(() => {
     if (result || isProcessing || error) {
@@ -43,12 +52,15 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
     }
   }, [result, isProcessing, error, controls, peekY])
 
-  const snapTo = useCallback((y: number) => {
-    controls.start({
-      y,
-      transition: { type: 'spring', stiffness: 300, damping: 30 },
-    })
-  }, [controls])
+  const snapTo = useCallback(
+    (y: number) => {
+      controls.start({
+        y,
+        transition: { type: 'spring', stiffness: 300, damping: 30 },
+      })
+    },
+    [controls],
+  )
 
   const handleDismiss = useCallback(async () => {
     await controls.start({
@@ -160,7 +172,9 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
                   <Button
                     variant="outline"
                     className="w-full gap-2 text-sm font-medium hover:scale-[1.02]"
-                    onClick={() => navigate({ to: '/product/$barcode', params: { barcode: result.barcode! } })}
+                    onClick={() =>
+                      navigate({ to: '/product/$barcode', params: { barcode: result.barcode! } })
+                    }
                   >
                     View full details
                     <ArrowRight className="h-4 w-4" />
@@ -187,11 +201,9 @@ export function ProductSheet({ isProcessing, result, error, onDismiss, dismissRe
               </BottomCta>
             </div>
           ) : (
-            <>
-              <div className="flex-1 flex flex-col items-center justify-center py-20 text-center text-muted-foreground">
-                <p className="text-sm">No product information available.</p>
-              </div>
-            </>
+            <div className="flex-1 flex flex-col items-center justify-center py-20 text-center text-muted-foreground">
+              <p className="text-sm">No product information available.</p>
+            </div>
           )}
         </div>
       </motion.div>

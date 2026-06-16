@@ -1,16 +1,27 @@
 #!/usr/bin/env node
-import { fileURLToPath } from 'url'
-import { dirname, resolve } from 'path'
-import { execSync } from 'child_process'
-import { loadEnv } from './lib/env.mjs'
-import { info, success, warn, error, header, divider, table } from './lib/logger.mjs'
+import { execSync } from 'node:child_process'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import {
-  checkNode, checkPnpm, checkUv, checkMkcert, checkAdb, checkXcodebuild, getPlatform,
-} from './lib/system.mjs'
-import {
-  ensureCerts, getCertInfo, getCARoot, isMkcertInstalled, generateCert, installCA,
+  ensureCerts,
+  generateCert,
+  getCARoot,
+  getCertInfo,
+  installCA,
+  isMkcertInstalled,
 } from './lib/certs.mjs'
-import { getLanIp, getConnectedAndroidDevices, deployToDevice } from './lib/device.mjs'
+import { deployToDevice, getConnectedAndroidDevices, getLanIp } from './lib/device.mjs'
+import { loadEnv } from './lib/env.mjs'
+import { divider, error, header, info, success, table, warn } from './lib/logger.mjs'
+import {
+  checkAdb,
+  checkMkcert,
+  checkNode,
+  checkPnpm,
+  checkUv,
+  checkXcodebuild,
+  getPlatform,
+} from './lib/system.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const projectRoot = resolve(__dirname, '..', '..')
@@ -53,7 +64,11 @@ function showHelp() {
   info('Configuration via .env files (root .env -> mobile .env -> mobile .env.local):')
   table([
     { label: 'MOBILE_TLS_ENABLED', status: 'default: true', detail: 'Set to false to use HTTP' },
-    { label: 'DEV_CERTS_MODE', status: 'default: auto', detail: 'skip=no mkcert, auto=mkcert if available' },
+    {
+      label: 'DEV_CERTS_MODE',
+      status: 'default: auto',
+      detail: 'skip=no mkcert, auto=mkcert if available',
+    },
     { label: 'MOBILE_PORT', status: 'default: 8826', detail: 'Dev server port' },
   ])
 }
@@ -62,16 +77,18 @@ function cmdSetup() {
   header('SafeShelf Dev Setup')
 
   const platform = getPlatform()
-  info('Platform: ' + platform)
+  info(`Platform: ${platform}`)
   divider()
 
   const prereqs = [checkNode(), checkPnpm(), checkUv(), checkMkcert()]
-  const allOk = prereqs.every(p => p.ok)
+  const allOk = prereqs.every((p) => p.ok)
 
-  table(prereqs.map(p => ({
-    label: p.message.split('\n')[0],
-    status: p.ok ? 'ok' : 'fail',
-  })))
+  table(
+    prereqs.map((p) => ({
+      label: p.message.split('\n')[0],
+      status: p.ok ? 'ok' : 'fail',
+    })),
+  )
 
   if (!allOk) {
     divider()
@@ -110,7 +127,9 @@ function handleCertsForSetup() {
   if (certsMode === 'skip') {
     warn('DEV_CERTS_MODE=skip: SSL cert setup skipped.')
     warn('Dev server will fall back to basicSsl auto-generated self-signed certs.')
-    warn('Android WebView will likely reject these. Set DEV_CERTS_MODE=auto and install mkcert for trusted HTTPS.')
+    warn(
+      'Android WebView will likely reject these. Set DEV_CERTS_MODE=auto and install mkcert for trusted HTTPS.',
+    )
     return
   }
 
@@ -157,7 +176,7 @@ function handleCertsForSetup() {
 }
 
 function cmdRun(platform) {
-  header('Deploying to ' + platform)
+  header(`Deploying to ${platform}`)
 
   const prereqs = [checkNode()]
   if (platform === 'android') {
@@ -166,12 +185,14 @@ function cmdRun(platform) {
     prereqs.push(checkXcodebuild())
   }
 
-  const failed = prereqs.filter(p => !p.ok)
+  const failed = prereqs.filter((p) => !p.ok)
   if (failed.length > 0) {
-    table(prereqs.map(p => ({
-      label: p.message.split('\n')[0],
-      status: p.ok ? 'ok' : 'fail',
-    })))
+    table(
+      prereqs.map((p) => ({
+        label: p.message.split('\n')[0],
+        status: p.ok ? 'ok' : 'fail',
+      })),
+    )
     error('Fix issues above and re-run.')
     process.exit(1)
   }
@@ -184,7 +205,7 @@ function cmdRun(platform) {
       info('Verify with: adb devices')
       process.exit(1)
     }
-    success('Device connected: ' + devices[0].id)
+    success(`Device connected: ${devices[0].id}`)
   }
 
   divider()
@@ -197,7 +218,7 @@ function cmdRun(platform) {
 
   const scheme = ensureCerts(certDir, tlsEnabled, certsMode, ip)
   const serverUrl = `${scheme}://${ip}:${port}`
-  info('Dev server URL: ' + serverUrl)
+  info(`Dev server URL: ${serverUrl}`)
 
   divider()
   info('Building web assets...')
@@ -205,7 +226,7 @@ function cmdRun(platform) {
   success('Build complete')
 
   divider()
-  info('Deploying to ' + platform + '...')
+  info(`Deploying to ${platform}...`)
   deployToDevice(platform, serverUrl, mobileDir)
-  success('Deployed to ' + platform)
+  success(`Deployed to ${platform}`)
 }

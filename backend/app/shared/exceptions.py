@@ -10,12 +10,12 @@ logger = logging.getLogger(__name__)
 
 def _rfc7807(status: int, detail: str, instance: str, type_url: str | None = None) -> dict:
     return {
-        "success": False,
-        "type": type_url or f"https://api.safeshelf.app/errors/{status}",
-        "title": HTTPStatus(status).phrase,
-        "status": status,
-        "detail": detail,
-        "instance": instance,
+        'success': False,
+        'type': type_url or f'https://api.safeshelf.app/errors/{status}',
+        'title': HTTPStatus(status).phrase,
+        'status': status,
+        'detail': detail,
+        'instance': instance,
     }
 
 
@@ -26,7 +26,9 @@ async def http_exception_handler(request: Request, exc: HTTPException) -> JSONRe
     )
 
 
-async def validation_exception_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
+async def validation_exception_handler(
+    request: Request, exc: RequestValidationError
+) -> JSONResponse:
     return JSONResponse(
         status_code=422,
         content=_rfc7807(422, str(exc.errors()), str(request.url.path)),
@@ -34,8 +36,8 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 
 async def global_exception_handler(request: Request, exc: Exception) -> JSONResponse:
-    logger.exception("Unhandled exception on %s %s", request.method, request.url.path)
+    logger.exception('Unhandled exception on %s %s', request.method, request.url.path)
     return JSONResponse(
         status_code=500,
-        content=_rfc7807(500, "Internal server error", str(request.url.path)),
+        content=_rfc7807(500, 'Internal server error', str(request.url.path)),
     )

@@ -1,16 +1,26 @@
-import { useState, useEffect } from 'react'
 import { AnimatePresence } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import { useCamera } from '../hooks/useCamera'
+import { scanStore } from '../services/scanStore'
 import { CameraPreview } from './CameraPreview'
 import { CaptureButton } from './CaptureButton'
+import { CapturePreview } from './CapturePreview'
+import { GalleryButton } from './GalleryButton'
 import { ModeSwitcher } from './ModeSwitcher'
 import { TopBar } from './TopBar'
-import { GalleryButton } from './GalleryButton'
-import { CapturePreview } from './CapturePreview'
-import { scanStore } from '../services/scanStore'
 
 export function CameraViewfinder() {
-  const { videoRef, mode, error, isCameraReady, capturePhoto, pickFromGallery, setMode, stopCamera, startCamera } = useCamera()
+  const {
+    videoRef,
+    mode,
+    error,
+    isCameraReady,
+    capturePhoto,
+    pickFromGallery,
+    setMode,
+    stopCamera,
+    startCamera,
+  } = useCamera()
   const [capturedImage, setCapturedImage] = useState<string | null>(() => scanStore.capturedImage)
 
   useEffect(() => {
@@ -38,7 +48,9 @@ export function CameraViewfinder() {
 
   return (
     <div className="fixed inset-0 bg-background">
-      <div className={`absolute inset-0 transition-opacity duration-200 ${capturedImage ? 'opacity-0 pointer-events-none' : ''}`}>
+      <div
+        className={`absolute inset-0 transition-opacity duration-200 ${capturedImage ? 'opacity-0 pointer-events-none' : ''}`}
+      >
         <div className="absolute inset-0 bg-black/[0.04]" />
         <CameraPreview videoRef={videoRef} isCameraReady={isCameraReady} error={error} />
 
@@ -47,7 +59,11 @@ export function CameraViewfinder() {
         <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center pb-[calc(2rem_+_var(--sab))] sm:pb-[calc(4rem_+_var(--sab))] gap-4 sm:gap-6">
           <div className="flex items-center gap-6 sm:gap-8">
             <GalleryButton onClick={handleGalleryPick} cameraAvailable={isCameraReady} />
-            <CaptureButton onClick={handleCapture} disabled={!isCameraReady} cameraAvailable={isCameraReady} />
+            <CaptureButton
+              onClick={handleCapture}
+              disabled={!isCameraReady}
+              cameraAvailable={isCameraReady}
+            />
             <div className="w-12 sm:w-14" />
           </div>
           <ModeSwitcher mode={mode} onModeChange={setMode} cameraAvailable={isCameraReady} />

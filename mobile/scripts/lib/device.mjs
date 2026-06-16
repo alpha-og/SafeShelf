@@ -1,5 +1,5 @@
-import { networkInterfaces } from 'os'
-import { execSync } from 'child_process'
+import { execSync } from 'node:child_process'
+import { networkInterfaces } from 'node:os'
 
 export function getLanIp() {
   for (const addrs of Object.values(networkInterfaces())) {
@@ -18,12 +18,12 @@ export function getConnectedAndroidDevices() {
     const output = execSync('adb devices', { encoding: 'utf8', timeout: 10000 })
     const lines = output.split('\n').slice(1)
     return lines
-      .map(l => {
+      .map((l) => {
         const parts = l.trim().split('\t')
         if (parts.length < 2) return null
         return { id: parts[0], status: parts[1] }
       })
-      .filter(d => d && d.status === 'device')
+      .filter((d) => d && d.status === 'device')
   } catch {
     return []
   }

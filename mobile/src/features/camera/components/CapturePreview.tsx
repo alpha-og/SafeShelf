@@ -1,10 +1,10 @@
-import { useRef, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { useProductDetection } from '../hooks/useProductDetection'
-import type { ScanMode } from '../hooks/useCamera'
-import { TopBar } from './TopBar'
+import { useEffect, useRef, useState } from 'react'
 import { ProductSheet } from '@/features/products/components/ProductSheet'
+import type { ScanMode } from '../hooks/useCamera'
+import { useProductDetection } from '../hooks/useProductDetection'
 import { scanStore } from '../services/scanStore'
+import { TopBar } from './TopBar'
 
 interface CapturePreviewProps {
   image: string

@@ -7,9 +7,9 @@ export function FormError({ error, fallback = 'Something went wrong' }: FormErro
   if (!error) return null
 
   const detail =
-    ((error as { response?: { data?: { detail?: string } } })?.response?.data?.detail)
-    ?? error.message
-    ?? fallback
+    (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail ??
+    error.message ??
+    fallback
 
   return <p className="text-sm text-destructive">{detail}</p>
 }

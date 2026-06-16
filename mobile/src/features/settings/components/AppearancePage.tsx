@@ -1,16 +1,16 @@
-import { Sun, Moon, Monitor, Check, ChevronDown } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
+import { Check, ChevronDown, Monitor, Moon, Sun } from 'lucide-react'
+import { PageHeader } from '@/components/PageHeader'
+import { SectionHeader } from '@/components/SectionHeader'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { PageHeader } from '@/components/PageHeader'
-import { SectionHeader } from '@/components/SectionHeader'
-import { useTheme } from '@/providers/ThemeProvider'
 import type { ThemeMode } from '@/providers/ThemeProvider'
+import { useTheme } from '@/providers/ThemeProvider'
 
 const options: { value: ThemeMode; label: string; icon: typeof Sun }[] = [
   { value: 'system', label: 'System', icon: Monitor },
@@ -33,7 +33,10 @@ export function AppearancePage() {
         <SectionHeader variant="default">Theme</SectionHeader>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-full flex items-center gap-3 px-4 py-3.5 h-auto hover:scale-[1.02] bg-primary/5 border-primary/20 hover:bg-primary/10">
+            <Button
+              variant="outline"
+              className="w-full flex items-center gap-3 px-4 py-3.5 h-auto hover:scale-[1.02] bg-primary/5 border-primary/20 hover:bg-primary/10"
+            >
               <CurrentIcon className="h-5 w-5 text-muted-foreground shrink-0" />
               <span className="flex-1 text-left text-foreground">{current.label}</span>
               <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0" />

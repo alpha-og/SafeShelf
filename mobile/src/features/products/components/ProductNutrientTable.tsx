@@ -1,13 +1,13 @@
-import type { ServingInfo } from '@/features/suitability/types'
+import { Badge } from '@/components/ui/badge'
 import {
   Table,
-  TableHeader,
   TableBody,
-  TableHead,
-  TableRow,
   TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '@/components/ui/table'
-import { Badge } from '@/components/ui/badge'
+import type { ServingInfo } from '@/features/suitability/types'
 
 interface NutrientDefinition {
   label: string
@@ -56,35 +56,57 @@ export function ProductNutrientTable({
   servingInfo: ServingInfo | null
   nutrientLevels: Record<string, string>
 }) {
-  const rows: NutrientRow[] = DISPLAY_NUTRIENTS
-    .map((n) => {
-      const raw100g = nutrients[`${n.key}_100g`]
-      const per100g = typeof raw100g === 'number' ? raw100g : null
-      if (per100g === null) return null
+  const rows: NutrientRow[] = DISPLAY_NUTRIENTS.map((n) => {
+    const raw100g = nutrients[`${n.key}_100g`]
+    const per100g = typeof raw100g === 'number' ? raw100g : null
+    if (per100g === null) return null
 
-      let perServing: number | null = null
-      if (servingInfo) {
-        perServing = per100g * (servingInfo.declaredQuantity / 100)
-      }
+    let perServing: number | null = null
+    if (servingInfo) {
+      perServing = per100g * (servingInfo.declaredQuantity / 100)
+    }
 
-      let racc: number | null = null
-      if (servingInfo && servingInfo.adjusted) {
-        racc = per100g * (servingInfo.racc / 100)
-      }
+    let racc: number | null = null
+    if (servingInfo?.adjusted) {
+      racc = per100g * (servingInfo.racc / 100)
+    }
 
-      const levelKey = n.key === 'energy-kcal' ? null : n.key
-      const levelVal = levelKey ? (nutrientLevels[levelKey] ?? null) : null
+    const levelKey = n.key === 'energy-kcal' ? null : n.key
+    const levelVal = levelKey ? (nutrientLevels[levelKey] ?? null) : null
 
-      return { label: n.label, per100g, perServing, racc, unit: n.unit, level: levelVal }
-    })
-    .filter((r): r is NonNullable<typeof r> => r !== null)
+    return { label: n.label, per100g, perServing, racc, unit: n.unit, level: levelVal }
+  }).filter((r): r is NonNullable<typeof r> => r !== null)
 
   if (rows.length === 0) return null
 
   const levelBadge = (lvl: string | null) => {
-    if (lvl === 'high') return <Badge variant="outline" className="text-[10px] px-1 py-0 h-4 bg-destructive/10 text-destructive border-destructive/20 hover:scale-105">{lvl}</Badge>
-    if (lvl === 'moderate') return <Badge variant="outline" className="text-[10px] px-1 py-0 h-4 bg-primary/10 text-primary border-primary/20 hover:scale-105">{lvl}</Badge>
-    if (lvl === 'low') return <Badge variant="outline" className="text-[10px] px-1 py-0 h-4 bg-secondary/10 text-secondary border-secondary/20 hover:scale-105">{lvl}</Badge>
+    if (lvl === 'high')
+      return (
+        <Badge
+          variant="outline"
+          className="text-[10px] px-1 py-0 h-4 bg-destructive/10 text-destructive border-destructive/20 hover:scale-105"
+        >
+          {lvl}
+        </Badge>
+      )
+    if (lvl === 'moderate')
+      return (
+        <Badge
+          variant="outline"
+          className="text-[10px] px-1 py-0 h-4 bg-primary/10 text-primary border-primary/20 hover:scale-105"
+        >
+          {lvl}
+        </Badge>
+      )
+    if (lvl === 'low')
+      return (
+        <Badge
+          variant="outline"
+          className="text-[10px] px-1 py-0 h-4 bg-secondary/10 text-secondary border-secondary/20 hover:scale-105"
+        >
+          {lvl}
+        </Badge>
+      )
     return null
   }
 
@@ -101,10 +123,16 @@ export function ProductNutrientTable({
               <TableHead className="text-xs text-foreground">Per</TableHead>
               <TableHead className="text-xs text-right text-foreground">100g</TableHead>
               {showServing && (
-                <TableHead className="text-xs text-right text-foreground">{servingInfo!.declaredQuantity}{servingInfo!.unit}</TableHead>
+                <TableHead className="text-xs text-right text-foreground">
+                  {servingInfo?.declaredQuantity}
+                  {servingInfo?.unit}
+                </TableHead>
               )}
               {showRacc && (
-                <TableHead className="text-xs text-right text-foreground">{servingInfo!.racc}{servingInfo!.raccUnit}</TableHead>
+                <TableHead className="text-xs text-right text-foreground">
+                  {servingInfo?.racc}
+                  {servingInfo?.raccUnit}
+                </TableHead>
               )}
             </TableRow>
           </TableHeader>
@@ -135,7 +163,8 @@ export function ProductNutrientTable({
       </div>
       {showRacc && (
         <p className="text-xs text-accent-foreground mt-2">
-          Serving adjusted to RACC baseline ({servingInfo!.racc}{servingInfo!.raccUnit}) — declared serving is less than 50% of standard
+          Serving adjusted to RACC baseline ({servingInfo?.racc}
+          {servingInfo?.raccUnit}) — declared serving is less than 50% of standard
         </p>
       )}
     </div>

@@ -1,7 +1,7 @@
-import { execSync } from 'child_process'
-import { existsSync, readFileSync, mkdirSync } from 'fs'
-import { resolve } from 'path'
-import { warn, info, success, divider, table } from './logger.mjs'
+import { execSync } from 'node:child_process'
+import { existsSync, mkdirSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { divider, info, success, table, warn } from './logger.mjs'
 
 export function isMkcertInstalled() {
   try {
@@ -30,17 +30,15 @@ export function generateCert(certDir, hostnames) {
   mkdirSync(certDir, { recursive: true })
   const certFile = resolve(certDir, 'hostname.local+2.pem')
   const keyFile = resolve(certDir, 'hostname.local+2-key.pem')
-  const args = [
-    `-cert-file "${certFile}"`,
-    `-key-file "${keyFile}"`,
-    ...hostnames,
-  ]
+  const args = [`-cert-file "${certFile}"`, `-key-file "${keyFile}"`, ...hostnames]
   execSync(`mkcert ${args.join(' ')}`, { stdio: 'inherit' })
 }
 
 export function certExists(certDir) {
-  return existsSync(resolve(certDir, 'hostname.local+2.pem')) &&
-         existsSync(resolve(certDir, 'hostname.local+2-key.pem'))
+  return (
+    existsSync(resolve(certDir, 'hostname.local+2.pem')) &&
+    existsSync(resolve(certDir, 'hostname.local+2-key.pem'))
+  )
 }
 
 export function getCertInfo(certDir) {
@@ -54,14 +52,10 @@ export function getCertInfo(certDir) {
     })
 
     const sanMatch = output.match(/X509v3 Subject Alternative Name:\s*\n\s+(.+)/)
-    const sans = sanMatch
-      ? sanMatch[1].split(', ').map(s => s.trim())
-      : ['(unknown)']
+    const sans = sanMatch ? sanMatch[1].split(', ').map((s) => s.trim()) : ['(unknown)']
 
     const expMatch = output.match(/Not After\s*:\s*(.+)/)
-    const expiry = expMatch
-      ? new Date(expMatch[1].trim()).toLocaleDateString()
-      : '(unknown)'
+    const expiry = expMatch ? new Date(expMatch[1].trim()).toLocaleDateString() : '(unknown)'
 
     return { sans, expiry }
   } catch {
@@ -98,9 +92,7 @@ export function ensureCerts(certDir, tlsEnabled, certsMode, ip) {
   if (ip) hostnames.push(ip)
 
   const existing = getCertInfo(certDir)
-  const ipInCert = existing && ip
-    ? existing.sans.some(s => s.includes(ip))
-    : false
+  const ipInCert = existing && ip ? existing.sans.some((s) => s.includes(ip)) : false
 
   if (existing && ipInCert && certExists(certDir)) {
     info('SSL certificate is up to date.')

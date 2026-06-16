@@ -7,11 +7,11 @@ class SignUpRequest(BaseModel):
     email: EmailStr
     password: str
 
-    @field_validator("password")
+    @field_validator('password')
     @classmethod
     def password_min_length(cls, v: str) -> str:
         if len(v) < 8:
-            raise ValueError("Password must be at least 8 characters")
+            raise ValueError('Password must be at least 8 characters')
         return v
 
 
@@ -23,7 +23,7 @@ class SignInRequest(BaseModel):
 
 class TokenResponse(BaseModel):
     access_token: str
-    token_type: str = "bearer"
+    token_type: str = 'bearer'
 
 
 class UserResponse(BaseModel):
@@ -37,12 +37,12 @@ class SignUpResponse(BaseModel):
     email: str
     created_at: datetime
     access_token: str
-    token_type: str = "bearer"
+    token_type: str = 'bearer'
 
 
 class DeviceRegisterRequest(BaseModel):
     device_name: str
-    device_type: str = "mobile"
+    device_type: str = 'mobile'
 
 
 class DeviceRegisterResponse(BaseModel):

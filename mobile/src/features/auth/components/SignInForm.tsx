@@ -1,10 +1,10 @@
 import { useForm } from '@tanstack/react-form'
-import { signInSchema, type SignInInput } from '../schemas/auth'
-import { useSignIn } from '../hooks/useSignIn'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { FormField } from '@/components/FormField'
 import { FormError } from '@/components/FormError'
+import { FormField } from '@/components/FormField'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { useSignIn } from '../hooks/useSignIn'
+import { type SignInInput, signInSchema } from '../schemas/auth'
 
 export function SignInForm() {
   const signInMutation = useSignIn()
@@ -30,7 +30,16 @@ export function SignInForm() {
     >
       <form.Field name="email">
         {(field) => (
-          <FormField label="Email" error={field.state.meta.errors ? field.state.meta.errors.map((e) => (typeof e === 'string' ? e : (e as { message: string }).message)).join(', ') : null}>
+          <FormField
+            label="Email"
+            error={
+              field.state.meta.errors
+                ? field.state.meta.errors
+                    .map((e) => (typeof e === 'string' ? e : (e as { message: string }).message))
+                    .join(', ')
+                : null
+            }
+          >
             <Input
               type="email"
               placeholder="you@example.com"
@@ -44,7 +53,16 @@ export function SignInForm() {
 
       <form.Field name="password">
         {(field) => (
-          <FormField label="Password" error={field.state.meta.errors ? field.state.meta.errors.map((e) => (typeof e === 'string' ? e : (e as { message: string }).message)).join(', ') : null}>
+          <FormField
+            label="Password"
+            error={
+              field.state.meta.errors
+                ? field.state.meta.errors
+                    .map((e) => (typeof e === 'string' ? e : (e as { message: string }).message))
+                    .join(', ')
+                : null
+            }
+          >
             <Input
               type="password"
               placeholder="••••••••"
@@ -56,9 +74,16 @@ export function SignInForm() {
         )}
       </form.Field>
 
-      <FormError error={signInMutation.isError ? signInMutation.error : null} fallback="Sign in failed" />
+      <FormError
+        error={signInMutation.isError ? signInMutation.error : null}
+        fallback="Sign in failed"
+      />
 
-      <Button type="submit" className="w-full hover:scale-[1.02]" disabled={signInMutation.isPending}>
+      <Button
+        type="submit"
+        className="w-full hover:scale-[1.02]"
+        disabled={signInMutation.isPending}
+      >
         {signInMutation.isPending ? 'Signing in...' : 'Sign in'}
       </Button>
     </form>

@@ -1,6 +1,6 @@
-import { Badge } from '@/components/ui/badge'
 import { StatusDot } from '@/components/StatusDot'
-import type { SuitabilityResult, OverallStatus } from '../types'
+import { Badge } from '@/components/ui/badge'
+import type { OverallStatus, SuitabilityResult } from '../types'
 
 interface SuitabilityBadgeProps {
   result: SuitabilityResult | null
@@ -27,7 +27,9 @@ export function SuitabilityBadge({ result }: SuitabilityBadgeProps) {
   const c = config[result.overall]
 
   return (
-    <Badge className={`gap-2 px-3 py-1.5 text-xs font-semibold rounded-full hover:scale-105 ${c.glass}`}>
+    <Badge
+      className={`gap-2 px-3 py-1.5 text-xs font-semibold rounded-full hover:scale-105 ${c.glass}`}
+    >
       <StatusDot status={result.overall} />
       {c.label}
     </Badge>

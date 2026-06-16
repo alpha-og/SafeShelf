@@ -18,7 +18,8 @@ export function ProductServingNote({ serving }: ProductServingNoteProps) {
   if (serving.flagged) {
     return (
       <p className="text-xs text-accent-foreground font-medium text-center">
-        Serving size ({serving.declaredQuantity}{serving.unit}) is unusually small
+        Serving size ({serving.declaredQuantity}
+        {serving.unit}) is unusually small
       </p>
     )
   }

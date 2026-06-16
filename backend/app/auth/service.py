@@ -27,16 +27,16 @@ def _generate_refresh_token() -> tuple[str, str]:
 async def signup(req: SignUpRequest, session: AsyncSession) -> tuple[User, str, str]:
     existing = await session.exec(select(User).where(User.email == req.email))
     if existing.first():
-        raise HTTPException(status_code=409, detail="Email already registered")
+        raise HTTPException(status_code=409, detail='Email already registered')
     user = User(email=req.email, hashed_password=hash_password(req.password))
     session.add(user)
     try:
         await session.commit()
     except IntegrityError:
-        raise HTTPException(status_code=409, detail="Email already registered")
+        raise HTTPException(status_code=409, detail='Email already registered')
     await session.refresh(user)
 
-    access_token = create_access_token({"sub": str(user.id)})
+    access_token = create_access_token({'sub': str(user.id)})
     raw_refresh, token_hash = _generate_refresh_token()
 
     refresh = RefreshToken(
@@ -54,24 +54,20 @@ async def signin(req: SignInRequest, session: AsyncSession) -> tuple[str, str]:
     result = await session.exec(select(User).where(User.email == req.email))
     user = result.first()
     if not user or not verify_password(req.password, user.hashed_password):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        raise HTTPException(status_code=401, detail='Invalid credentials')
 
-    access_token = create_access_token({"sub": str(user.id)})
+    access_token = create_access_token({'sub': str(user.id)})
     raw_refresh, token_hash = _generate_refresh_token()
 
     device_pk: int | None = None
     if req.device_id:
         device = (
-            await session.exec(
-                select(Device).where(Device.device_uuid == req.device_id)
-            )
+            await session.exec(select(Device).where(Device.device_uuid == req.device_id))
         ).first()
         if device is None:
-            raise HTTPException(status_code=404, detail="Device not found")
+            raise HTTPException(status_code=404, detail='Device not found')
         if device.user_id is not None and device.user_id != user.id:
-            raise HTTPException(
-                status_code=403, detail="Device belongs to another user"
-            )
+            raise HTTPException(status_code=403, detail='Device belongs to another user')
         if device.user_id is None:
             device.user_id = user.id
             session.add(device)
@@ -91,7 +87,7 @@ async def signin(req: SignInRequest, session: AsyncSession) -> tuple[str, str]:
 
 async def refresh(raw_token: str | None, session: AsyncSession) -> tuple[str, str]:
     if not raw_token:
-        raise HTTPException(status_code=401, detail="Refresh token missing")
+        raise HTTPException(status_code=401, detail='Refresh token missing')
 
     token_hash = _hash_token(raw_token)
     now = utcnow()
@@ -106,7 +102,7 @@ async def refresh(raw_token: str | None, session: AsyncSession) -> tuple[str, st
         .values(revoked_at=now)
     )
     if result.rowcount == 0:
-        raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
+        raise HTTPException(status_code=401, detail='Invalid or expired refresh token')
 
     token = (
         await session.exec(
@@ -116,7 +112,7 @@ async def refresh(raw_token: str | None, session: AsyncSession) -> tuple[str, st
         )
     ).first()
 
-    access_token = create_access_token({"sub": str(token.user_id)})
+    access_token = create_access_token({'sub': str(token.user_id)})
     raw_new, new_hash = _generate_refresh_token()
 
     new_token = RefreshToken(
@@ -133,7 +129,7 @@ async def refresh(raw_token: str | None, session: AsyncSession) -> tuple[str, st
 
 async def signout(raw_token: str | None, session: AsyncSession) -> None:
     if not raw_token:
-        raise HTTPException(status_code=401, detail="Refresh token missing")
+        raise HTTPException(status_code=401, detail='Refresh token missing')
 
     token_hash = _hash_token(raw_token)
     result = await session.exec(
@@ -158,4 +154,4 @@ async def register_device(req: DeviceRegisterRequest, session: AsyncSession) -> 
     session.add(device)
     await session.commit()
     await session.refresh(device)
-    return {"device_id": device.device_uuid, "device_name": device.device_name}
+    return {'device_id': device.device_uuid, 'device_name': device.device_name}

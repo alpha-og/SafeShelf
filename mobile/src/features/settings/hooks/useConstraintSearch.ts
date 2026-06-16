@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { searchConstraints, type ConstraintKind } from '../services/constraints'
+import { type ConstraintKind, searchConstraints } from '../services/constraints'
 
 export function useConstraintSearch(kind: ConstraintKind, query: string, enabled: boolean) {
   return useQuery({

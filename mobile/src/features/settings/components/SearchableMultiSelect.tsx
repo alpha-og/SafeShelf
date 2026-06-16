@@ -1,7 +1,7 @@
+import { Loader2, Plus, Search, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { Search, X, Loader2, Plus } from 'lucide-react'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { useConstraintSearch } from '../hooks/useConstraintSearch'
 import type { ConstraintItem, ConstraintKind } from '../services/constraints'
 

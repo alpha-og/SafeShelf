@@ -1,6 +1,6 @@
+import { useQueries, useQuery } from '@tanstack/react-query'
 import { api } from '@/lib/axios'
 import { setItem } from '@/lib/storage'
-import { useQueries, useQuery } from '@tanstack/react-query'
 import type { ConditionThreshold, Rule } from '../types'
 
 const ALIASES_CACHE_KEY = 'safeshelf:ingredient_aliases'
@@ -47,13 +47,9 @@ export function useConditionRules(codes: string[]) {
   })
 
   return {
-    rules: queries
-      .filter((r) => r.data)
-      .map((r) => r.data) as ConditionThreshold[],
+    rules: queries.filter((r) => r.data).map((r) => r.data) as ConditionThreshold[],
     isLoading: queries.some((r) => r.isLoading),
-    errors: queries
-      .filter((r) => r.error)
-      .map((r) => r.error),
+    errors: queries.filter((r) => r.error).map((r) => r.error),
   }
 }
 

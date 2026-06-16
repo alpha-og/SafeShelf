@@ -1,5 +1,5 @@
-import React from 'react'
 import { motion } from 'framer-motion'
+import type React from 'react'
 import { cn } from '@/lib/utils'
 
 interface AuroraBackgroundProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -15,10 +15,7 @@ export function AuroraBackground({
 }: AuroraBackgroundProps) {
   return (
     <div
-      className={cn(
-        'relative flex flex-col min-h-0 bg-slate-950 text-slate-50',
-        className
-      )}
+      className={cn('relative flex flex-col min-h-0 bg-slate-950 text-slate-50', className)}
       {...props}
     >
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -35,7 +32,7 @@ export function AuroraBackground({
             'absolute -inset-[10%] opacity-50 blur-[60px]',
             'bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),rgba(255,255,255,0))]',
             'after:content-[""] after:absolute after:inset-0 after:bg-[radial-gradient(circle_at_80%_20%,rgba(78,205,196,0.2),rgba(255,255,255,0))]',
-            'before:content-[""] before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_20%_80%,rgba(255,107,107,0.15),rgba(255,255,255,0))]'
+            'before:content-[""] before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_20%_80%,rgba(255,107,107,0.15),rgba(255,255,255,0))]',
           )}
         />
         {showRadialGradient && (

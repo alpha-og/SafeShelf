@@ -1,6 +1,6 @@
-import { createFileRoute, redirect, Outlet, useNavigate } from '@tanstack/react-router'
-import { useAuth } from '@/hooks/useAuth'
+import { createFileRoute, Outlet, redirect, useNavigate } from '@tanstack/react-router'
 import { useEffect } from 'react'
+import { useAuth } from '@/hooks/useAuth'
 
 export const Route = createFileRoute('/_auth')({
   beforeLoad: ({ context }) => {
