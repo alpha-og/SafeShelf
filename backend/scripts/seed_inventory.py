@@ -29,7 +29,7 @@ CATEGORIES = {
 PRODUCTS_PER_CATEGORY = 30
 
 async def fetch_off_products(category_tag: str, limit: int = 30) -> list[dict]:
-    url = f"https://world.openfoodfacts.org/api/v2/search?categories_tags={category_tag}&fields=code,product_name,image_url,brands,quantity&page_size={limit}"
+    url = f"https://world.openfoodfacts.org/api/v2/search?categories_tags={category_tag}&countries_tags=india&fields=code,product_name,image_url,brands,quantity&page_size={limit}"
     headers = {"User-Agent": "SafeShelf-Dev/1.0"}
     async with httpx.AsyncClient() as client:
         try:

@@ -114,7 +114,7 @@ async def get_store_inventory(store_id: str, product_id: str, session: AsyncSess
         "barcode": prod.barcode,
         "product_name": prod.product_name,
         "product_image": prod.product_image,
-        "in_stock": inv.in_stock,
+        "in_stock": inv.stock_quantity > 0,
         "quantity": inv.stock_quantity,
         "price": inv.price
     }
@@ -139,7 +139,7 @@ async def get_all_store_inventory(store_id: str, session: AsyncSession) -> list[
             "barcode": prod.barcode,
             "product_name": prod.product_name,
             "product_image": prod.product_image,
-            "in_stock": inv.in_stock,
+            "in_stock": inv.stock_quantity > 0,
             "quantity": inv.stock_quantity,
             "price": inv.price
         }
@@ -166,7 +166,7 @@ async def search_store_inventory(store_id: str, q: str, session: AsyncSession) -
             "barcode": prod.barcode,
             "product_name": prod.product_name,
             "product_image": prod.product_image,
-            "in_stock": inv.in_stock,
+            "in_stock": inv.stock_quantity > 0,
             "quantity": inv.stock_quantity,
             "price": inv.price
         }

@@ -3,6 +3,7 @@ import { getItem, setItem } from '@/lib/storage'
 import { api } from '@/lib/axios'
 import { toast } from 'sonner'
 import type { ProductInfo } from '@/features/products/services/product'
+import { useStore } from './StoreProvider'
 
 export interface CartItem {
   product: ProductInfo
@@ -43,12 +44,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     await setItem('cart_items', newItems)
   }
 
+  const { selectedStoreId } = useStore()
+
   const addToCart = async (product: ProductInfo) => {
     if (!product.barcode) return // Can't reliably manage cart items without barcode
     
     try {
-      // Check store inventory (assuming "main" as the global store for now)
-      const { data: res } = await api.get(`/v1/stores/main/inventory/${product.barcode}`)
+      if (!selectedStoreId) {
+        toast.error("Please select a store first")
+        return
+      }
+
+      const { data: res } = await api.get(`/v1/stores/${selectedStoreId}/inventory/${product.barcode}`)
       if (!res || !res.in_stock) {
         toast.error("Sorry, this item is currently out of stock!")
         return
