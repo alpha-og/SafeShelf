@@ -24,3 +24,13 @@ export async function fetchStores(lat?: number, lon?: number): Promise<Store[]> 
     return []
   }
 }
+
+export async function fetchStoreById(id: string): Promise<Store | null> {
+  try {
+    const response = await api.get(`/v1/stores/${id}`)
+    return response.data as Store
+  } catch (error) {
+    console.error('Failed to fetch store details:', error)
+    return null
+  }
+}
