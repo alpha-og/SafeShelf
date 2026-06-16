@@ -47,7 +47,7 @@ pnpm dev:ios            # build and deploy to iOS device
 | `pnpm dev:ios` | Build and deploy mobile app to iOS device |
 | `pnpm build` | Production build of mobile app |
 | `pnpm typecheck` | TypeScript type checking |
-| `pnpm lint` | ESLint |
+| `pnpm lint` | Biome (mobile) + ruff (backend) |
 | `pnpm backend:dev` | Start backend dev server only |
 | `pnpm backend:sync` | Sync Python dependencies |
 

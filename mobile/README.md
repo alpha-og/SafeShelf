@@ -86,7 +86,7 @@ src/
 | `pnpm dev` | Start Vite dev server |
 | `pnpm build` | Production build |
 | `pnpm typecheck` | TypeScript check |
-| `pnpm lint` | ESLint |
+| `pnpm lint` | Biome |
 | `pnpm cap:sync` | Sync Capacitor native configs |
 | `pnpm cap:android` | Open Android project in Android Studio |
 | `pnpm cap:ios` | Open iOS project in Xcode |

@@ -12,18 +12,21 @@
 safeshelf/
 ├── backend/        # Python 3.14 — FastAPI + SQLModel + asyncpg
 │   ├── app/        # Feature modules: auth, analysis, cart, guidelines,
-│   │               #   products, profiles, recipes, sessions, stores
+│   │   #   conditions, products, profiles, recipes, sessions, stores
+│   │   ├── api/         # API v1 router
 │   │   ├── router.py    # FastAPI APIRouter with prefix
 │   │   ├── schemas.py   # Pydantic/SQLModel models
 │   │   ├── service.py   # Business logic
 │   │   └── __init__.py
 │   └── pyproject.toml   # Entrypoint: `uv run python -m app`
+├── backend/app/api/     # API v1 endpoints routing
 └── mobile/         # React 19 + TypeScript 6 + Vite 8 + TanStack Router
     ├── src/
     │   ├── routes/       # File-based routes; routeTree.gen.ts is auto-generated
     │   ├── features/     # Feature modules (e.g. auth/)
     │   ├── components/   # shadcn/ui components (button, card, input)
     │   ├── providers/    # React context providers (AuthProvider)
+    │   ├── assets/       # Static assets (images, fonts)
     │   ├── lib/          # API client, storage, utils
     │   └── hooks/        # Shared hooks (useAuth)
     └── scripts/
@@ -37,10 +40,10 @@ safeshelf/
 |---|---|
 | Setup everything | `pnpm setup` (pnpm install + uv sync) |
 | Full dev setup + SSL certs | `pnpm dev:setup` or `node mobile/scripts/dev.mjs setup` |
-| Mobile dev server (port 8826) | `pnpm dev` or `pnpm mobile:dev` |
+| Mobile dev server (port 8826) | `pnpm mobile:dev` |
 | Mobile build | `pnpm build` |
 | TypeScript check | `pnpm typecheck` (runs `tsc -b`) |
-| Lint | `pnpm lint` (ESLint) |
+| Lint | `pnpm lint` (Biome) |
 | Capacitor sync | `pnpm cap:sync` |
 | Capacitor Android | `pnpm cap:android` |
 | Deploy to Android device | `pnpm dev:android` or `node mobile/scripts/dev.mjs android` |
