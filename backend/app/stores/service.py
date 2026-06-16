@@ -120,9 +120,43 @@ async def get_store_inventory(store_id: str, product_id: str, session: AsyncSess
     }
 
 async def get_all_store_inventory(store_id: str, session: AsyncSession) -> list[dict]:
-    from app.stores.models import Store
+    from app.stores.models import Store, StoreInventory
     from app.products.models import Product
-    stmt = select(StoreInventory, Product).join(Store).join(Product).where(Store.uuid == store_id)
+    
+    #to ensure we get data from that store itself
+    stmt = (
+        select(StoreInventory, Product)
+        .join(Store, StoreInventory.store_id == Store.id)
+        .join(Product, StoreInventory.product_id == Product.id)
+        .where(Store.uuid == store_id)
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+    
+    return [
+        {
+            "store_id": store_id,
+            "barcode": prod.barcode,
+            "product_name": prod.product_name,
+            "product_image": prod.product_image,
+            "in_stock": inv.in_stock,
+            "quantity": inv.stock_quantity,
+            "price": inv.price
+        }
+        for inv, prod in rows
+    ]
+
+async def search_store_inventory(store_id: str, q: str, session: AsyncSession) -> list[dict]:
+    from app.stores.models import Store, StoreInventory
+    from app.products.models import Product
+    
+    stmt = (
+        select(StoreInventory, Product)
+        .join(Store, StoreInventory.store_id == Store.id)
+        .join(Product, StoreInventory.product_id == Product.id)
+        .where(Store.uuid == store_id)
+        .where(Product.product_name.ilike(f"%{q}%"))
+    )
     result = await session.execute(stmt)
     rows = result.all()
     
