@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { ChevronDown, ChevronUp, CircleAlert, CircleX } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { StatusDot } from '@/components/StatusDot'
 import type { SuitabilityCheck, SuitabilityStatus } from '../types'
 
 interface SuitabilityBreakdownProps {
@@ -22,14 +23,6 @@ function groupSort(a: GroupInfo, b: GroupInfo): number {
   if (aIdx !== -1) return -1
   if (bIdx !== -1) return 1
   return a.name.localeCompare(b.name)
-}
-
-function dotColor(status: SuitabilityStatus): string {
-  switch (status) {
-    case 'fail': return 'bg-red-500'
-    case 'warn': return 'bg-amber-500'
-    case 'pass': return 'bg-green-500'
-  }
 }
 
 export function SuitabilityBreakdown({ checks }: SuitabilityBreakdownProps) {
@@ -78,26 +71,27 @@ export function SuitabilityBreakdown({ checks }: SuitabilityBreakdownProps) {
     <div className="space-y-0.5">
       {groups.map((group) => {
         const hasIssues = group.status !== 'pass'
-        const isOpen = hasIssues && openGroups.has(group.name)
 
         if (!hasIssues) {
           return (
             <div key={group.name} className="flex items-center gap-2 px-2 py-1">
-              <span className={`w-2 h-2 rounded-full ${dotColor(group.status)}`} />
+              <StatusDot status={group.status} />
               <span className="text-sm font-medium text-foreground">{group.name}</span>
             </div>
           )
         }
+
+        const isOpen = hasIssues && openGroups.has(group.name)
 
         return (
           <div key={group.name}>
             <Button
               variant="ghost"
               onClick={() => toggleGroup(group.name)}
-              className="w-full flex items-center justify-between gap-2 h-auto py-1.5 px-2"
+              className="w-full flex items-center justify-between gap-2 h-auto py-1.5 px-2 text-foreground hover:text-foreground hover:scale-[1.01]"
             >
               <span className="flex items-center gap-2">
-                <span className={`w-2 h-2 rounded-full ${dotColor(group.status)}`} />
+                <StatusDot status={group.status} />
                 <span className="text-sm font-medium text-foreground">{group.name}</span>
               </span>
               {isOpen ? <ChevronUp className="h-3.5 w-3.5 text-muted-foreground shrink-0" /> : <ChevronDown className="h-3.5 w-3.5 text-muted-foreground shrink-0" />}
@@ -109,9 +103,9 @@ export function SuitabilityBreakdown({ checks }: SuitabilityBreakdownProps) {
                   .map((check, i) => (
                     <div key={i} className="flex items-start gap-2 text-sm py-0.5">
                       {check.status === 'fail' ? (
-                        <CircleX className="h-3.5 w-3.5 mt-0.5 shrink-0 text-red-600" />
+                        <CircleX className="h-3.5 w-3.5 mt-0.5 shrink-0 text-[#B46A72]" />
                       ) : (
-                        <CircleAlert className="h-3.5 w-3.5 mt-0.5 shrink-0 text-amber-600" />
+                        <CircleAlert className="h-3.5 w-3.5 mt-0.5 shrink-0 text-[#F7C8D3]" />
                       )}
                       <div className="min-w-0">
                         <p className="font-medium text-foreground leading-tight">{check.label}</p>

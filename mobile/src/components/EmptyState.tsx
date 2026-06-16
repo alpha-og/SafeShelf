@@ -23,7 +23,7 @@ export function EmptyState({ icon: Icon, title, description, actionLabel, onActi
       {actionLabel && (
         <Button
           onClick={onAction ?? (() => navigate({ to: '/' }))}
-          className="mt-6"
+          className="mt-6 hover:scale-[1.02]"
         >
           {actionLabel}
         </Button>

@@ -1,7 +1,8 @@
-import { ArrowLeft, ShoppingCart, Trash2, Plus, Minus } from 'lucide-react'
+import { ShoppingCart, Trash2, Plus, Minus } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { EmptyState } from '@/components/EmptyState'
+import { PageHeader } from '@/components/PageHeader'
 import { useCart } from '@/providers/CartProvider'
 import { ProductCard } from '@/components/ProductCard'
 
@@ -11,22 +12,17 @@ export function CartPage() {
 
   return (
     <div className="flex-1 min-h-0 bg-background flex flex-col">
-      <header className="border-b border-border sticky top-0 bg-background/80 backdrop-blur-md z-10">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => navigate({ to: '/' })}>
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <ShoppingCart className="h-5 w-5 text-foreground" />
-            <h1 className="text-xl font-bold text-foreground">Cart</h1>
-          </div>
-          {items.length > 0 && (
-            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive hover:bg-destructive/10" onClick={clearCart}>
-              <Trash2 className="h-5 w-5" />
-            </Button>
-          )}
-        </div>
-      </header>
+      <PageHeader
+        title="Cart"
+        icon={ShoppingCart}
+        onBack={() => navigate({ to: '/' })}
+        className="sticky top-0 bg-background/80 backdrop-blur-md z-10"
+        actions={items.length > 0 ? (
+          <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive hover:bg-destructive/10 hover:scale-[1.02]" onClick={clearCart}>
+            <Trash2 className="h-5 w-5" />
+          </Button>
+        ) : undefined}
+      />
 
       <main className="flex-1 flex flex-col">
         {isLoading ? (
@@ -54,7 +50,7 @@ export function CartPage() {
                     <Button 
                       variant="outline" 
                       size="icon" 
-                      className="h-8 w-8 rounded-full"
+                      className="h-8 w-8 rounded-full hover:scale-[1.02]"
                       onClick={() => updateQuantity(item.product.barcode!, item.quantity + 1)}
                     >
                       <Plus className="h-4 w-4" />
@@ -63,7 +59,7 @@ export function CartPage() {
                     <Button 
                       variant="outline" 
                       size="icon" 
-                      className="h-8 w-8 rounded-full text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/20"
+                      className="h-8 w-8 rounded-full text-destructive hover:text-destructive hover:bg-destructive/10 hover:scale-[1.02] border-destructive/20"
                       onClick={() => updateQuantity(item.product.barcode!, item.quantity - 1)}
                     >
                       <Minus className="h-4 w-4" />
