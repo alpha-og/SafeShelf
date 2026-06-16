@@ -17,11 +17,15 @@ async def get_store_products(store_id: str) -> dict:
 
 async def get_store_inventory(store_id: str, product_id: str, session: AsyncSession) -> dict:
     from app.stores.models import Store
-    stmt = select(StoreInventory).join(Store).where(Store.uuid == store_id, StoreInventory.product_id == product_id)
+    from app.products.models import Product
+    stmt = select(StoreInventory, Product).join(Store).join(Product).where(
+        Store.uuid == store_id, 
+        Product.barcode == product_id
+    )
     result = await session.execute(stmt)
-    inv = result.scalar_one_or_none()
+    row = result.first()
     
-    if not inv:
+    if not row:
         return {
             "store_id": store_id,
             "product_id": product_id,
@@ -32,11 +36,13 @@ async def get_store_inventory(store_id: str, product_id: str, session: AsyncSess
             "price": 0.0
         }
         
+    inv, prod = row
+        
     return {
         "store_id": store_id,
-        "product_id": product_id,
-        "product_name": inv.product_name,
-        "product_image": inv.product_image,
+        "product_id": prod.barcode,
+        "product_name": prod.product_name,
+        "product_image": prod.product_image,
         "in_stock": inv.in_stock,
         "quantity": inv.stock_quantity,
         "price": inv.price
@@ -44,19 +50,20 @@ async def get_store_inventory(store_id: str, product_id: str, session: AsyncSess
 
 async def get_all_store_inventory(store_id: str, session: AsyncSession) -> list[dict]:
     from app.stores.models import Store
-    stmt = select(StoreInventory).join(Store).where(Store.uuid == store_id)
+    from app.products.models import Product
+    stmt = select(StoreInventory, Product).join(Store).join(Product).where(Store.uuid == store_id)
     result = await session.execute(stmt)
-    invs = result.scalars().all()
+    rows = result.all()
     
     return [
         {
             "store_id": store_id,
-            "product_id": inv.product_id,
-            "product_name": inv.product_name,
-            "product_image": inv.product_image,
+            "product_id": prod.barcode,
+            "product_name": prod.product_name,
+            "product_image": prod.product_image,
             "in_stock": inv.in_stock,
             "quantity": inv.stock_quantity,
             "price": inv.price
         }
-        for inv in invs
+        for inv, prod in rows
     ]

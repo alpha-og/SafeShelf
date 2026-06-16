@@ -46,10 +46,13 @@ async def seed_inventory():
     
     print(f"Seeding {len(df)} records into StoreInventory...")
     async with async_session() as session:
+        from sqlmodel import select
+        from app.products.models import Product
+        import uuid
         for idx, row in df.iterrows():
             #barcode
-            product_id = str(row.get("code", f"PROD_{idx}"))
-            if product_id == "nan" or not product_id.strip():
+            barcode = str(row.get("code", f"PROD_{idx}"))
+            if barcode == "nan" or not barcode.strip():
                 continue
                 
             #name
@@ -62,15 +65,28 @@ async def seed_inventory():
             else:
                 product_image = str(product_image)
                 
+            prod = (await session.exec(select(Product).where(Product.barcode == barcode))).first()
+            if not prod:
+                brand = row.get("brands", None)
+                qty_str = row.get("quantity", None)
+                prod = Product(
+                    uuid=str(uuid.uuid4()),
+                    barcode=barcode,
+                    product_name=product_name,
+                    product_image=product_image,
+                    brand=str(brand) if pd.notna(brand) else None,
+                    quantity=str(qty_str) if pd.notna(qty_str) else None
+                )
+                session.add(prod)
+                await session.flush()
+                
             #mock stock and price
             stock_qty = random.randint(0, 100)
             price = round(random.uniform(20.0, 1500.0))
             
             inv = StoreInventory(
                 store_id=store_id,
-                product_id=product_id,
-                product_name=product_name,
-                product_image=product_image,
+                product_id=prod.id,
                 stock_quantity=stock_qty,
                 price=float(price),
                 in_stock=(stock_qty > 0)
@@ -78,16 +94,25 @@ async def seed_inventory():
             await session.merge(inv)
             
         #Nutella to test
-        nutella = StoreInventory(
+        nutella_prod = (await session.exec(select(Product).where(Product.barcode == "3017624010701"))).first()
+        if not nutella_prod:
+            nutella_prod = Product(
+                uuid=str(uuid.uuid4()),
+                barcode="3017624010701",
+                product_name="Nutella Ferrero",
+                product_image="https://images.openfoodfacts.org/images/products/301/762/401/0701/front_en.189.400.jpg"
+            )
+            session.add(nutella_prod)
+            await session.flush()
+            
+        nutella_inv = StoreInventory(
             store_id=store_id,
-            product_id="3017624010701", 
-            product_name="Nutella Ferrero",
-            product_image="https://images.openfoodfacts.org/images/products/301/762/401/0701/front_en.189.400.jpg",
+            product_id=nutella_prod.id,
             stock_quantity=50,
             price=399.0, 
             in_stock=True
         )
-        await session.merge(nutella)
+        await session.merge(nutella_inv)
         
         await session.commit()
     print("Seeding complete!")
