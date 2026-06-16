@@ -2,10 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 import { getItem, setItem } from '@/lib/storage'
 import { api } from '@/lib/axios'
 import { toast } from 'sonner'
-import type React from 'react'
-import { createContext, useContext, useEffect, useState } from 'react'
 import type { ProductInfo } from '@/features/products/services/product'
-import { getItem, setItem } from '@/lib/storage'
 
 export interface CartItem {
   product: ProductInfo
