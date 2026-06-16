@@ -60,8 +60,31 @@ async def get_store(store_id: str, session: AsyncSession) -> dict:
     }
 
 
-async def get_store_products(store_id: str) -> dict:
-    raise HTTPException(status_code=status.HTTP_501_NOT_IMPLEMENTED, detail="Not implemented")
+async def get_store_products(store_id: str, session: AsyncSession) -> dict:
+    from app.stores.models import Store, StoreInventory
+    from app.products.models import Product
+    
+    stmt = select(Product).join(StoreInventory).join(Store).where(Store.uuid == store_id)
+    result = await session.execute(stmt)
+    products = result.scalars().all()
+    
+    product_list = [
+        {
+            "id": str(prod.uuid),
+            "barcode": prod.barcode,
+            "product_name": prod.product_name,
+            "product_image": prod.product_image,
+            "brand": prod.brand,
+            "quantity": prod.quantity,
+            "categories": []
+        }
+        for prod in products
+    ]
+    
+    return {
+        "store_id": store_id,
+        "products": product_list
+    }
 
 async def get_store_inventory(store_id: str, product_id: str, session: AsyncSession) -> dict:
     from app.stores.models import Store

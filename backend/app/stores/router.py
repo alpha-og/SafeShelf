@@ -20,8 +20,8 @@ async def store_detail(store_id: str, session: AsyncSession = Depends(get_sessio
 
 
 @router.get("/{store_id}/products", response_model=StoreProductsResponse)
-async def store_products(store_id: str):
-    return await get_store_products(store_id)
+async def store_products(store_id: str, session: AsyncSession = Depends(get_session)):
+    return await get_store_products(store_id, session)
 
 @router.get("/{store_id}/inventory/search", response_model=list[InventoryResponse])
 async def search_inventory(store_id: str, q: str, session: AsyncSession = Depends(get_session)):
