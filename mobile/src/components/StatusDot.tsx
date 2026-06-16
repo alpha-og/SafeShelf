@@ -6,13 +6,13 @@ function dotColor(status: DotStatus): string {
   switch (status) {
     case 'fail':
     case 'unsuitable':
-      return 'bg-[#B46A72]'
+      return 'bg-status-fail'
     case 'warn':
     case 'caution':
-      return 'bg-[#D4919C]'
+      return 'bg-status-warn'
     case 'pass':
     case 'suitable':
-      return 'bg-[#8A9B76]'
+      return 'bg-status-pass'
   }
 }
 

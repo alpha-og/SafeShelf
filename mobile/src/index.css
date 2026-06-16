@@ -25,6 +25,16 @@
   --color-overlay: #2D3A47;
   --color-overlay-foreground: #FFF7E6;
   --color-overlay-muted: #A9B7C6;
+
+  --color-status-pass: #8A9B76;
+  --color-status-warn: #D4919C;
+  --color-status-fail: #B46A72;
+
+  --color-score-a: #16a34a;
+  --color-score-b: #65a30d;
+  --color-score-c: #ca8a04;
+  --color-score-d: #ea580c;
+  --color-score-e: #dc2626;
 }
 
 @layer base {

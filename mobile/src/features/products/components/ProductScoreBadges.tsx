@@ -1,26 +1,26 @@
 import { Badge } from '@/components/ui/badge'
 
 const NUTRISCORE_STYLES: Record<string, string> = {
-  a: 'bg-green-600/15 text-green-600 border-green-600/30 hover:scale-105',
-  b: 'bg-lime-500/15 text-lime-600 border-lime-500/30 hover:scale-105',
-  c: 'bg-yellow-400/15 text-yellow-600 border-yellow-400/30 hover:scale-105',
-  d: 'bg-orange-500/15 text-orange-600 border-orange-500/30 hover:scale-105',
-  e: 'bg-red-600/15 text-red-600 border-red-600/30 hover:scale-105',
+  a: 'bg-score-a/15 text-score-a border-score-a/30 hover:scale-105',
+  b: 'bg-score-b/15 text-score-b border-score-b/30 hover:scale-105',
+  c: 'bg-score-c/15 text-score-c border-score-c/30 hover:scale-105',
+  d: 'bg-score-d/15 text-score-d border-score-d/30 hover:scale-105',
+  e: 'bg-score-e/15 text-score-e border-score-e/30 hover:scale-105',
 }
 
 const ECOSCORE_STYLES: Record<string, string> = {
-  a: 'bg-green-600/15 text-green-600 border-green-600/30 hover:scale-105',
-  b: 'bg-lime-500/15 text-lime-600 border-lime-500/30 hover:scale-105',
-  c: 'bg-yellow-400/15 text-yellow-600 border-yellow-400/30 hover:scale-105',
-  d: 'bg-orange-500/15 text-orange-600 border-orange-500/30 hover:scale-105',
-  e: 'bg-red-600/15 text-red-600 border-red-600/30 hover:scale-105',
+  a: 'bg-score-a/15 text-score-a border-score-a/30 hover:scale-105',
+  b: 'bg-score-b/15 text-score-b border-score-b/30 hover:scale-105',
+  c: 'bg-score-c/15 text-score-c border-score-c/30 hover:scale-105',
+  d: 'bg-score-d/15 text-score-d border-score-d/30 hover:scale-105',
+  e: 'bg-score-e/15 text-score-e border-score-e/30 hover:scale-105',
 }
 
 const NOVA_STYLES: Record<number, string> = {
-  1: 'bg-green-600/15 text-green-600 border-green-600/30 hover:scale-105',
-  2: 'bg-yellow-500/15 text-yellow-600 border-yellow-500/30 hover:scale-105',
-  3: 'bg-orange-500/15 text-orange-600 border-orange-500/30 hover:scale-105',
-  4: 'bg-red-600/15 text-red-600 border-red-600/30 hover:scale-105',
+  1: 'bg-score-a/15 text-score-a border-score-a/30 hover:scale-105',
+  2: 'bg-score-c/15 text-score-c border-score-c/30 hover:scale-105',
+  3: 'bg-score-d/15 text-score-d border-score-d/30 hover:scale-105',
+  4: 'bg-score-e/15 text-score-e border-score-e/30 hover:scale-105',
 }
 
 interface ProductScoreBadgesProps {
