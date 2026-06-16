@@ -147,7 +147,7 @@ export function ProductSheet({
               </div>
             </>
           ) : result ? (
-            <div className="flex flex-col flex-1 pb-(--sab)">
+            <div className="flex flex-col flex-1 min-h-0 pb-(--sab)">
               <ProductHero
                 product={result}
                 suitability={suitability}
@@ -161,7 +161,7 @@ export function ProductSheet({
                 hideCartIcon={isFull}
               />
 
-              <div className="flex-1 overflow-y-auto px-4 pt-6 space-y-6 relative z-20 no-scrollbar">
+              <div className="flex flex-col flex-1 min-h-0 overflow-y-auto px-4 pt-6 space-y-6 relative z-20 no-scrollbar">
                 <ProductServingNote serving={suitability?.serving} />
 
                 {suitability && suitability.checks.length > 0 && (
