@@ -4,12 +4,60 @@ from sqlmodel import select
 from app.stores.models import StoreInventory
 
 
-async def get_nearby_stores(lat: float | None, lon: float | None) -> dict:
-    raise HTTPException(status_code=status.HTTP_501_NOT_IMPLEMENTED, detail='Not implemented')
+import math
+
+def calculate_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    R = 6371.0 #radius of earth in kms
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    a = math.sin(dlat / 2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2)**2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    return R * c
+
+async def get_stores(city: str | None, lat: float | None, lon: float | None, session: AsyncSession) -> dict:
+    from app.stores.models import Store
+    stmt = select(Store)
+    if city:
+        stmt = stmt.where(Store.city == city)
+    
+    result = await session.execute(stmt)
+    stores = result.scalars().all()
+    
+    store_list = [
+        {
+            "id": s.uuid,
+            "name": s.name,
+            "address": s.address or "",
+            "city": s.city,
+            "lat": s.lat or 0.0,
+            "lon": s.lon or 0.0
+        } for s in stores
+    ]
+    
+    if lat is not None and lon is not None:
+        store_list.sort(key=lambda s: calculate_distance(lat, lon, s["lat"], s["lon"]) if s["lat"] and s["lon"] else float('inf'))
+        
+    return {"stores": store_list}
 
 
-async def get_store(store_id: str) -> dict:
-    raise HTTPException(status_code=status.HTTP_501_NOT_IMPLEMENTED, detail='Not implemented')
+async def get_store(store_id: str, session: AsyncSession) -> dict:
+    from app.stores.models import Store
+    stmt = select(Store).where(Store.uuid == store_id)
+    result = await session.execute(stmt)
+    s = result.scalar_one_or_none()
+    
+    if not s:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Store not found")
+        
+    return {
+        "id": s.uuid,
+        "name": s.name,
+        "address": s.address or "",
+        "city": s.city,
+        "lat": s.lat or 0.0,
+        "lon": s.lon or 0.0,
+        "hours": s.hours
+    }
 
 
 async def get_store_products(store_id: str) -> dict:

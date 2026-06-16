@@ -2,21 +2,21 @@ from fastapi import APIRouter, Depends
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.stores.schemas import InventoryResponse, NearbyResponse, StoreProductsResponse, StoreResponse
-from app.stores.service import get_nearby_stores, get_store, get_store_inventory, get_store_products
+from app.stores.service import get_stores, get_store, get_store_inventory, get_store_products
 from app.stores.models import StoreInventory  
 from app.shared.deps import get_session
 
 router = APIRouter(prefix="/stores", tags=["stores"])
 
 
-@router.get("/nearby", response_model=NearbyResponse)
-async def nearby(lat: float | None = None, lon: float | None = None):
-    return await get_nearby_stores(lat, lon)
+@router.get("", response_model=NearbyResponse)
+async def list_stores(city: str | None = None, lat: float | None = None, lon: float | None = None, session: AsyncSession = Depends(get_session)):
+    return await get_stores(city, lat, lon, session)
 
 
 @router.get("/{store_id}", response_model=StoreResponse)
-async def store_detail(store_id: str):
-    return await get_store(store_id)
+async def store_detail(store_id: str, session: AsyncSession = Depends(get_session)):
+    return await get_store(store_id, session)
 
 
 @router.get("/{store_id}/products", response_model=StoreProductsResponse)
