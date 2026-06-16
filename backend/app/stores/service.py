@@ -15,11 +15,9 @@ async def get_store(store_id: str) -> dict:
 async def get_store_products(store_id: str) -> dict:
     raise HTTPException(status_code=status.HTTP_501_NOT_IMPLEMENTED, detail="Not implemented")
 
-
-async def get_store_inventory(store_id: str, product_id: str) -> dict:
-    raise HTTPException(status_code=status.HTTP_501_NOT_IMPLEMENTED, detail='Not implemented')
 async def get_store_inventory(store_id: str, product_id: str, session: AsyncSession) -> dict:
-    stmt = select(StoreInventory).where(StoreInventory.product_id == product_id)
+    from app.stores.models import Store
+    stmt = select(StoreInventory).join(Store).where(Store.uuid == store_id, StoreInventory.product_id == product_id)
     result = await session.execute(stmt)
     inv = result.scalar_one_or_none()
     
@@ -45,7 +43,8 @@ async def get_store_inventory(store_id: str, product_id: str, session: AsyncSess
     }
 
 async def get_all_store_inventory(store_id: str, session: AsyncSession) -> list[dict]:
-    stmt = select(StoreInventory)
+    from app.stores.models import Store
+    stmt = select(StoreInventory).join(Store).where(Store.uuid == store_id)
     result = await session.execute(stmt)
     invs = result.scalars().all()
     

@@ -4,13 +4,24 @@ import kagglehub
 import pandas as pd
 from sqlmodel import SQLModel
 from app.shared.db import engine, async_session
-from app.stores.models import StoreInventory
+from app.stores.models import StoreInventory, Store
 
 async def seed_inventory():
     print("Initializing database...")
     async with engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
         
+    print("Setting up default Main Store...")
+    async with async_session() as session:
+        from sqlmodel import select
+        store = (await session.exec(select(Store).where(Store.uuid == "main"))).first()
+        if not store:
+            store = Store(uuid="main", name="Main Store", address="123 Grocery Ave", city="Metropolis")
+            session.add(store)
+            await session.commit()
+            await session.refresh(store)
+        store_id = store.id
+
     print("Downloading Open Food Facts dataset (this might take a minute)...")
     path = kagglehub.dataset_download('openfoodfacts/world-food-facts')
     tsv_files = [f for f in os.listdir(path) if f.endswith('.tsv') or f.endswith('.csv')]
@@ -56,6 +67,7 @@ async def seed_inventory():
             price = round(random.uniform(20.0, 1500.0))
             
             inv = StoreInventory(
+                store_id=store_id,
                 product_id=product_id,
                 product_name=product_name,
                 product_image=product_image,
@@ -67,6 +79,7 @@ async def seed_inventory():
             
         #Nutella to test
         nutella = StoreInventory(
+            store_id=store_id,
             product_id="3017624010701", 
             product_name="Nutella Ferrero",
             product_image="https://images.openfoodfacts.org/images/products/301/762/401/0701/front_en.189.400.jpg",
