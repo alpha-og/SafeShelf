@@ -48,21 +48,10 @@ async def seed_inventory():
     async with engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
         
-    print("Setting up default Main Store...")
-    async with async_session() as session:
-        store = (await session.exec(select(Store).where(Store.uuid == "main"))).first()
-        if not store:
-            store = Store(uuid="main", name="Main Store", address="123 Grocery Ave", city="Metropolis")
-            session.add(store)
-            await session.commit()
-            await session.refresh(store)
-        store_id = store.id
-
     print("Fetching products from OpenFoodFacts API...")
     seen_barcodes = set()
     category_product_map = {}
     
-    #pre-fetch
     for cat_name, off_tag in CATEGORIES.items():
         print(f"Fetching {cat_name} ({off_tag})...")
         products = await fetch_off_products(off_tag, limit=PRODUCTS_PER_CATEGORY)
@@ -70,66 +59,83 @@ async def seed_inventory():
 
     print("Seeding database...")
     async with async_session() as session:
+        stores = (await session.exec(select(Store))).all()
+        if not stores:
+            print("No stores found! Please run seed_stores.py first.")
+            return
+
         for cat_name, off_tag in CATEGORIES.items():
             cat = (await session.exec(select(Category).where(Category.off_tag == off_tag))).first()
             if not cat:
-                cat = Category(
-                    uuid=str(uuid.uuid4()),
-                    name=cat_name,
-                    off_tag=off_tag
-                )
+                cat = Category(uuid=str(uuid.uuid4()), name=cat_name, off_tag=off_tag)
                 session.add(cat)
                 await session.flush()
+
+            cat_type = "Others"
+            if cat_name in ["Bakery", "Cereals", "Pasta", "Canned Foods"]:
+                cat_type = "Staples"
+            elif cat_name in ["Dairy", "Meats", "Fruits", "Vegetables", "Frozen Foods"]:
+                cat_type = "Perishables"
 
             for row in category_product_map.get(cat_name, []):
                 barcode = str(row.get("code", ""))
                 if not barcode or barcode == "nan":
                     continue
                     
-                if barcode in seen_barcodes:
-                    existing_prod = (await session.exec(select(Product).where(Product.barcode == barcode))).first()
-                    if existing_prod:
-                        link = (await session.exec(select(ProductCategory).where(
-                            ProductCategory.product_id == existing_prod.id,
-                            ProductCategory.category_id == cat.id
-                        ))).first()
-                        if not link:
-                            session.add(ProductCategory(product_id=existing_prod.id, category_id=cat.id))
-                    continue
+                existing_prod = (await session.exec(select(Product).where(Product.barcode == barcode))).first()
+                if existing_prod:
+                    prod = existing_prod
+                else:
+                    product_name = str(row.get("product_name", f"Unknown Product {barcode}"))
+                    product_image = row.get("image_url", None)
+                    brand = row.get("brands", None)
+                    qty_str = row.get("quantity", None)
                     
+                    prod = Product(
+                        uuid=str(uuid.uuid4()),
+                        barcode=barcode,
+                        product_name=product_name,
+                        product_image=str(product_image) if product_image else None,
+                        brand=str(brand) if brand else None,
+                        quantity=str(qty_str) if qty_str else None
+                    )
+                    session.add(prod)
+                    await session.flush()
+                
+                #link between product and category
+                link = (await session.exec(select(ProductCategory).where(
+                    ProductCategory.product_id == prod.id,
+                    ProductCategory.category_id == cat.id
+                ))).first()
+                if not link:
+                    session.add(ProductCategory(product_id=prod.id, category_id=cat.id))
+
+                if barcode in seen_barcodes:
+                    continue
                 seen_barcodes.add(barcode)
                 
-                product_name = str(row.get("product_name", f"Unknown Product {barcode}"))
-                product_image = row.get("image_url", None)
-                brand = row.get("brands", None)
-                qty_str = row.get("quantity", None)
-                
-                prod = Product(
-                    uuid=str(uuid.uuid4()),
-                    barcode=barcode,
-                    product_name=product_name,
-                    product_image=str(product_image) if product_image else None,
-                    brand=str(brand) if brand else None,
-                    quantity=str(qty_str) if qty_str else None
-                )
-                session.add(prod)
-                await session.flush()
-                
-                session.add(ProductCategory(product_id=prod.id, category_id=cat.id))
-                
-                stock_qty = random.randint(0, 100)
-                price = round(random.uniform(2.0, 50.0), 2)
-                
-                inv = StoreInventory(
-                    store_id=store_id,
-                    product_id=prod.id,
-                    stock_quantity=stock_qty,
-                    price=float(price)
-                )
-                await session.merge(inv)
+                #assign 30% of the stock to the stores
+                for store in stores:
+                    if random.random() <= 0.30:
+                        if cat_type == "Staples":
+                            stock_qty = random.randint(50, 150)
+                        elif cat_type == "Perishables":
+                            stock_qty = random.randint(5, 30)
+                        else:
+                            stock_qty = random.randint(10, 50)
+                            
+                        price = round(random.uniform(20.0, 1500.0), 2)
+                        
+                        inv = StoreInventory(
+                            store_id=store.id,
+                            product_id=prod.id,
+                            stock_quantity=stock_qty,
+                            price=float(price)
+                        )
+                        await session.merge(inv)
                 
         await session.commit()
-    print(f"Seeding complete! Inserted {len(seen_barcodes)} unique products across {len(CATEGORIES)} categories.")
+    print(f"Seeding complete! Inserted {len(seen_barcodes)} unique products across {len(CATEGORIES)} categories into multiple stores.")
 
 if __name__ == "__main__":
     asyncio.run(seed_inventory())
