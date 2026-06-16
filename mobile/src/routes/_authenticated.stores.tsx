@@ -1,18 +1,19 @@
-import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useEffect } from 'react'
 import { MapPin, Clock } from 'lucide-react'
-import { fetchStores } from '@/features/stores/services/storeApi'
 import { useStore } from '@/providers/StoreProvider'
+import { useNearestStore } from '@/features/stores/hooks/useNearestStore'
 
 export const Route = createFileRoute('/_authenticated/stores')({
   component: StoresPage,
 })
 
 function StoresPage() {
-  const { data: stores, isLoading } = useQuery({
-    queryKey: ['stores'],
-    queryFn: fetchStores,
-  })
+  const { locateAndFetch, stores, isLoading } = useNearestStore()
+  
+  useEffect(() => {
+    locateAndFetch()
+  }, [locateAndFetch])
   
   const { setSelectedStoreId, selectedStoreId } = useStore()
   const navigate = useNavigate()
@@ -34,7 +35,7 @@ function StoresPage() {
       <main className="flex-1 overflow-y-auto px-6 pb-20">
         {isLoading ? (
           <div className="flex items-center justify-center h-40">
-            <p className="text-muted-foreground animate-pulse">Loading stores...</p>
+            <p className="text-muted-foreground animate-pulse">Detecting nearby stores...</p>
           </div>
         ) : (
           <div className="flex flex-col gap-4">
