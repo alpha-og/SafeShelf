@@ -1,7 +1,8 @@
 import asyncio
 from sqlmodel import SQLModel, select
 from app.shared.db import engine, async_session
-from app.stores.models import Store
+from app.stores.models import Store, StoreInventory
+from app.products.models import Product, Category, ProductCategory
 
 async def seed_stores():
     print("Initializing database...")
@@ -10,9 +11,14 @@ async def seed_stores():
         await conn.run_sync(SQLModel.metadata.create_all)
         
     stores_to_seed = [
-        Store(uuid="main", name="Main Store", address="123 Grocery Ave", city="Metropolis", lat=40.7128, lon=-74.0060, hours="8:00 AM - 10:00 PM"),
-        Store(uuid="downtown", name="Downtown Branch", address="456 Market St", city="Metropolis", lat=40.7138, lon=-74.0070, hours="24 Hours"),
-        Store(uuid="uptown", name="Uptown Branch", address="789 High St", city="Metropolis", lat=40.7158, lon=-74.0090, hours="9:00 AM - 9:00 PM"),
+        Store(uuid="main", name="SafeShelf Kochi Central", address="MG Road, Ernakulam", city="Kochi", lat=9.9816, lon=76.2999, hours="8:00 AM - 10:00 PM"),
+        Store(uuid="tvm-palayam", name="SafeShelf Trivandrum", address="Palayam", city="Thiruvananthapuram", lat=8.5035, lon=76.9533, hours="7:00 AM - 11:00 PM"),
+        Store(uuid="calicut-sm", name="SafeShelf Kozhikode", address="SM Street", city="Kozhikode", lat=11.2588, lon=75.7804, hours="9:00 AM - 9:00 PM"),
+        Store(uuid="thrissur-round", name="SafeShelf Thrissur", address="Swaraj Round", city="Thrissur", lat=10.5276, lon=76.2144, hours="8:00 AM - 10:00 PM"),
+        Store(uuid="palakkad-stadium", name="SafeShelf Palakkad", address="Stadium Bypass Road", city="Palakkad", lat=10.7867, lon=76.6548, hours="7:30 AM - 9:30 PM"),
+        Store(uuid="kottayam-baker", name="SafeShelf Kottayam", address="Baker Junction", city="Kottayam", lat=9.5916, lon=76.5222, hours="8:00 AM - 9:00 PM"),
+        Store(uuid="kannur-thavakkara", name="SafeShelf Kannur", address="Thavakkara", city="Kannur", lat=11.8745, lon=75.3704, hours="8:00 AM - 10:00 PM"),
+        Store(uuid="alappuzha-mullakkal", name="SafeShelf Alappuzha", address="Mullakkal", city="Alappuzha", lat=9.4981, lon=76.3388, hours="9:00 AM - 8:00 PM"),
     ]
     
     print("Seeding stores...")
