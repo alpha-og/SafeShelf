@@ -38,7 +38,7 @@ export function useProductDetection(
 
           if (barcode) {
             console.log(`[scan] Barcode detected: ${barcode}`)
-            setResult(await lookupByBarcode(barcode, selectedStoreId))
+            setResult(await lookupByBarcode(barcode))
           } else {
             console.log(
               '[scan] No barcode detected locally (barcode mode) → sending for backend identification',
@@ -54,7 +54,7 @@ export function useProductDetection(
 
           if (barcode) {
             console.log(`[scan] Barcode detected (auto mode): ${barcode}`)
-            setResult(await lookupByBarcode(barcode, selectedStoreId))
+            setResult(await lookupByBarcode(barcode))
           } else {
             console.log('[scan] No barcode detected (auto mode) → sending for image identification')
             setResult(await identifyProduct(data, mode))

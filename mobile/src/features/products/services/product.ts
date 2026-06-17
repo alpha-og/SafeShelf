@@ -44,7 +44,7 @@ export function mapResponse(data: Record<string, unknown>): ProductInfo {
   }
 }
 
-export async function lookupByBarcode(barcode: string, storeId?: string | null): Promise<ProductInfo | null> {
+export async function lookupByBarcode(barcode: string): Promise<ProductInfo | null> {
   try {
     const url = `/v1/products/${barcode}`
     const response = await api.get(url)

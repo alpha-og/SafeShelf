@@ -27,7 +27,7 @@ export function ProductDetailPage() {
     error,
   } = useQuery({
     queryKey: ['product', barcode, selectedStoreId],
-    queryFn: () => lookupByBarcode(barcode, selectedStoreId),
+    queryFn: () => lookupByBarcode(barcode),
     enabled: !!barcode,
   })
 
