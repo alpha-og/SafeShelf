@@ -100,34 +100,52 @@ async def _lookup_recipes(client: AsyncClient, ids: list[str]) -> list[RecipeIte
 
     raw_meals = await asyncio.gather(*[fetch_one(id_) for id_ in ids])
 
-    def to_item(meal: dict) -> RecipeItem:
-        ingredients: list[str] = []
-        measurements: list[str] = []
-        for i in range(1, 21):
-            ing = (meal.get(f'strIngredient{i}') or '').strip()
-            meas = (meal.get(f'strMeasure{i}') or '').strip()
-            if ing:
-                ingredients.append(ing)
-                measurements.append(meas)
+    return [_meal_to_item(m) for m in raw_meals if m is not None]
 
-        tags_str = (meal.get('strTags') or '').strip()
-        tags = [t.strip() for t in tags_str.split(',') if t.strip()]
 
-        return RecipeItem(
-            id=meal['idMeal'],
-            name=meal.get('strMeal', ''),
-            category=meal.get('strCategory') or None,
-            area=meal.get('strArea') or None,
-            ingredients=ingredients,
-            measurements=measurements,
-            instructions=(meal.get('strInstructions') or '').strip(),
-            thumbnail_url=meal.get('strMealThumb') or None,
-            tags=tags,
-            youtube_url=meal.get('strYoutube') or None,
-            source_url=meal.get('strSource') or None,
+def _meal_to_item(meal: dict) -> RecipeItem:
+    ingredients: list[str] = []
+    measurements: list[str] = []
+    for i in range(1, 21):
+        ing = (meal.get(f'strIngredient{i}') or '').strip()
+        meas = (meal.get(f'strMeasure{i}') or '').strip()
+        if ing:
+            ingredients.append(ing)
+            measurements.append(meas)
+
+    tags_str = (meal.get('strTags') or '').strip()
+    tags = [t.strip() for t in tags_str.split(',') if t.strip()]
+
+    return RecipeItem(
+        id=meal['idMeal'],
+        name=meal.get('strMeal', ''),
+        category=meal.get('strCategory') or None,
+        area=meal.get('strArea') or None,
+        ingredients=ingredients,
+        measurements=measurements,
+        instructions=(meal.get('strInstructions') or '').strip(),
+        thumbnail_url=meal.get('strMealThumb') or None,
+        tags=tags,
+        youtube_url=meal.get('strYoutube') or None,
+        source_url=meal.get('strSource') or None,
+    )
+
+
+async def lookup_recipe_by_id(client: AsyncClient, id_: str) -> RecipeItem | None:
+    try:
+        resp = await client.get(
+            f'{THEMEALDB_BASE}lookup.php',
+            params={'i': id_},
+            timeout=15,
         )
-
-    return [to_item(m) for m in raw_meals if m is not None]
+        resp.raise_for_status()
+        meals = (resp.json()).get('meals')
+        if not meals:
+            return None
+        return _meal_to_item(meals[0])
+    except (HTTPError, KeyError, ValueError) as exc:
+        logger.warning('recipe lookup failed for id "%s": %s', id_, exc)
+        return None
 
 
 async def _search_recipes_internal(

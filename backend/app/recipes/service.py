@@ -2,7 +2,17 @@ from httpx import AsyncClient
 
 from app.recipes.agent import RecipeQuery, extract_query, run_search, validate_query
 from app.recipes.schemas import SearchRequest, SearchResponse, SuggestRequest
-from app.recipes.tools import _search_recipes_internal
+from app.recipes.tools import RecipeItem, _search_recipes_internal, lookup_recipe_by_id
+
+
+async def get_recipe_handler(id: str) -> RecipeItem:
+    from fastapi import HTTPException, status
+
+    async with AsyncClient() as client:
+        recipe = await lookup_recipe_by_id(client, id)
+    if recipe is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Recipe not found')
+    return recipe
 
 
 async def suggest_recipes(req: SuggestRequest, session) -> dict:
