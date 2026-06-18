@@ -1,6 +1,7 @@
 import { PackageX } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
+import { StatusDot } from '@/components/StatusDot'
 import { useProductSuitability } from '@/features/suitability/hooks/useProductSuitability'
 import type { InventoryResponse } from '@/features/stores/services/storeInventoryApi'
 import { cn } from '@/lib/utils'
@@ -36,22 +37,10 @@ export function SearchResultCard({ item, onClick }: SearchResultCardProps) {
 
   const { result, isLoading } = useProductSuitability(item.barcode, isVisible)
 
-  const tintClass =
-    result && !isLoading
-      ? result.overall === 'unsuitable'
-        ? 'bg-destructive/[0.04] border-destructive/15'
-        : result.overall === 'caution'
-          ? 'bg-accent/[0.04] border-accent/15'
-          : 'bg-card'
-      : 'bg-card'
-
   return (
     <Card
       ref={ref}
-      className={cn(
-        'overflow-hidden active:scale-[0.98] transition-transform',
-        tintClass,
-      )}
+      className="overflow-hidden active:scale-[0.98] transition-transform"
       onClick={() => onClick(item.barcode)}
     >
       <CardContent className="p-0">
@@ -72,6 +61,11 @@ export function SearchResultCard({ item, onClick }: SearchResultCardProps) {
           </div>
 
           <div className="flex-1 p-3 flex flex-col gap-1.5 min-w-0">
+            {result && !isLoading && (
+              <div className="flex justify-end -mt-1 -mr-1">
+                <StatusDot status={result.overall} className="w-4 h-4" />
+              </div>
+            )}
             <h3 className="font-semibold leading-tight line-clamp-2 text-sm">
               {item.product_name || 'Unknown Product'}
             </h3>
