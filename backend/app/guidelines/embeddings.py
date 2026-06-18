@@ -82,7 +82,7 @@ async def retrieve_disease_context(disease: str, aliases: list[str] = None, n_re
     
     # Formulate as a direct retrieval instruction
     query = (
-        f"Find clinical nutrition guidelines, dietary restrictions, maximum and minimum daily thresholds, "
+        f"Find clinical nutrition guidelines, dietary restrictions, maximum and minimum daily thresholds,interaction rules for medications, and any relevant ingredient aliases for the disease "
         f"and allowable intake values for the disease '{disease}' (also known as: {alias_str}). "
         f"Focus on metrics regarding sodium, potassium, sugar, fiber, protein, or fats."
     )

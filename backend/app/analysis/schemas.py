@@ -28,3 +28,14 @@ class SuggestRequest(BaseModel):
 class SuggestResponse(BaseModel):
     alternatives: list[dict]
     explanation: str | None = None
+
+
+class DeepEvaluateRequest(BaseModel):
+    product: dict
+    user_profile: dict
+    per_serving_nutrients: dict[str, dict[str, float | str]] = {}
+
+
+class DeepEvaluateResponse(BaseModel):
+    checks: list[dict]
+    agent_used: bool = True

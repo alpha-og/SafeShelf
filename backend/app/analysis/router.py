@@ -3,12 +3,19 @@ from fastapi import APIRouter, Depends
 from app.analysis.schemas import (
     CompareRequest,
     CompareResponse,
+    DeepEvaluateRequest,
+    DeepEvaluateResponse,
     EvaluateRequest,
     EvaluateResponse,
     SuggestRequest,
     SuggestResponse,
 )
-from app.analysis.service import compare_products, evaluate_product, suggest_alternatives
+from app.analysis.service import (
+    compare_products,
+    deep_evaluate,
+    evaluate_product,
+    suggest_alternatives,
+)
 from app.shared.deps import get_current_user, get_session
 
 router = APIRouter(prefix='/analysis', tags=['analysis'])
@@ -39,3 +46,8 @@ async def suggest(
     _current_user=Depends(get_current_user),
 ):
     return await suggest_alternatives(req, session)
+
+
+@router.post('/deep-evaluate', response_model=DeepEvaluateResponse)
+async def deep_evaluate_endpoint(req: DeepEvaluateRequest):
+    return await deep_evaluate(req)
