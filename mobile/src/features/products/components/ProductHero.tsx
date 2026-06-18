@@ -1,4 +1,4 @@
-import { ArrowLeft, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react'
+import { ArrowLeft, ImageOff, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { DragHandle } from '@/components/DragHandle'
 import { SuitabilityBadge } from '@/features/suitability/components/SuitabilityBadge'
@@ -32,20 +32,21 @@ export function ProductHero({
   hideCartIcon = false,
 }: ProductHeroProps) {
   const [imageError, setImageError] = useState(false)
+  const [loaded, setLoaded] = useState(false)
 
   return (
     <div className="relative w-full h-56">
-      {product.imageUrl && !imageError ? (
+      <div className="absolute inset-0 bg-overlay-foreground/5 flex items-center justify-center">
+        <ImageOff className="w-8 h-8 text-overlay-muted/40" />
+      </div>
+      {product.imageUrl && !imageError && (
         <img
           src={product.imageUrl}
           alt={product.productName || 'Product'}
-          className="w-full h-full object-cover"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+          onLoad={() => setLoaded(true)}
           onError={() => setImageError(true)}
         />
-      ) : (
-        <div className="w-full h-full bg-overlay-foreground/5 flex items-center justify-center">
-          <span className="text-overlay-muted text-sm font-medium">No Image</span>
-        </div>
       )}
 
       {peekGradient && (

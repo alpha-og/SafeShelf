@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams } from '@tanstack/react-router'
-import { ArrowLeft, ExternalLink, Youtube } from 'lucide-react'
+import { ArrowLeft, ExternalLink, ImageOff, Youtube } from 'lucide-react'
+import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -9,6 +10,8 @@ import { getRecipeById } from '../services/recipe'
 export function RecipeDetailPage() {
   const { id } = useParams({ from: '/_authenticated/recipe/$id' })
   const navigate = useNavigate()
+  const [imageError, setImageError] = useState(false)
+  const [loaded, setLoaded] = useState(false)
 
   const {
     data: recipe,
@@ -52,16 +55,17 @@ export function RecipeDetailPage() {
   return (
     <div className="relative flex flex-col flex-1 min-h-0 bg-background text-foreground">
       <div className="relative w-full h-56">
-        {recipe.thumbnail_url ? (
+        <div className="absolute inset-0 bg-muted flex items-center justify-center">
+          <ImageOff className="w-8 h-8 text-muted-foreground/40" />
+        </div>
+        {recipe.thumbnail_url && !imageError && (
           <img
             src={`${recipe.thumbnail_url}/preview`}
             alt={recipe.name}
-            className="w-full h-full object-cover"
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+            onLoad={() => setLoaded(true)}
+            onError={() => setImageError(true)}
           />
-        ) : (
-          <div className="w-full h-full bg-muted flex items-center justify-center">
-            <span className="text-muted-foreground text-sm font-medium">No Image</span>
-          </div>
         )}
 
         <div className="absolute top-0 left-0 z-20 p-3">
