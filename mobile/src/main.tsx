@@ -5,6 +5,7 @@ import { StrictMode, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import { AuthProvider, useAuth } from '@/providers/AuthProvider'
 import { CartProvider } from '@/providers/CartProvider'
+import { StoreProvider } from '@/providers/StoreProvider'
 import { ThemeProvider } from '@/providers/ThemeProvider'
 import { routeTree } from './routeTree.gen'
 import './index.css'
@@ -52,9 +53,11 @@ createRoot(document.getElementById('root')!).render(
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <CartProvider>
-            <InnerApp />
-          </CartProvider>
+          <StoreProvider>
+            <CartProvider>
+              <InnerApp />
+            </CartProvider>
+          </StoreProvider>
         </AuthProvider>
       </QueryClientProvider>
     </ThemeProvider>

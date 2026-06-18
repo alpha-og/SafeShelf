@@ -13,7 +13,7 @@ export function AuthPage({ title, description, children, toggle }: AuthPageProps
     <div className="flex flex-1 min-h-0 items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">SafeShelf</CardTitle>
+          <CardTitle className="text-2xl">{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
         </CardHeader>
         <CardContent>

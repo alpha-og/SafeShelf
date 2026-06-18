@@ -46,7 +46,8 @@ export function mapResponse(data: Record<string, unknown>): ProductInfo {
 
 export async function lookupByBarcode(barcode: string): Promise<ProductInfo | null> {
   try {
-    const response = await api.get(`/v1/products/${barcode}`)
+    const url = `/v1/products/${barcode}`
+    const response = await api.get(url)
     return mapResponse(response.data)
   } catch (err) {
     console.error('Failed to lookup barcode:', err)
