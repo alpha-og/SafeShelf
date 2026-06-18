@@ -25,6 +25,11 @@ export interface SearchResponse {
   rejection_reason?: string | null
 }
 
+export async function getRecipeById(id: string): Promise<RecipeItem> {
+  const { data } = await api.get(`/v1/recipes/${id}`)
+  return data as RecipeItem
+}
+
 export async function searchRecipes(
   query: string,
   categories: string[],

@@ -4,11 +4,12 @@ import type { RecipeItem } from '../services/recipe'
 
 interface RecipeCardProps {
   recipe: RecipeItem
+  onPress?: () => void
 }
 
-export function RecipeCard({ recipe }: RecipeCardProps) {
+export function RecipeCard({ recipe, onPress }: RecipeCardProps) {
   return (
-    <Card className="overflow-hidden mb-4 shadow-sm">
+    <Card className="overflow-hidden mb-4 shadow-sm active:scale-[0.98] transition-transform" onClick={onPress}>
       <CardContent className="p-0">
         <div className="flex">
           {recipe.thumbnail_url ? (

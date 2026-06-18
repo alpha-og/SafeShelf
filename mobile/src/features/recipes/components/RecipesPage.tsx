@@ -1,5 +1,6 @@
 import { useCallback, useRef } from 'react'
 import { Loader2, SearchX, Utensils } from 'lucide-react'
+import { useNavigate } from '@tanstack/react-router'
 import { EmptyState } from '@/components/EmptyState'
 import { PageHeader } from '@/components/PageHeader'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -8,6 +9,7 @@ import { RecipeCard } from './RecipeCard'
 import { RecipeSearchBar } from './RecipeSearchBar'
 
 export function RecipesPage() {
+  const navigate = useNavigate()
   const {
     searchText,
     setSearchText,
@@ -114,7 +116,7 @@ export function RecipesPage() {
         {recipes.length > 0 && (
           <>
             {recipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} />
+              <RecipeCard key={recipe.id} recipe={recipe} onPress={() => navigate({ to: '/recipe/$id', params: { id: recipe.id } })} />
             ))}
             <div ref={sentinelCallbackRef} className="h-4" />
             {isFetchingNextPage && (

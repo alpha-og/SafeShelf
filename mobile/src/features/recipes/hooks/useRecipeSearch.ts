@@ -1,14 +1,50 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDebounce } from '@/hooks/useDebounce'
 import { searchRecipes } from '../services/recipe'
 
 const DEBOUNCE_MS = 300
+const STORAGE_KEY = 'recipe_search_state'
+
+interface SearchState {
+  searchText: string
+  selectedCategories: string[]
+  selectedAreas: string[]
+}
+
+function loadSearchState(): SearchState | null {
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
+  }
+}
 
 export function useRecipeSearch() {
-  const [searchText, setSearchText] = useState('')
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
-  const [selectedAreas, setSelectedAreas] = useState<string[]>([])
+  const savedState = useRef<SearchState | null>(null)
+  if (savedState.current === null) {
+    savedState.current = loadSearchState()
+  }
+
+  const [searchText, setSearchText] = useState(savedState.current?.searchText ?? '')
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+    savedState.current?.selectedCategories ?? [],
+  )
+  const [selectedAreas, setSelectedAreas] = useState<string[]>(
+    savedState.current?.selectedAreas ?? [],
+  )
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ searchText, selectedCategories, selectedAreas } satisfies SearchState),
+      )
+    } catch {
+      /* sessionStorage unavailable */
+    }
+  }, [searchText, selectedCategories, selectedAreas])
 
   const debouncedSearchText = useDebounce(searchText, DEBOUNCE_MS)
   const debouncedCategories = useDebounce(selectedCategories, DEBOUNCE_MS)

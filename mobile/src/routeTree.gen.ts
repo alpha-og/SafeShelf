@@ -22,6 +22,7 @@ import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authen
 import { Route as AuthenticatedSettingsPreferencesRouteImport } from './routes/_authenticated/settings/preferences'
 import { Route as AuthenticatedSettingsConstraintsRouteImport } from './routes/_authenticated/settings/constraints'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
+import { Route as AuthenticatedRecipeIdRouteImport } from './routes/_authenticated/recipe/$id'
 import { Route as AuthenticatedProductBarcodeRouteImport } from './routes/_authenticated/product/$barcode'
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
@@ -92,6 +93,11 @@ const AuthenticatedSettingsAppearanceRoute =
     path: '/appearance',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
+const AuthenticatedRecipeIdRoute = AuthenticatedRecipeIdRouteImport.update({
+  id: '/recipe/$id',
+  path: '/recipe/$id',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedProductBarcodeRoute =
   AuthenticatedProductBarcodeRouteImport.update({
     id: '/product/$barcode',
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/history': typeof AuthenticatedHistoryRoute
   '/recipes': typeof AuthenticatedRecipesRoute
   '/product/$barcode': typeof AuthenticatedProductBarcodeRoute
+  '/recipe/$id': typeof AuthenticatedRecipeIdRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/constraints': typeof AuthenticatedSettingsConstraintsRoute
   '/settings/preferences': typeof AuthenticatedSettingsPreferencesRoute
@@ -121,6 +128,7 @@ export interface FileRoutesByTo {
   '/history': typeof AuthenticatedHistoryRoute
   '/recipes': typeof AuthenticatedRecipesRoute
   '/product/$barcode': typeof AuthenticatedProductBarcodeRoute
+  '/recipe/$id': typeof AuthenticatedRecipeIdRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/constraints': typeof AuthenticatedSettingsConstraintsRoute
   '/settings/preferences': typeof AuthenticatedSettingsPreferencesRoute
@@ -138,6 +146,7 @@ export interface FileRoutesById {
   '/_authenticated/recipes': typeof AuthenticatedRecipesRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/product/$barcode': typeof AuthenticatedProductBarcodeRoute
+  '/_authenticated/recipe/$id': typeof AuthenticatedRecipeIdRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/constraints': typeof AuthenticatedSettingsConstraintsRoute
   '/_authenticated/settings/preferences': typeof AuthenticatedSettingsPreferencesRoute
@@ -154,6 +163,7 @@ export interface FileRouteTypes {
     | '/history'
     | '/recipes'
     | '/product/$barcode'
+    | '/recipe/$id'
     | '/settings/appearance'
     | '/settings/constraints'
     | '/settings/preferences'
@@ -167,6 +177,7 @@ export interface FileRouteTypes {
     | '/history'
     | '/recipes'
     | '/product/$barcode'
+    | '/recipe/$id'
     | '/settings/appearance'
     | '/settings/constraints'
     | '/settings/preferences'
@@ -183,6 +194,7 @@ export interface FileRouteTypes {
     | '/_authenticated/recipes'
     | '/_authenticated/'
     | '/_authenticated/product/$barcode'
+    | '/_authenticated/recipe/$id'
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/constraints'
     | '/_authenticated/settings/preferences'
@@ -287,6 +299,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsAppearanceRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/recipe/$id': {
+      id: '/_authenticated/recipe/$id'
+      path: '/recipe/$id'
+      fullPath: '/recipe/$id'
+      preLoaderRoute: typeof AuthenticatedRecipeIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/product/$barcode': {
       id: '/_authenticated/product/$barcode'
       path: '/product/$barcode'
@@ -338,6 +357,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedRecipesRoute: typeof AuthenticatedRecipesRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedProductBarcodeRoute: typeof AuthenticatedProductBarcodeRoute
+  AuthenticatedRecipeIdRoute: typeof AuthenticatedRecipeIdRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -347,6 +367,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedRecipesRoute: AuthenticatedRecipesRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedProductBarcodeRoute: AuthenticatedProductBarcodeRoute,
+  AuthenticatedRecipeIdRoute: AuthenticatedRecipeIdRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
