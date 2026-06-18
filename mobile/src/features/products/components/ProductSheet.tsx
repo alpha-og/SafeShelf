@@ -110,6 +110,7 @@ export function ProductSheet({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="absolute inset-0 z-10 bg-background/60"
+          onTouchStart={(e) => e.stopPropagation()}
           onClick={() => {
             setIsFull(false)
             snapTo(peekY)
@@ -127,6 +128,7 @@ export function ProductSheet({
         dragMomentum={false}
         animate={controls}
         onDragEnd={handleDragEnd}
+        onTouchStart={(e) => e.stopPropagation()}
       >
         <div className="flex-1 flex flex-col min-h-0 text-foreground">
           {isProcessing ? (
