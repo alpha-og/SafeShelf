@@ -1,5 +1,6 @@
 import { AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import { SessionBanner } from '@/features/cart/components/SessionBanner'
 import { useCamera } from '../hooks/useCamera'
 import { scanStore } from '../services/scanStore'
 import { CameraPreview } from './CameraPreview'
@@ -55,6 +56,8 @@ export function CameraViewfinder() {
         <CameraPreview videoRef={videoRef} isCameraReady={isCameraReady} error={error} />
 
         <TopBar cameraAvailable={isCameraReady} />
+
+        <SessionBanner />
 
         <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center pb-[calc(2rem_+_var(--sab))] sm:pb-[calc(4rem_+_var(--sab))] gap-4 sm:gap-6">
           <div className="flex items-center gap-6 sm:gap-8">
