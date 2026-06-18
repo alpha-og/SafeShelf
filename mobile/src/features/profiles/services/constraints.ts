@@ -34,8 +34,8 @@ async function searchAllergens(query: string): Promise<ConstraintItem[]> {
   const res = await fetch(url)
   if (!res.ok) throw new Error(`Allergen search failed: ${res.status}`)
   const tags = (await res.json()) as string[]
-  // The tag string is stable enough to use as the id; title-case it for display.
-  return tags.map((tag) => ({ id: tag, name: titleCase(tag) }))
+  const valid = tags.filter(Boolean)
+  return valid.map((tag) => ({ id: tag, name: titleCase(tag) }))
 }
 
 export async function searchConstraints(

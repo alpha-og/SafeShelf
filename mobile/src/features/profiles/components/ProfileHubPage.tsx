@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import { Pencil, Plus, Trash2, Users } from 'lucide-react'
+import { FileText, Pencil, Plus, Trash2, Users } from 'lucide-react'
 import { useState } from 'react'
 import { Avatar } from '@/components/Avatar'
 import { FormError } from '@/components/FormError'
@@ -186,6 +186,22 @@ export function ProfileHubPage() {
             >
               <Plus className="h-5 w-5 text-muted-foreground shrink-0" />
               <span className="flex-1 text-left">Add group</span>
+            </button>
+          </div>
+        </section>
+
+        <section>
+          <SectionHeader variant="default" className="px-4">
+            Health Report
+          </SectionHeader>
+          <div>
+            <button
+              type="button"
+              onClick={() => navigate({ to: '/profile/health-report' })}
+              className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-foreground transition-colors hover:bg-accent"
+            >
+              <FileText className="h-5 w-5 text-muted-foreground shrink-0" />
+              <span className="flex-1 text-left">Upload & manage health reports</span>
             </button>
           </div>
         </section>

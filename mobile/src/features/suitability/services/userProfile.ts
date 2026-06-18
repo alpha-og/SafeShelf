@@ -5,6 +5,7 @@ import {
   listProfiles,
 } from '@/features/profiles/services/profileStorage'
 import type { Profile } from '@/features/profiles/types'
+import type { HealthData } from '@/features/health-report/types'
 import type { SuitabilityContext, UserProfile } from '../types'
 import { DEFAULT_SERVING_SETTINGS } from '../types'
 
@@ -19,8 +20,84 @@ function emptyProfile(): UserProfile {
   }
 }
 
-function mapProfile(profile: Profile): UserProfile {
+const CONDITION_MAP: Record<string, { name: string; code: string }> = {
+  diabetes: { name: 'Diabetes', code: '5A10' },
+  hypertension: { name: 'Hypertension', code: 'BA00' },
+  highCholesterol: { name: 'High Cholesterol', code: '5C80' },
+  thyroidDisorder: { name: 'Thyroid Disorder', code: '5A00' },
+  heartDisease: { name: 'Heart Disease', code: 'BA60' },
+  kidneyDisease: { name: 'Kidney Disease', code: 'GB70' },
+}
+
+function extractHealthConditions(healthData: HealthData | null | undefined): {
+  names: string[]
+  codes: string[]
+} {
+  if (!healthData?.medicalConditions) return { names: [], codes: [] }
+  const names: string[] = []
+  const codes: string[] = []
+
+  for (const [key, value] of Object.entries(healthData.medicalConditions)) {
+    if (value === true) {
+      const mapping = CONDITION_MAP[key]
+      if (mapping) {
+        names.push(mapping.name)
+        codes.push(mapping.code)
+      }
+    }
+  }
+
+  return { names, codes }
+}
+
+const ALLERGEN_MAP: Record<string, string> = {
+  peanut: 'Peanut',
+  milk: 'Milk',
+  gluten: 'Gluten',
+  soy: 'Soy',
+  egg: 'Egg',
+  treeNuts: 'Tree Nuts',
+  shellfish: 'Shellfish',
+}
+
+function extractHealthAllergens(healthData: HealthData | null | undefined): string[] {
+  if (!healthData?.allergies) return []
+  const result: string[] = []
+
+  for (const [key, value] of Object.entries(healthData.allergies)) {
+    if (key === 'otherAllergies' && Array.isArray(value)) {
+      result.push(...value)
+    } else if (value === true) {
+      const name = ALLERGEN_MAP[key]
+      if (name) result.push(name)
+    }
+  }
+
+  return result
+}
+
+function mergeUserProfile(
+  manualAllergens: string[],
+  manualConditions: string[],
+  manualConditionCodes: string[],
+  healthData: HealthData | null | undefined,
+): { allergens: string[]; conditions: string[]; conditionCodes: string[] } {
+  const healthConditions = extractHealthConditions(healthData)
+  const healthAllergens = extractHealthAllergens(healthData)
+
+  const mergedAllergens = [...new Set([...manualAllergens, ...healthAllergens])]
+  const mergedConditions = [...new Set([...manualConditions, ...healthConditions.names])]
+  const mergedConditionCodes = [...new Set([...manualConditionCodes, ...healthConditions.codes])]
+
   return {
+    allergens: mergedAllergens,
+    conditions: mergedConditions,
+    conditionCodes: mergedConditionCodes,
+  }
+}
+
+function mapProfile(profile: Profile): UserProfile {
+  const base = {
     allergens: profile.allergens.map((a) => a.name),
     conditions: profile.conditions.map((c) => c.name),
     conditionCodes: profile.conditions.map((c) => c.id).filter(Boolean),
@@ -28,6 +105,15 @@ function mapProfile(profile: Profile): UserProfile {
     budget: profile.budget,
     servingSettings: profile.servingSettings,
   }
+
+  const merged = mergeUserProfile(
+    base.allergens,
+    base.conditions,
+    base.conditionCodes,
+    profile.healthData,
+  )
+
+  return { ...base, ...merged }
 }
 
 /**
@@ -49,13 +135,23 @@ function mergeProfiles(members: Profile[]): UserProfile {
   let minLiquidMl = 0
 
   for (const member of members) {
-    member.allergens.forEach((a) => {
-      allergens.add(a.name)
-    })
-    member.conditions.forEach((c) => {
-      conditions.add(c.name)
-      if (c.id) conditionCodes.add(c.id)
-    })
+    const base = {
+      allergens: member.allergens.map((a) => a.name),
+      conditions: member.conditions.map((c) => c.name),
+      conditionCodes: member.conditions.map((c) => c.id).filter(Boolean),
+    }
+
+    const merged = mergeUserProfile(
+      base.allergens,
+      base.conditions,
+      base.conditionCodes,
+      member.healthData,
+    )
+
+    merged.allergens.forEach((a) => allergens.add(a))
+    merged.conditions.forEach((c) => conditions.add(c))
+    merged.conditionCodes.forEach((c) => conditionCodes.add(c))
+
     member.dietaryPreferences.forEach((d) => {
       dietaryPreferences.add(d)
     })

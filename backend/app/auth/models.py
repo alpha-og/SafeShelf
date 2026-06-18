@@ -13,6 +13,7 @@ class User(SQLModel, table=True):
 
     refresh_tokens: list[RefreshToken] = Relationship(back_populates='user', cascade_delete=True)
     devices: list[Device] = Relationship(back_populates='user')
+    health_reports: list['HealthReport'] = Relationship(back_populates='user')  # noqa: F821, UP037
 
 
 class RefreshToken(SQLModel, table=True):

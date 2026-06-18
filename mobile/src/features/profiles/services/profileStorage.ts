@@ -39,8 +39,20 @@ export async function getProfile(id: string): Promise<Profile | null> {
 export async function createProfile(input: ProfileInput): Promise<Profile> {
   const profiles = await listProfiles()
   const now = utcnow()
-  const profile: Profile = { ...input, id: generateId(), createdAt: now, updatedAt: now }
+  const profile: Profile = {
+    ...input,
+    id: generateId(),
+    healthData: input.healthData ?? null,
+    createdAt: now,
+    updatedAt: now,
+  }
   await setItem(PROFILES_KEY, [...profiles, profile])
+
+  // If this is the only profile, auto-set it as active.
+  if (profiles.length === 0) {
+    await setActiveProfileId(profile.id)
+  }
+
   return profile
 }
 
@@ -72,17 +84,31 @@ export async function deleteProfile(id: string): Promise<void> {
   }))
   await setItem(GROUPS_KEY, updatedGroups)
 
-  // Fall back to another profile if the deleted one was the active selection.
-  const selection = await getActiveSelection()
-  if (selection?.type === 'profile' && selection.profileId === id) {
+  // If only one profile remains, it should be active by default.
+  if (next.length === 1) {
     await setActiveProfileId(next[0].id)
+  } else {
+    // Fall back to another profile if the deleted one was the active selection.
+    const selection = await getActiveSelection()
+    if (selection?.type === 'profile' && selection.profileId === id) {
+      await setActiveProfileId(next[0].id)
+    }
   }
 }
 
 // ---- Active selection (a single profile, or a Group Buy group) --------
 
 export async function getActiveSelection(): Promise<ActiveSelection | null> {
-  return (await getItem<ActiveSelection>(ACTIVE_SELECTION_KEY)) ?? null
+  const stored = await getItem<ActiveSelection>(ACTIVE_SELECTION_KEY)
+  if (stored) return stored
+
+  // No active selection stored. If there's exactly one profile, auto-select it.
+  const profiles = await listProfiles()
+  if (profiles.length === 1) {
+    return { type: 'profile', profileId: profiles[0].id }
+  }
+
+  return null
 }
 
 export async function setActiveProfileId(profileId: string): Promise<void> {

@@ -22,6 +22,7 @@ import { Route as AuthSigninRouteImport } from './routes/_auth.signin'
 import { Route as AuthenticatedProfileRouteRouteImport } from './routes/_authenticated/profile/route'
 import { Route as AuthenticatedProfileIndexRouteImport } from './routes/_authenticated/profile/index'
 import { Route as AuthenticatedProfileNewRouteImport } from './routes/_authenticated/profile/new'
+import { Route as AuthenticatedProfileHealthReportRouteImport } from './routes/_authenticated/profile/health-report'
 import { Route as AuthenticatedProfileProfileIdRouteImport } from './routes/_authenticated/profile/$profileId'
 import { Route as AuthenticatedProductBarcodeRouteImport } from './routes/_authenticated/product/$barcode'
 import { Route as AuthenticatedProfileGroupsRouteRouteImport } from './routes/_authenticated/profile/groups/route'
@@ -92,6 +93,12 @@ const AuthenticatedProfileNewRoute = AuthenticatedProfileNewRouteImport.update({
   path: '/new',
   getParentRoute: () => AuthenticatedProfileRouteRoute,
 } as any)
+const AuthenticatedProfileHealthReportRoute =
+  AuthenticatedProfileHealthReportRouteImport.update({
+    id: '/health-report',
+    path: '/health-report',
+    getParentRoute: () => AuthenticatedProfileRouteRoute,
+  } as any)
 const AuthenticatedProfileProfileIdRoute =
   AuthenticatedProfileProfileIdRouteImport.update({
     id: '/$profileId',
@@ -135,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/profile/groups': typeof AuthenticatedProfileGroupsRouteRouteWithChildren
   '/product/$barcode': typeof AuthenticatedProductBarcodeRoute
   '/profile/$profileId': typeof AuthenticatedProfileProfileIdRoute
+  '/profile/health-report': typeof AuthenticatedProfileHealthReportRoute
   '/profile/new': typeof AuthenticatedProfileNewRoute
   '/profile/': typeof AuthenticatedProfileIndexRoute
   '/profile/groups/$groupId': typeof AuthenticatedProfileGroupsGroupIdRoute
@@ -151,6 +159,7 @@ export interface FileRoutesByTo {
   '/profile/groups': typeof AuthenticatedProfileGroupsRouteRouteWithChildren
   '/product/$barcode': typeof AuthenticatedProductBarcodeRoute
   '/profile/$profileId': typeof AuthenticatedProfileProfileIdRoute
+  '/profile/health-report': typeof AuthenticatedProfileHealthReportRoute
   '/profile/new': typeof AuthenticatedProfileNewRoute
   '/profile': typeof AuthenticatedProfileIndexRoute
   '/profile/groups/$groupId': typeof AuthenticatedProfileGroupsGroupIdRoute
@@ -172,6 +181,7 @@ export interface FileRoutesById {
   '/_authenticated/profile/groups': typeof AuthenticatedProfileGroupsRouteRouteWithChildren
   '/_authenticated/product/$barcode': typeof AuthenticatedProductBarcodeRoute
   '/_authenticated/profile/$profileId': typeof AuthenticatedProfileProfileIdRoute
+  '/_authenticated/profile/health-report': typeof AuthenticatedProfileHealthReportRoute
   '/_authenticated/profile/new': typeof AuthenticatedProfileNewRoute
   '/_authenticated/profile/': typeof AuthenticatedProfileIndexRoute
   '/_authenticated/profile/groups/$groupId': typeof AuthenticatedProfileGroupsGroupIdRoute
@@ -191,6 +201,7 @@ export interface FileRouteTypes {
     | '/profile/groups'
     | '/product/$barcode'
     | '/profile/$profileId'
+    | '/profile/health-report'
     | '/profile/new'
     | '/profile/'
     | '/profile/groups/$groupId'
@@ -207,6 +218,7 @@ export interface FileRouteTypes {
     | '/profile/groups'
     | '/product/$barcode'
     | '/profile/$profileId'
+    | '/profile/health-report'
     | '/profile/new'
     | '/profile'
     | '/profile/groups/$groupId'
@@ -227,6 +239,7 @@ export interface FileRouteTypes {
     | '/_authenticated/profile/groups'
     | '/_authenticated/product/$barcode'
     | '/_authenticated/profile/$profileId'
+    | '/_authenticated/profile/health-report'
     | '/_authenticated/profile/new'
     | '/_authenticated/profile/'
     | '/_authenticated/profile/groups/$groupId'
@@ -332,6 +345,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileNewRouteImport
       parentRoute: typeof AuthenticatedProfileRouteRoute
     }
+    '/_authenticated/profile/health-report': {
+      id: '/_authenticated/profile/health-report'
+      path: '/health-report'
+      fullPath: '/profile/health-report'
+      preLoaderRoute: typeof AuthenticatedProfileHealthReportRouteImport
+      parentRoute: typeof AuthenticatedProfileRouteRoute
+    }
     '/_authenticated/profile/$profileId': {
       id: '/_authenticated/profile/$profileId'
       path: '/$profileId'
@@ -404,6 +424,7 @@ const AuthenticatedProfileGroupsRouteRouteWithChildren =
 interface AuthenticatedProfileRouteRouteChildren {
   AuthenticatedProfileGroupsRouteRoute: typeof AuthenticatedProfileGroupsRouteRouteWithChildren
   AuthenticatedProfileProfileIdRoute: typeof AuthenticatedProfileProfileIdRoute
+  AuthenticatedProfileHealthReportRoute: typeof AuthenticatedProfileHealthReportRoute
   AuthenticatedProfileNewRoute: typeof AuthenticatedProfileNewRoute
   AuthenticatedProfileIndexRoute: typeof AuthenticatedProfileIndexRoute
 }
@@ -413,6 +434,8 @@ const AuthenticatedProfileRouteRouteChildren: AuthenticatedProfileRouteRouteChil
     AuthenticatedProfileGroupsRouteRoute:
       AuthenticatedProfileGroupsRouteRouteWithChildren,
     AuthenticatedProfileProfileIdRoute: AuthenticatedProfileProfileIdRoute,
+    AuthenticatedProfileHealthReportRoute:
+      AuthenticatedProfileHealthReportRoute,
     AuthenticatedProfileNewRoute: AuthenticatedProfileNewRoute,
     AuthenticatedProfileIndexRoute: AuthenticatedProfileIndexRoute,
   }

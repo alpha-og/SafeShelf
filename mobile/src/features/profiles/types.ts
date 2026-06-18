@@ -1,3 +1,4 @@
+import type { HealthData } from '@/features/health-report/types'
 import type { ConstraintItem } from './services/constraints'
 
 export interface ServingSettings {
@@ -38,8 +39,14 @@ export interface Profile {
   /** True for the profile created during onboarding. Informational only —
    * deletion of the last remaining profile is blocked regardless of this flag. */
   isMain: boolean
+  /** Health data extracted from uploaded medical reports via AI. */
+  healthData: HealthData | null
   createdAt: string
   updatedAt: string
+}
+
+export type ProfileInput = Omit<Profile, 'id' | 'createdAt' | 'updatedAt' | 'healthData'> & {
+  healthData?: HealthData | null
 }
 
 export interface ProfileGroup {
@@ -51,7 +58,6 @@ export interface ProfileGroup {
   updatedAt: string
 }
 
-export type ProfileInput = Omit<Profile, 'id' | 'createdAt' | 'updatedAt'>
 export type ProfilePatch = Partial<Omit<Profile, 'id' | 'createdAt'>>
 export type GroupInput = Pick<ProfileGroup, 'name' | 'memberProfileIds'>
 export type GroupPatch = Partial<GroupInput>
