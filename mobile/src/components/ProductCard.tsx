@@ -5,9 +5,11 @@ import type { ProductInfo } from '@/features/products/services/product'
 interface ProductCardProps {
   product: ProductInfo
   action?: React.ReactNode
+  /** Optional content (e.g. a suitability pill) shown beneath the product name. */
+  badge?: React.ReactNode
 }
 
-export function ProductCard({ product, action }: ProductCardProps) {
+export function ProductCard({ product, action, badge }: ProductCardProps) {
   return (
     <Card className="overflow-hidden mb-4 shadow-sm">
       <CardContent className="p-4 flex gap-4">
@@ -30,6 +32,7 @@ export function ProductCard({ product, action }: ProductCardProps) {
             {product.productName || 'Unknown Product'}
           </h3>
           {product.brand && <p className="text-muted-foreground text-sm mt-1">{product.brand}</p>}
+          {badge && <div className="mt-2">{badge}</div>}
           {product.barcode && (
             <p className="text-xs text-muted-foreground mt-auto pt-2 font-mono">
               {product.barcode}
