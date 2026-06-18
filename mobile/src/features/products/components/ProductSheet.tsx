@@ -118,16 +118,17 @@ export function ProductSheet({
       )}
 
       <motion.div
-        className="absolute inset-x-0 bottom-0 z-20 flex flex-col rounded-t-3xl overflow-hidden shadow-[0_-10px_40px_rgba(0,0,0,0.3)]"
+        className="absolute inset-x-0 bottom-0 z-20 flex flex-col rounded-t-3xl bg-background overflow-hidden shadow-[0_-10px_40px_rgba(0,0,0,0.3)]"
         style={{ height: `calc(100dvh - ${topOffset}px)` }}
         initial={{ y: OFFRANGE }}
         drag="y"
         dragConstraints={{ top: 0 }}
         dragElastic={{ top: 0, bottom: 0.4 }}
+        dragMomentum={false}
         animate={controls}
         onDragEnd={handleDragEnd}
       >
-        <div className="flex-1 rounded-t-3xl flex flex-col min-h-0 bg-background text-foreground">
+        <div className="flex-1 flex flex-col min-h-0 text-foreground">
           {isProcessing ? (
             <>
               <DragHandle variant="dark" className="relative z-20" />

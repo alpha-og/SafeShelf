@@ -37,7 +37,7 @@ export function CapturePreview({ image, mode, isCameraReady, onRetake }: Capture
 
   return (
     <motion.div
-      className="fixed inset-0 bg-background"
+      className="absolute inset-0 bg-background"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
