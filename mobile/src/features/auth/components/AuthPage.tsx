@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { BrandLogo } from '@/components/BrandLogo'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface AuthPageProps {
@@ -13,7 +14,8 @@ export function AuthPage({ title, description, children, toggle }: AuthPageProps
     <div className="flex flex-1 min-h-0 items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">SafeShelf</CardTitle>
+          <BrandLogo className="mb-1 text-4xl" />
+          <CardTitle className="text-2xl">{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
         </CardHeader>
         <CardContent>
