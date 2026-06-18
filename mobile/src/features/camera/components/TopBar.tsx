@@ -72,7 +72,7 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar(
           <ShoppingCart className="h-5 w-5" />
         </button>
         <button
-          onClick={() => navigate({ to: '/history' })}
+          onClick={() => navigate({ to: '/recent-scans' })}
           className={`flex items-center justify-center w-10 h-10 rounded-full transition-colors ${
             cameraAvailable
               ? 'text-white/70 hover:text-white hover:bg-primary-foreground/10 hover:scale-[1.02]'

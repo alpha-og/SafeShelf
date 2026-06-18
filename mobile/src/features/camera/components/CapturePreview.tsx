@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import { ProductSheet } from '@/features/products/components/ProductSheet'
+import { addScanToHistory } from '@/features/products/services/scanHistory'
 import type { ScanMode } from '../hooks/useCamera'
 import { useProductDetection } from '../hooks/useProductDetection'
 import { scanStore } from '../services/scanStore'
@@ -28,6 +29,7 @@ export function CapturePreview({ image, mode, isCameraReady, onRetake }: Capture
   useEffect(() => {
     if (result) {
       scanStore.lastResult = result
+      addScanToHistory(result)
     }
   }, [result])
 
