@@ -5,6 +5,7 @@ import type {
   ServingInfo,
   ServingSettings,
   SuitabilityCheck,
+  SuitabilityContext,
   SuitabilityResult,
   UserProfile,
 } from './types'
@@ -599,4 +600,47 @@ export function evaluate(
   }
 
   return { overall, checks, insights, serving: servingInfo }
+}
+
+/** Identity of a check for attribution: same group + type + label means the
+ *  same finding, regardless of which member triggered it. */
+function checkKey(check: SuitabilityCheck): string {
+  return `${check.group ?? ''}|${check.type}|${check.label}`
+}
+
+/**
+ * Evaluates a suitability context. For a single profile this is just
+ * `evaluate`. For an active Group Buy group it evaluates the strictest-wins
+ * merged profile (so the result, serving and overall status are unchanged),
+ * then re-runs the evaluation per member and tags each non-pass check with the
+ * name(s) of the member(s) it affects — so the UI can show who has the problem.
+ */
+export function evaluateContext(
+  product: ProductInfo,
+  context: SuitabilityContext,
+  thresholds: ConditionThreshold[],
+  aliases: Record<string, string>,
+): SuitabilityResult {
+  const result = evaluate(product, context.profile, thresholds, aliases)
+  if (!context.members || context.members.length === 0) return result
+
+  const ownersByKey = new Map<string, string[]>()
+  for (const member of context.members) {
+    const memberResult = evaluate(product, member.profile, thresholds, aliases)
+    for (const check of memberResult.checks) {
+      if (check.status === 'pass') continue
+      const key = checkKey(check)
+      const owners = ownersByKey.get(key) ?? []
+      if (!owners.includes(member.name)) owners.push(member.name)
+      ownersByKey.set(key, owners)
+    }
+  }
+
+  const checks = result.checks.map((check) => {
+    if (check.status === 'pass') return check
+    const owners = ownersByKey.get(checkKey(check))
+    return owners ? { ...check, owners } : check
+  })
+
+  return { ...result, checks }
 }

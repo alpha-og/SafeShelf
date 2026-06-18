@@ -59,6 +59,25 @@ export interface SuitabilityCheck {
   label: string
   detail: string
   group?: string
+  /** Names of the active Group Buy members this check applies to. Set only when
+   *  a group is active and the check isn't a pass; undefined for a single profile. */
+  owners?: string[]
+}
+
+/** A single Group Buy member resolved into a suitability profile, tagged with
+ *  the member's display name so checks can be attributed back to them. */
+export interface GroupMemberProfile {
+  name: string
+  profile: UserProfile
+}
+
+export interface SuitabilityContext {
+  /** The profile suitability runs against: for a Group Buy group this is the
+   *  strictest-wins merge of all members; for a single selection it's that profile. */
+  profile: UserProfile
+  /** Per-member profiles when a Group Buy group is active, so each check can be
+   *  attributed to whoever it affects. Null when a single profile is active. */
+  members: GroupMemberProfile[] | null
 }
 
 export interface SuitabilityResult {

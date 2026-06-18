@@ -5,7 +5,7 @@ import {
   listProfiles,
 } from '@/features/profiles/services/profileStorage'
 import type { Profile } from '@/features/profiles/types'
-import type { UserProfile } from '../types'
+import type { SuitabilityContext, UserProfile } from '../types'
 import { DEFAULT_SERVING_SETTINGS } from '../types'
 
 function emptyProfile(): UserProfile {
@@ -82,20 +82,25 @@ function mergeProfiles(members: Profile[]): UserProfile {
   }
 }
 
-export async function readUserProfile(): Promise<UserProfile> {
+export async function readUserProfile(): Promise<SuitabilityContext> {
   const selection = await getActiveSelection()
   // Shouldn't normally happen — _authenticated.tsx gates on a profile
   // existing — but stay defensive rather than throwing mid-scan.
-  if (!selection) return emptyProfile()
+  if (!selection) return { profile: emptyProfile(), members: null }
 
   if (selection.type === 'profile') {
     const profile = await getProfile(selection.profileId)
-    return profile ? mapProfile(profile) : emptyProfile()
+    return { profile: profile ? mapProfile(profile) : emptyProfile(), members: null }
   }
 
   const group = await getGroup(selection.groupId)
-  if (!group) return emptyProfile()
+  if (!group) return { profile: emptyProfile(), members: null }
   const allProfiles = await listProfiles()
   const members = allProfiles.filter((p) => group.memberProfileIds.includes(p.id))
-  return mergeProfiles(members)
+  return {
+    profile: mergeProfiles(members),
+    // Keep per-member profiles so suitability checks can be attributed back to
+    // whoever they affect when this group is the active selection.
+    members: members.map((m) => ({ name: m.name, profile: mapProfile(m) })),
+  }
 }

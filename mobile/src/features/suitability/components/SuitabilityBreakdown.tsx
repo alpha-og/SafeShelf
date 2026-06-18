@@ -104,8 +104,11 @@ export function SuitabilityBreakdown({ checks }: SuitabilityBreakdownProps) {
               <div className="ml-4 pl-3 border-l-2 border-border space-y-1.5 pb-1.5">
                 {group.checks
                   .filter((c) => c.status !== 'pass')
-                  .map((check, i) => (
-                    <div key={i} className="flex items-start gap-2 text-sm py-0.5">
+                  .map((check) => (
+                    <div
+                      key={`${check.type}:${check.label}`}
+                      className="flex items-start gap-2 text-sm py-0.5"
+                    >
                       {check.status === 'fail' ? (
                         <CircleX className="h-3.5 w-3.5 mt-0.5 shrink-0 text-[#B46A72]" />
                       ) : (
@@ -114,6 +117,21 @@ export function SuitabilityBreakdown({ checks }: SuitabilityBreakdownProps) {
                       <div className="min-w-0">
                         <p className="font-medium text-foreground leading-tight">{check.label}</p>
                         <p className="text-muted-foreground text-xs mt-0.5">{check.detail}</p>
+                        {check.owners && check.owners.length > 0 && (
+                          <div className="flex flex-wrap items-center gap-1 mt-1.5">
+                            <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
+                              Affects
+                            </span>
+                            {check.owners.map((owner) => (
+                              <span
+                                key={owner}
+                                className="inline-flex items-center rounded-full bg-muted/60 px-2 py-0.5 text-[11px] font-medium text-foreground"
+                              >
+                                {owner}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}
