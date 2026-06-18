@@ -11,14 +11,13 @@ import { cn } from '@/lib/utils'
 import { useProfiles } from '@/providers/ProfilesProvider'
 import { deleteProfile } from '../services/profileStorage'
 
-// Shared "pop forward" treatment for whichever profile/group is currently
-// active: instead of an "Active" label, the row is enlarged and elevated
-// off the flat list, and its avatar/icon bubble turns green instead of the
-// default red/primary tint. No horizontal margin, so it stays flush with
-// the screen edges — only the corners round off, like a card sitting on a
-// flat surface rather than one inset from it.
-const ACTIVE_ROW_CLASSES =
-  'rounded-2xl bg-card shadow-[0_4px_16px_rgba(0,0,0,0.35)] relative z-10 py-5'
+// Shared treatment for whichever profile/group is currently active: instead of
+// an "Active" label, the row stays the same size as every other row and only
+// changes color — a subtle green tint behind it, and its avatar/icon bubble
+// turns green instead of the default red/primary tint. Keeping rows uniform
+// avoids the elevated-card look (and the stray divider line it produced when
+// sitting between bordered rows).
+const ACTIVE_ROW_CLASSES = 'bg-emerald-500/10'
 const ACTIVE_BUBBLE_CLASSES = 'bg-emerald-500/20 text-emerald-600 border-emerald-500/30'
 
 export function ProfileHubPage() {
@@ -73,8 +72,8 @@ export function ProfileHubPage() {
                 <div
                   key={profile.id}
                   className={cn(
-                    'w-full flex items-center gap-3 px-4 py-3.5 transition-all',
-                    isActive ? ACTIVE_ROW_CLASSES : 'border-b border-border',
+                    'w-full flex items-center gap-3 px-4 py-3.5 border-b border-border transition-colors',
+                    isActive && ACTIVE_ROW_CLASSES,
                   )}
                 >
                   <button
@@ -84,7 +83,7 @@ export function ProfileHubPage() {
                   >
                     <Avatar
                       name={profile.name}
-                      size={isActive ? 'lg' : 'md'}
+                      size="md"
                       className={isActive ? ACTIVE_BUBBLE_CLASSES : undefined}
                     />
                     <span className="flex-1 min-w-0 text-sm text-foreground truncate">
@@ -141,8 +140,8 @@ export function ProfileHubPage() {
                 <div
                   key={group.id}
                   className={cn(
-                    'w-full flex items-center gap-3 px-4 py-3.5 transition-all',
-                    isActive ? ACTIVE_ROW_CLASSES : 'border-b border-border',
+                    'w-full flex items-center gap-3 px-4 py-3.5 border-b border-border transition-colors',
+                    isActive && ACTIVE_ROW_CLASSES,
                   )}
                 >
                   <button
@@ -152,13 +151,13 @@ export function ProfileHubPage() {
                   >
                     <div
                       className={cn(
-                        'inline-flex items-center justify-center shrink-0 rounded-full border',
+                        'inline-flex items-center justify-center shrink-0 rounded-full border h-10 w-10',
                         isActive
-                          ? `h-16 w-16 ${ACTIVE_BUBBLE_CLASSES}`
-                          : 'h-10 w-10 bg-primary/15 text-primary border-primary/20',
+                          ? ACTIVE_BUBBLE_CLASSES
+                          : 'bg-primary/15 text-primary border-primary/20',
                       )}
                     >
-                      <Users className={isActive ? 'h-7 w-7' : 'h-5 w-5'} />
+                      <Users className="h-5 w-5" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-sm text-foreground truncate">{group.name}</div>

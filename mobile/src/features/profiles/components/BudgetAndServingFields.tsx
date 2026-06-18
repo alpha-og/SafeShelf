@@ -9,14 +9,16 @@ interface BudgetAndServingFieldsProps {
   onServingSettingsChange: (value: ServingSettings) => void
 }
 
+// NOTE: `budget` / `onBudgetChange` are intentionally kept on the props (and
+// still passed by callers) even though the Budget section below is commented
+// off — so the field can be switched back on without re-threading state.
 export function BudgetAndServingFields({
-  budget,
-  onBudgetChange,
   servingSettings,
   onServingSettingsChange,
 }: BudgetAndServingFieldsProps) {
   return (
     <div className="space-y-8">
+      {/* Budget section disabled for now — uncomment to re-enable.
       <section>
         <label htmlFor="budget" className="text-sm font-medium text-foreground mb-2 block">
           Budget
@@ -30,6 +32,7 @@ export function BudgetAndServingFields({
           onChange={(e) => onBudgetChange(e.target.value.replace(/\D/g, ''))}
         />
       </section>
+      */}
 
       <section>
         <h2 className="text-sm font-medium text-foreground mb-2">Serving size thresholds</h2>

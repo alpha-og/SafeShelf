@@ -8,11 +8,12 @@ import { Input } from '@/components/ui/input'
 import { useProfiles } from '@/providers/ProfilesProvider'
 import type { ConstraintItem } from '../services/constraints'
 import { createProfile, deleteProfile, getProfile, updateProfile } from '../services/profileStorage'
-import { DEFAULT_SERVING_SETTINGS } from '../types'
+import { DEFAULT_SERVING_SETTINGS, type PrescriptionFile } from '../types'
 import { BudgetAndServingFields } from './BudgetAndServingFields'
 import { ConditionsAndAllergensFields } from './ConditionsAndAllergensFields'
 import { DietaryChoicesScreen } from './DietaryChoicesScreen'
 import { DietarySummaryButton } from './DietarySummaryButton'
+import { PrescriptionUpload } from './PrescriptionUpload'
 import { ProfileWizard, type ProfileWizardValues } from './ProfileWizard'
 
 interface ManageProfilePageProps {
@@ -54,6 +55,7 @@ function EditProfileForm({ profileId }: { profileId: string }) {
   const [servingSettings, setServingSettings] = useState(DEFAULT_SERVING_SETTINGS)
   const [conditions, setConditions] = useState<ConstraintItem[]>([])
   const [allergens, setAllergens] = useState<ConstraintItem[]>([])
+  const [prescriptions, setPrescriptions] = useState<PrescriptionFile[]>([])
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
@@ -67,6 +69,7 @@ function EditProfileForm({ profileId }: { profileId: string }) {
         setServingSettings(profile.servingSettings)
         setConditions(profile.conditions)
         setAllergens(profile.allergens)
+        setPrescriptions(profile.prescriptions ?? [])
       }
       setLoaded(true)
     })
@@ -87,6 +90,7 @@ function EditProfileForm({ profileId }: { profileId: string }) {
         servingSettings,
         conditions,
         allergens,
+        prescriptions,
       })
       // The edited profile may be driving suitability directly, or as a
       // member of the currently active Group Buy group — either way the
@@ -186,6 +190,8 @@ function EditProfileForm({ profileId }: { profileId: string }) {
           allergens={allergens}
           onAllergensChange={setAllergens}
         />
+
+        <PrescriptionUpload prescriptions={prescriptions} onChange={setPrescriptions} />
       </main>
 
       <footer className="border-t border-border shrink-0 px-4 py-3 space-y-2">

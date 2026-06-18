@@ -7,7 +7,6 @@ import { FormError } from '@/components/FormError'
 import { PageHeader } from '@/components/PageHeader'
 import { SectionHeader } from '@/components/SectionHeader'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { useProfiles } from '@/providers/ProfilesProvider'
 import { createGroup, deleteGroup, getGroup, updateGroup } from '../services/profileStorage'
@@ -62,7 +61,7 @@ export function EditGroupPage({ groupId }: EditGroupPageProps) {
         }
       }
       await refresh()
-      navigate({ to: '/profile/groups' })
+      navigate({ to: '/profile' })
     } catch (err) {
       setError(err as Error)
     } finally {
@@ -79,7 +78,7 @@ export function EditGroupPage({ groupId }: EditGroupPageProps) {
       if (groupId === activeGroup?.id) {
         queryClient.invalidateQueries({ queryKey: ['userProfile'] })
       }
-      navigate({ to: '/profile/groups' })
+      navigate({ to: '/profile' })
     } catch (err) {
       setError(err as Error)
     }
@@ -91,11 +90,11 @@ export function EditGroupPage({ groupId }: EditGroupPageProps) {
     <div className="flex-1 min-h-0 bg-background flex flex-col overflow-hidden">
       <PageHeader
         title={isNew ? 'New Group' : name || 'Edit Group'}
-        onBack={() => navigate({ to: '/profile/groups' })}
+        onBack={() => navigate({ to: '/profile' })}
       />
 
-      <main className="max-w-7xl mx-auto px-4 py-6 space-y-8 flex-1 min-h-0 overflow-y-auto">
-        <section>
+      <main className="py-6 space-y-8 flex-1 min-h-0 overflow-y-auto">
+        <section className="px-4">
           <label htmlFor="group-name" className="text-sm font-medium text-foreground mb-2 block">
             Group name
           </label>
@@ -109,8 +108,10 @@ export function EditGroupPage({ groupId }: EditGroupPageProps) {
         </section>
 
         <section>
-          <SectionHeader variant="default">Members</SectionHeader>
-          <Card className="overflow-hidden">
+          <SectionHeader variant="default" className="px-4">
+            Members
+          </SectionHeader>
+          <div>
             {profiles.map((profile) => {
               const checked = memberIds.includes(profile.id)
               return (
@@ -118,15 +119,15 @@ export function EditGroupPage({ groupId }: EditGroupPageProps) {
                   key={profile.id}
                   type="button"
                   onClick={() => toggleMember(profile.id)}
-                  className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-foreground transition-colors hover:bg-accent border-b border-border last:border-b-0"
+                  className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-foreground transition-colors hover:bg-accent border-b border-border"
                 >
-                  <Avatar name={profile.name} size="sm" />
+                  <Avatar name={profile.name} size="md" />
                   <span className="flex-1 text-left">{profile.name}</span>
                   {checked && <Check className="h-4 w-4 text-foreground shrink-0" />}
                 </button>
               )
             })}
-          </Card>
+          </div>
         </section>
       </main>
 

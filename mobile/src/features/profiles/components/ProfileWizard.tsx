@@ -3,10 +3,11 @@ import { PageHeader } from '@/components/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import type { ConstraintItem } from '../services/constraints'
-import { DEFAULT_SERVING_SETTINGS, type ServingSettings } from '../types'
+import { DEFAULT_SERVING_SETTINGS, type PrescriptionFile, type ServingSettings } from '../types'
 import { BudgetAndServingFields } from './BudgetAndServingFields'
 import { ConditionsAndAllergensFields } from './ConditionsAndAllergensFields'
 import { DietaryToggleList } from './DietaryToggleList'
+import { PrescriptionUpload } from './PrescriptionUpload'
 
 export interface ProfileWizardValues {
   name: string
@@ -16,6 +17,7 @@ export interface ProfileWizardValues {
   servingSettings: ServingSettings
   conditions: ConstraintItem[]
   allergens: ConstraintItem[]
+  prescriptions: PrescriptionFile[]
 }
 
 interface ProfileWizardProps {
@@ -27,12 +29,7 @@ interface ProfileWizardProps {
   submitLabel?: string
 }
 
-const STEP_TITLES = [
-  'Name & Age',
-  'Dietary Choices',
-  'Budget & Serving Size',
-  'Conditions & Allergens',
-]
+const STEP_TITLES = ['Name & Age', 'Dietary Choices', 'Serving Size', 'Conditions & Allergens']
 
 export function ProfileWizard({
   intro,
@@ -49,6 +46,7 @@ export function ProfileWizard({
   const [servingSettings, setServingSettings] = useState(DEFAULT_SERVING_SETTINGS)
   const [conditions, setConditions] = useState<ConstraintItem[]>([])
   const [allergens, setAllergens] = useState<ConstraintItem[]>([])
+  const [prescriptions, setPrescriptions] = useState<PrescriptionFile[]>([])
   const [submitting, setSubmitting] = useState(false)
   // `submitting` (state) is what disables the button visually, but state
   // updates aren't applied synchronously — a duplicate click/tap fired
@@ -73,8 +71,14 @@ export function ProfileWizard({
         servingSettings,
         conditions,
         allergens,
+        prescriptions,
       })
-    } finally {
+      // On success the caller navigates away and this wizard unmounts. We
+      // deliberately leave the guard engaged: resetting it here would re-open
+      // the door for a late ghost-click / duplicate tap to fire onSubmit again
+      // before unmount and create a second profile.
+    } catch {
+      // Only re-enable submission when it actually failed, so the user can retry.
       hasSubmittedRef.current = false
       setSubmitting(false)
     }
@@ -136,12 +140,15 @@ export function ProfileWizard({
         )}
 
         {step === 4 && (
-          <ConditionsAndAllergensFields
-            conditions={conditions}
-            onConditionsChange={setConditions}
-            allergens={allergens}
-            onAllergensChange={setAllergens}
-          />
+          <>
+            <ConditionsAndAllergensFields
+              conditions={conditions}
+              onConditionsChange={setConditions}
+              allergens={allergens}
+              onAllergensChange={setAllergens}
+            />
+            <PrescriptionUpload prescriptions={prescriptions} onChange={setPrescriptions} />
+          </>
         )}
       </main>
 
