@@ -63,25 +63,23 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar(
       >
         <button
           onClick={() => navigate({ to: '/cart' })}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+          className={`flex items-center justify-center w-10 h-10 rounded-full transition-colors ${
             cameraAvailable
               ? 'text-white/70 hover:text-white hover:bg-primary-foreground/10 hover:scale-[1.02]'
               : 'text-white/40 hover:text-white/60 hover:scale-[1.02]'
           }`}
         >
-          <ShoppingCart className="h-3.5 w-3.5" />
-          Cart
+          <ShoppingCart className="h-5 w-5" />
         </button>
         <button
           onClick={() => navigate({ to: '/history' })}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+          className={`flex items-center justify-center w-10 h-10 rounded-full transition-colors ${
             cameraAvailable
               ? 'text-white/70 hover:text-white hover:bg-primary-foreground/10 hover:scale-[1.02]'
               : 'text-white/40 hover:text-white/60 hover:scale-[1.02]'
           }`}
         >
-          <History className="h-3.5 w-3.5" />
-          History
+          <History className="h-5 w-5" />
         </button>
       </div>
     </div>
