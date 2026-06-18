@@ -10,7 +10,11 @@ export function RecipeDetailPage() {
   const { id } = useParams({ from: '/_authenticated/recipe/$id' })
   const navigate = useNavigate()
 
-  const { data: recipe, isLoading, error } = useQuery({
+  const {
+    data: recipe,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['recipe', id],
     queryFn: () => getRecipeById(id),
     enabled: !!id,
@@ -80,12 +84,18 @@ export function RecipeDetailPage() {
               </Badge>
             )}
             {recipe.area && (
-              <Badge variant="outline" className="text-[11px] px-2 py-0.5 border-white/30 text-overlay-foreground/80">
+              <Badge
+                variant="outline"
+                className="text-[11px] px-2 py-0.5 border-white/30 text-overlay-foreground/80"
+              >
                 {recipe.area}
               </Badge>
             )}
             {recipe.tags.map((tag) => (
-              <Badge key={tag} className="text-[11px] px-2 py-0.5 bg-white/20 text-overlay-foreground/70">
+              <Badge
+                key={tag}
+                className="text-[11px] px-2 py-0.5 bg-white/20 text-overlay-foreground/70"
+              >
                 {tag}
               </Badge>
             ))}

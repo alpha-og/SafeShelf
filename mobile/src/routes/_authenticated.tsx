@@ -1,8 +1,14 @@
-import { createFileRoute, Outlet, redirect, useNavigate, useRouterState } from '@tanstack/react-router'
+import {
+  createFileRoute,
+  Outlet,
+  redirect,
+  useNavigate,
+  useRouterState,
+} from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
+import { useNearestStore } from '@/features/stores/hooks/useNearestStore'
 import { useAuth } from '@/hooks/useAuth'
 import { useStore } from '@/providers/StoreProvider'
-import { useNearestStore } from '@/features/stores/hooks/useNearestStore'
 
 export const Route = createFileRoute('/_authenticated')({
   beforeLoad: ({ context }) => {
@@ -18,7 +24,7 @@ function RouteComponent() {
   const { selectedStoreId, isInitialized, setSelectedStoreId } = useStore()
   const navigate = useNavigate()
   const currentPath = useRouterState({ select: (s) => s.location.pathname })
-  
+
   const { locateAndFetch, isLoading: isLocating } = useNearestStore()
   const [hasAttemptedAutoSelect, setHasAttemptedAutoSelect] = useState(false)
 
@@ -41,7 +47,17 @@ function RouteComponent() {
         })
       }
     }
-  }, [auth.isAuthenticated, isInitialized, selectedStoreId, currentPath, navigate, hasAttemptedAutoSelect, isLocating, locateAndFetch, setSelectedStoreId])
+  }, [
+    auth.isAuthenticated,
+    isInitialized,
+    selectedStoreId,
+    currentPath,
+    navigate,
+    hasAttemptedAutoSelect,
+    isLocating,
+    locateAndFetch,
+    setSelectedStoreId,
+  ])
 
   if (!auth.isAuthenticated || !isInitialized) return null
 

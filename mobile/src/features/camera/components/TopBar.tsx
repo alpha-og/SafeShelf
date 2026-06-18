@@ -1,9 +1,9 @@
-import { Link, useNavigate } from '@tanstack/react-router'
-import { History, Settings, ShoppingCart, MapPin } from 'lucide-react'
-import { forwardRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useStore } from '@/providers/StoreProvider'
+import { Link, useNavigate } from '@tanstack/react-router'
+import { History, MapPin, Settings, ShoppingCart } from 'lucide-react'
+import { forwardRef } from 'react'
 import { fetchStoreById } from '@/features/stores/services/storeApi'
+import { useStore } from '@/providers/StoreProvider'
 
 interface TopBarProps {
   cameraAvailable: boolean

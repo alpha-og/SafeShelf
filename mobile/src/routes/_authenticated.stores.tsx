@@ -1,8 +1,8 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { Clock, MapPin } from 'lucide-react'
 import { useEffect } from 'react'
-import { MapPin, Clock } from 'lucide-react'
-import { useStore } from '@/providers/StoreProvider'
 import { useNearestStore } from '@/features/stores/hooks/useNearestStore'
+import { useStore } from '@/providers/StoreProvider'
 
 export const Route = createFileRoute('/_authenticated/stores')({
   component: StoresPage,
@@ -10,11 +10,11 @@ export const Route = createFileRoute('/_authenticated/stores')({
 
 function StoresPage() {
   const { locateAndFetch, stores, isLoading } = useNearestStore()
-  
+
   useEffect(() => {
     locateAndFetch()
   }, [locateAndFetch])
-  
+
   const { setSelectedStoreId, selectedStoreId } = useStore()
   const navigate = useNavigate()
 
@@ -44,9 +44,11 @@ function StoresPage() {
                 key={store.id}
                 onClick={() => handleSelectStore(store.id)}
                 className={`flex flex-col p-5 rounded-2xl border text-left transition-all active:scale-[0.98]
-                  ${selectedStoreId === store.id 
-                    ? 'border-primary bg-primary/10 shadow-sm shadow-primary/20' 
-                    : 'border-border/50 bg-card hover:bg-muted/50'}`}
+                  ${
+                    selectedStoreId === store.id
+                      ? 'border-primary bg-primary/10 shadow-sm shadow-primary/20'
+                      : 'border-border/50 bg-card hover:bg-muted/50'
+                  }`}
               >
                 <div className="flex items-start justify-between w-full">
                   <h3 className="text-lg font-semibold text-foreground">{store.name}</h3>
@@ -56,12 +58,14 @@ function StoresPage() {
                     </span>
                   )}
                 </div>
-                
+
                 <div className="flex items-center text-muted-foreground mt-3 text-sm">
                   <MapPin className="w-4 h-4 mr-2 opacity-70 shrink-0" />
-                  <span className="line-clamp-1">{store.address}, {store.city}</span>
+                  <span className="line-clamp-1">
+                    {store.address}, {store.city}
+                  </span>
                 </div>
-                
+
                 {store.hours && (
                   <div className="flex items-center text-muted-foreground mt-2 text-sm">
                     <Clock className="w-4 h-4 mr-2 opacity-70 shrink-0" />

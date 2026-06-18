@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import type { ProductInfo } from '@/features/products/services/product'
 import { lookupByBarcode } from '@/features/products/services/product'
+import { useStore } from '@/providers/StoreProvider'
 import { decodeBarcode, identifyProduct } from '../services/detection'
 import type { ScanMode } from './useCamera'
-import { useStore } from '@/providers/StoreProvider'
 
 interface UseProductDetectionReturn {
   isProcessing: boolean

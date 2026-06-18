@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react'
 import { Geolocation } from '@capacitor/geolocation'
+import { useCallback, useState } from 'react'
 import { fetchStores, type Store } from '../services/storeApi'
 
 export interface NearestStoreResult {
@@ -19,7 +19,7 @@ export function useNearestStore() {
 
   const locateAndFetch = useCallback(async () => {
     setResult((prev) => ({ ...prev, isLoading: true, error: null }))
-    
+
     try {
       let lat: number | undefined
       let lon: number | undefined
@@ -49,7 +49,7 @@ export function useNearestStore() {
         isLoading: false,
         error: null,
       })
-      
+
       return { stores, lat, lon }
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'Failed to fetch stores'

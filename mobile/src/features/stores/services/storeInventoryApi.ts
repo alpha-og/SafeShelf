@@ -10,7 +10,10 @@ export interface InventoryResponse {
   price: number
 }
 
-export async function searchStoreInventory(storeId: string, query: string): Promise<InventoryResponse[]> {
+export async function searchStoreInventory(
+  storeId: string,
+  query: string,
+): Promise<InventoryResponse[]> {
   try {
     const response = await api.get(`/v1/stores/${storeId}/inventory/search`, {
       params: { q: query },

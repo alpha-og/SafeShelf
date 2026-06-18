@@ -1,5 +1,5 @@
 import { Search, X } from 'lucide-react'
-import { useRef, useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 interface SearchBarProps {
   value: string
@@ -8,7 +8,12 @@ interface SearchBarProps {
   autoFocus?: boolean
 }
 
-export function SearchBar({ value, onChange, placeholder = 'Search products...', autoFocus = false }: SearchBarProps) {
+export function SearchBar({
+  value,
+  onChange,
+  placeholder = 'Search products...',
+  autoFocus = false,
+}: SearchBarProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {

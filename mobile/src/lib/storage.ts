@@ -30,8 +30,6 @@ async function initNative(): Promise<boolean> {
 
 const initPromise: Promise<boolean> = initNative()
 
-
-
 async function getToken(): Promise<string | null> {
   const native = await initPromise
   if (native && nativeDb) {

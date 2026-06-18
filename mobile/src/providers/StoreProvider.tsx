@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import type React from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import { getItem, setItem } from '@/lib/storage'
 
 interface StoreContextType {
@@ -34,7 +35,6 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     if (id) {
       await setItem('selected_store_id', id)
     } else {
-      
       await setItem('selected_store_id', '')
     }
   }

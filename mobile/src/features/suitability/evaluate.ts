@@ -482,8 +482,10 @@ function checkDietary(
       for (const item of disallowed) {
         const trigger = aliases[item.toLowerCase()] ?? item
         const triggerLower = trigger.toLowerCase()
-        const matched = 
-          ingredientLower.some((ing) => ing.includes(triggerLower) || ing.includes(item.toLowerCase())) ||
+        const matched =
+          ingredientLower.some(
+            (ing) => ing.includes(triggerLower) || ing.includes(item.toLowerCase()),
+          ) ||
           categoriesLower.some((c) => c.includes(triggerLower) || c.includes(item.toLowerCase())) ||
           allergensLower.some((a) => a.includes(triggerLower) || a.includes(item.toLowerCase()))
         if (matched) {

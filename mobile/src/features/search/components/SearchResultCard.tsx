@@ -25,8 +25,8 @@ export function SearchResultCard({ item, onClick }: SearchResultCardProps) {
             }}
           />
         ) : null}
-        
-        {(!item.product_image) && (
+
+        {!item.product_image && (
           <PackageX className="w-6 h-6 text-muted-foreground/50 absolute inset-0 m-auto" />
         )}
       </div>
@@ -39,11 +39,11 @@ export function SearchResultCard({ item, onClick }: SearchResultCardProps) {
       </div>
 
       <div className="flex flex-col items-end shrink-0 py-1">
-        <div className="font-bold text-lg text-primary">
-          ₹{(item.price || 0).toFixed(2)}
-        </div>
+        <div className="font-bold text-lg text-primary">₹{(item.price || 0).toFixed(2)}</div>
         {item.in_stock ? (
-          <div className="text-xs font-medium text-emerald-500 mt-1">In Stock ({item.quantity})</div>
+          <div className="text-xs font-medium text-emerald-500 mt-1">
+            In Stock ({item.quantity})
+          </div>
         ) : (
           <div className="text-xs font-medium text-destructive mt-1">Out of Stock</div>
         )}

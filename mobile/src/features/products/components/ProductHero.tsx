@@ -1,5 +1,5 @@
-import { useState } from 'react'
 import { ArrowLeft, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react'
+import { useState } from 'react'
 import { DragHandle } from '@/components/DragHandle'
 import { SuitabilityBadge } from '@/features/suitability/components/SuitabilityBadge'
 import type { SuitabilityResult } from '@/features/suitability/types'
