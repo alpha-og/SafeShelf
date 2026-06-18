@@ -1,7 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState, useRef } from 'react'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { BottomNavBar } from '@/components/BottomNavBar'
 import { CameraViewfinder } from '@/features/camera/components/CameraViewfinder'
+import { RecipesPage } from '@/features/recipes/components/RecipesPage'
 import { SearchScreen } from '@/features/search/components/SearchScreen'
 
 export const Route = createFileRoute('/_authenticated/')({
@@ -9,7 +11,7 @@ export const Route = createFileRoute('/_authenticated/')({
 })
 
 function SwipeableContainer() {
-  const [index, setIndex] = useState(0) // 0: Camera, 1: Search
+  const [index, setIndex] = useState(1)
   const touchStartX = useRef<number | null>(null)
   const touchStartY = useRef<number | null>(null)
 
@@ -21,20 +23,14 @@ function SwipeableContainer() {
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (touchStartX.current === null || touchStartY.current === null) return
 
-    const touchEndX = e.changedTouches[0].clientX
-    const touchEndY = e.changedTouches[0].clientY
+    const deltaX = e.changedTouches[0].clientX - touchStartX.current
+    const deltaY = e.changedTouches[0].clientY - touchStartY.current
 
-    const deltaX = touchEndX - touchStartX.current
-    const deltaY = touchEndY - touchStartY.current
-
-    // Check if swipe is mostly horizontal
     if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
-      if (deltaX < 0 && index === 0) {
-        // Swiped left
-        setIndex(1)
-      } else if (deltaX > 0 && index === 1) {
-        // Swiped right
-        setIndex(0)
+      if (deltaX < 0 && index < 2) {
+        setIndex(index + 1)
+      } else if (deltaX > 0 && index > 0) {
+        setIndex(index - 1)
       }
     }
 
@@ -43,39 +39,31 @@ function SwipeableContainer() {
   }
 
   return (
-    <div 
+    <div
       className="w-full h-full overflow-hidden relative bg-black"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
       <motion.div
         initial={false}
-        animate={{ x: `${-index * 50}%` }}
+        animate={{ x: `${-index * (100 / 3)}%` }}
         transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
-        className="flex w-[200vw] h-full"
+        className="flex w-[300vw] h-full"
       >
+        <div className="w-[100vw] h-full shrink-0 bg-background">
+          <RecipesPage />
+        </div>
         <div className="w-[100vw] h-full relative overflow-hidden shrink-0">
           <CameraViewfinder />
         </div>
-        <div className="w-[100vw] h-full overflow-hidden shrink-0">
+        <div className="w-[100vw] h-full shrink-0 bg-background">
           <SearchScreen />
         </div>
       </motion.div>
 
-      {/* Dot Indicators */}
-      <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-50 pointer-events-none">
-        <div
-          className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-            index === 0 ? 'bg-white' : 'bg-white/40'
-          }`}
-        />
-        <div
-          className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-            index === 1 ? 'bg-white' : 'bg-white/40'
-          }`}
-        />
-      </div>
+      <AnimatePresence>
+        {index !== 1 && <BottomNavBar key="navbar" activeIndex={index} onChange={setIndex} />}
+      </AnimatePresence>
     </div>
   )
 }
-

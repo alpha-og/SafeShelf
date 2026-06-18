@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated.index'
+import { Route as AuthenticatedStoresRouteImport } from './routes/_authenticated.stores'
 import { Route as AuthenticatedRecipesRouteImport } from './routes/_authenticated.recipes'
 import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticated.history'
 import { Route as AuthenticatedCartRouteImport } from './routes/_authenticated.cart'
@@ -36,6 +37,11 @@ const AuthRoute = AuthRouteImport.update({
 const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedStoresRoute = AuthenticatedStoresRouteImport.update({
+  id: '/stores',
+  path: '/stores',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedRecipesRoute = AuthenticatedRecipesRouteImport.update({
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/cart': typeof AuthenticatedCartRoute
   '/history': typeof AuthenticatedHistoryRoute
   '/recipes': typeof AuthenticatedRecipesRoute
+  '/stores': typeof AuthenticatedStoresRoute
   '/product/$barcode': typeof AuthenticatedProductBarcodeRoute
   '/recipe/$id': typeof AuthenticatedRecipeIdRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -127,6 +134,7 @@ export interface FileRoutesByTo {
   '/cart': typeof AuthenticatedCartRoute
   '/history': typeof AuthenticatedHistoryRoute
   '/recipes': typeof AuthenticatedRecipesRoute
+  '/stores': typeof AuthenticatedStoresRoute
   '/product/$barcode': typeof AuthenticatedProductBarcodeRoute
   '/recipe/$id': typeof AuthenticatedRecipeIdRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -144,6 +152,7 @@ export interface FileRoutesById {
   '/_authenticated/cart': typeof AuthenticatedCartRoute
   '/_authenticated/history': typeof AuthenticatedHistoryRoute
   '/_authenticated/recipes': typeof AuthenticatedRecipesRoute
+  '/_authenticated/stores': typeof AuthenticatedStoresRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/product/$barcode': typeof AuthenticatedProductBarcodeRoute
   '/_authenticated/recipe/$id': typeof AuthenticatedRecipeIdRoute
@@ -162,6 +171,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/history'
     | '/recipes'
+    | '/stores'
     | '/product/$barcode'
     | '/recipe/$id'
     | '/settings/appearance'
@@ -176,6 +186,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/history'
     | '/recipes'
+    | '/stores'
     | '/product/$barcode'
     | '/recipe/$id'
     | '/settings/appearance'
@@ -192,6 +203,7 @@ export interface FileRouteTypes {
     | '/_authenticated/cart'
     | '/_authenticated/history'
     | '/_authenticated/recipes'
+    | '/_authenticated/stores'
     | '/_authenticated/'
     | '/_authenticated/product/$barcode'
     | '/_authenticated/recipe/$id'
@@ -227,6 +239,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/stores': {
+      id: '/_authenticated/stores'
+      path: '/stores'
+      fullPath: '/stores'
+      preLoaderRoute: typeof AuthenticatedStoresRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/recipes': {
@@ -355,6 +374,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedCartRoute: typeof AuthenticatedCartRoute
   AuthenticatedHistoryRoute: typeof AuthenticatedHistoryRoute
   AuthenticatedRecipesRoute: typeof AuthenticatedRecipesRoute
+  AuthenticatedStoresRoute: typeof AuthenticatedStoresRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedProductBarcodeRoute: typeof AuthenticatedProductBarcodeRoute
   AuthenticatedRecipeIdRoute: typeof AuthenticatedRecipeIdRoute
@@ -365,6 +385,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedCartRoute: AuthenticatedCartRoute,
   AuthenticatedHistoryRoute: AuthenticatedHistoryRoute,
   AuthenticatedRecipesRoute: AuthenticatedRecipesRoute,
+  AuthenticatedStoresRoute: AuthenticatedStoresRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedProductBarcodeRoute: AuthenticatedProductBarcodeRoute,
   AuthenticatedRecipeIdRoute: AuthenticatedRecipeIdRoute,
