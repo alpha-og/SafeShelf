@@ -1,7 +1,9 @@
-import type React from 'react'
-import { createContext, useContext, useEffect, useState } from 'react'
-import type { ProductInfo } from '@/features/products/services/product'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { getItem, setItem } from '@/lib/storage'
+import { api } from '@/lib/axios'
+import { toast } from 'sonner'
+import type { ProductInfo } from '@/features/products/services/product'
+import { useStore } from './StoreProvider'
 
 export interface CartItem {
   product: ProductInfo
@@ -42,17 +44,44 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     await setItem('cart_items', newItems)
   }
 
+  const { selectedStoreId } = useStore()
+
   const addToCart = async (product: ProductInfo) => {
     if (!product.barcode) return // Can't reliably manage cart items without barcode
-    const newItems = [...items]
-    const existingIndex = newItems.findIndex((item) => item.product.barcode === product.barcode)
+    
+    try {
+      if (!selectedStoreId) {
+        toast.error("Please select a store first")
+        return
+      }
 
-    if (existingIndex >= 0) {
-      newItems[existingIndex].quantity += 1
-    } else {
-      newItems.push({ product, quantity: 1 })
+      const { data: res } = await api.get(`/v1/stores/${selectedStoreId}/inventory/${product.barcode}`)
+      if (!res || !res.in_stock) {
+        toast.error("Sorry, this item is currently out of stock!")
+        return
+      }
+      
+      const requestedQty = 1
+      const newItems = [...items]
+      const existingIndex = newItems.findIndex((item) => item.product.barcode === product.barcode)
+      
+      const currentQty = existingIndex >= 0 ? newItems[existingIndex].quantity : 0
+      
+      if (currentQty + requestedQty > res.quantity) {
+        toast.error(`Only ${res.quantity} left in stock!`)
+        return
+      }
+
+      if (existingIndex >= 0) {
+        newItems[existingIndex].quantity += requestedQty
+      } else {
+        newItems.push({ product, quantity: requestedQty })
+      }
+      await saveCart(newItems)
+    } catch (err) {
+      console.error('Inventory check failed:', err)
+      toast.error("Failed to check inventory. Please try again.")
     }
-    await saveCart(newItems)
   }
 
   const removeFromCart = async (barcode: string) => {

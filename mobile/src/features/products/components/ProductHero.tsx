@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { ArrowLeft, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react'
 import { DragHandle } from '@/components/DragHandle'
 import { SuitabilityBadge } from '@/features/suitability/components/SuitabilityBadge'
@@ -30,13 +31,16 @@ export function ProductHero({
   peekGradient = false,
   hideCartIcon = false,
 }: ProductHeroProps) {
+  const [imageError, setImageError] = useState(false)
+
   return (
     <div className="relative w-full h-56">
-      {product.imageUrl ? (
+      {product.imageUrl && !imageError ? (
         <img
           src={product.imageUrl}
           alt={product.productName || 'Product'}
           className="w-full h-full object-cover"
+          onError={() => setImageError(true)}
         />
       ) : (
         <div className="w-full h-full bg-overlay-foreground/5 flex items-center justify-center">

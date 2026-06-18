@@ -47,7 +47,7 @@ export function CameraViewfinder() {
   }
 
   return (
-    <div className="fixed inset-0 bg-background">
+    <div className="absolute inset-0 w-full h-full bg-background">
       <div
         className={`absolute inset-0 transition-opacity duration-200 ${capturedImage ? 'opacity-0 pointer-events-none' : ''}`}
       >

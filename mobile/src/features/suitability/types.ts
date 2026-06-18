@@ -5,6 +5,9 @@ export interface UserProfile {
   dietaryPreferences: string[]
   budget: string
   servingSettings?: ServingSettings
+  age?: number | null
+  diseaseSeverities?: Record<string, 'low' | 'moderate' | 'high'>
+  medications?: string[]
 }
 
 export interface ServingSettings {
@@ -51,7 +54,7 @@ export type SuitabilityStatus = 'pass' | 'warn' | 'fail'
 
 export type OverallStatus = 'suitable' | 'caution' | 'unsuitable'
 
-export type CheckType = 'allergen' | 'nutrient' | 'exclusion' | 'diet' | 'traces'
+export type CheckType = 'allergen' | 'nutrient' | 'exclusion' | 'diet' | 'traces' | 'agent_insight'
 
 export interface SuitabilityCheck {
   type: CheckType
