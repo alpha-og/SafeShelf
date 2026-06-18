@@ -27,6 +27,7 @@ dependencies = [
     "lxml>=5.3.0",
     "chromadb>=1.5.0",
     "sentence-transformers>=3.0.0",
+    "PyMuPDF>=1.25.0",
 ]
 
 [tool.ruff]
@@ -35,6 +36,9 @@ line-length = 100
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP"]
+
+[tool.ruff.lint.per-file-ignores]
+"app/health_report/schemas.py" = ["N815"]
 
 [tool.ruff.format]
 quote-style = "single"
