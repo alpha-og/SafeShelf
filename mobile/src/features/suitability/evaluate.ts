@@ -395,7 +395,7 @@ function checkNutrients(
       const meetsRule = applyOperator(converted, rule.value, rule.operator)
 
       if (!meetsRule) {
-        const pct = (converted / rule.value) * 100
+        const pct = rule.value !== 0 ? (converted / rule.value) * 100 : 0
         const dailyHint = getDailyHint(rule.nutrient, rule.value, rule.unit)
         const dailyStr = dailyHint ? ` ${dailyHint}` : ''
         const limitWord =
