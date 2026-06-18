@@ -113,7 +113,7 @@ export function RecentScansPage() {
         actions={
           <button
             onClick={handleClear}
-            className="flex items-center gap-1.5 text-xs text-destructive hover:text-destructive/80 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full backdrop-blur-md border border-destructive/20 bg-destructive/10 hover:bg-destructive/20 hover:scale-[1.02] text-destructive transition-colors"
           >
             <Trash2 className="h-4 w-4" />
             Clear

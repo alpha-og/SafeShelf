@@ -19,14 +19,12 @@ export function CartPage() {
         className="sticky top-0 bg-background/80 backdrop-blur-md z-10"
         actions={
           items.length > 0 ? (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-destructive hover:text-destructive hover:bg-destructive/10 hover:scale-[1.02]"
+            <button
               onClick={clearCart}
+              className="flex items-center justify-center w-10 h-10 rounded-full backdrop-blur-md border border-destructive/20 bg-destructive/10 hover:bg-destructive/20 hover:scale-[1.02] text-destructive transition-colors"
             >
               <Trash2 className="h-5 w-5" />
-            </Button>
+            </button>
           ) : undefined
         }
       />
