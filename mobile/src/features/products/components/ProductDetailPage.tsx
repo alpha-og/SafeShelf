@@ -118,6 +118,7 @@ export function ProductDetailPage() {
           addToCart={addToCart}
           removeFromCart={removeFromCart}
           updateQuantity={updateQuantity}
+          suitability={suitability}
         />
       </BottomCta>
     </div>

@@ -4,11 +4,14 @@ import { EmptyState } from '@/components/EmptyState'
 import { PageHeader } from '@/components/PageHeader'
 import { ProductCard } from '@/components/ProductCard'
 import { Button } from '@/components/ui/button'
+import { SuitabilityPill } from '@/features/suitability/components/SuitabilityPill'
+import { useCartSuitability } from '@/features/suitability/hooks/useCartSuitability'
 import { useCart } from '@/providers/CartProvider'
 
 export function CartPage() {
   const navigate = useNavigate()
   const { items, isLoading, clearCart, updateQuantity } = useCart()
+  const suitabilityByBarcode = useCartSuitability(items)
 
   return (
     <div className="flex-1 min-h-0 bg-background flex flex-col">
@@ -48,33 +51,39 @@ export function CartPage() {
           </div>
         ) : (
           <div className="flex-1 px-4 py-6 overflow-y-auto">
-            {items.map((item) => (
-              <ProductCard
-                key={item.product.barcode || item.product.productName}
-                product={item.product}
-                action={
-                  <div className="flex flex-col items-center gap-3">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-8 w-8 rounded-full hover:scale-[1.02]"
-                      onClick={() => updateQuantity(item.product.barcode!, item.quantity + 1)}
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                    <span className="font-semibold text-sm w-6 text-center">{item.quantity}</span>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-8 w-8 rounded-full text-destructive hover:text-destructive hover:bg-destructive/10 hover:scale-[1.02] border-destructive/20"
-                      onClick={() => updateQuantity(item.product.barcode!, item.quantity - 1)}
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                }
-              />
-            ))}
+            {items.map((item) => {
+              const result = item.product.barcode
+                ? suitabilityByBarcode.get(item.product.barcode)
+                : undefined
+              return (
+                <ProductCard
+                  key={item.product.barcode || item.product.productName}
+                  product={item.product}
+                  badge={result ? <SuitabilityPill status={result.overall} /> : undefined}
+                  action={
+                    <div className="flex flex-col items-center gap-3">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-8 w-8 rounded-full hover:scale-[1.02]"
+                        onClick={() => updateQuantity(item.product.barcode!, item.quantity + 1)}
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                      <span className="font-semibold text-sm w-6 text-center">{item.quantity}</span>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-8 w-8 rounded-full text-destructive hover:text-destructive hover:bg-destructive/10 hover:scale-[1.02] border-destructive/20"
+                        onClick={() => updateQuantity(item.product.barcode!, item.quantity - 1)}
+                      >
+                        <Minus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  }
+                />
+              )
+            })}
           </div>
         )}
       </main>

@@ -197,6 +197,7 @@ export function ProductSheet({
                   addToCart={addToCart}
                   removeFromCart={removeFromCart}
                   updateQuantity={updateQuantity}
+                  suitability={suitability}
                 />
               </BottomCta>
             </div>
