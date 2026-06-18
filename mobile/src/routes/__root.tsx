@@ -1,9 +1,11 @@
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import type { AuthState } from '@/providers/AuthProvider'
+import type { ProfilesState } from '@/providers/ProfilesProvider'
 
 interface RouterContext {
   auth: AuthState
+  profiles: ProfilesState
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({

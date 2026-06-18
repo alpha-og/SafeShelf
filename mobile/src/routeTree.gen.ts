@@ -16,6 +16,7 @@ import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated.
 import { Route as OnboardingOnboardingRouteImport } from './routes/_onboarding.onboarding'
 import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticated.history'
 import { Route as AuthenticatedCartRouteImport } from './routes/_authenticated.cart'
+import { Route as AuthWelcomeRouteImport } from './routes/_auth.welcome'
 import { Route as AuthSignupRouteImport } from './routes/_auth.signup'
 import { Route as AuthSigninRouteImport } from './routes/_auth.signin'
 import { Route as AuthenticatedProfileRouteRouteImport } from './routes/_authenticated/profile/route'
@@ -58,6 +59,11 @@ const AuthenticatedCartRoute = AuthenticatedCartRouteImport.update({
   id: '/cart',
   path: '/cart',
   getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthWelcomeRoute = AuthWelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
+  getParentRoute: () => AuthRoute,
 } as any)
 const AuthSignupRoute = AuthSignupRouteImport.update({
   id: '/signup',
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileRouteRouteWithChildren
   '/signin': typeof AuthSigninRoute
   '/signup': typeof AuthSignupRoute
+  '/welcome': typeof AuthWelcomeRoute
   '/cart': typeof AuthenticatedCartRoute
   '/history': typeof AuthenticatedHistoryRoute
   '/onboarding': typeof OnboardingOnboardingRoute
@@ -137,6 +144,7 @@ export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
   '/signin': typeof AuthSigninRoute
   '/signup': typeof AuthSignupRoute
+  '/welcome': typeof AuthWelcomeRoute
   '/cart': typeof AuthenticatedCartRoute
   '/history': typeof AuthenticatedHistoryRoute
   '/onboarding': typeof OnboardingOnboardingRoute
@@ -156,6 +164,7 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRouteRouteWithChildren
   '/_auth/signin': typeof AuthSigninRoute
   '/_auth/signup': typeof AuthSignupRoute
+  '/_auth/welcome': typeof AuthWelcomeRoute
   '/_authenticated/cart': typeof AuthenticatedCartRoute
   '/_authenticated/history': typeof AuthenticatedHistoryRoute
   '/_onboarding/onboarding': typeof OnboardingOnboardingRoute
@@ -175,6 +184,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/signin'
     | '/signup'
+    | '/welcome'
     | '/cart'
     | '/history'
     | '/onboarding'
@@ -190,6 +200,7 @@ export interface FileRouteTypes {
     | '/'
     | '/signin'
     | '/signup'
+    | '/welcome'
     | '/cart'
     | '/history'
     | '/onboarding'
@@ -208,6 +219,7 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/_auth/signin'
     | '/_auth/signup'
+    | '/_auth/welcome'
     | '/_authenticated/cart'
     | '/_authenticated/history'
     | '/_onboarding/onboarding'
@@ -277,6 +289,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/cart'
       preLoaderRoute: typeof AuthenticatedCartRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/_auth/welcome': {
+      id: '/_auth/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof AuthWelcomeRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/_auth/signup': {
       id: '/_auth/signup'
@@ -354,11 +373,13 @@ declare module '@tanstack/react-router' {
 interface AuthRouteChildren {
   AuthSigninRoute: typeof AuthSigninRoute
   AuthSignupRoute: typeof AuthSignupRoute
+  AuthWelcomeRoute: typeof AuthWelcomeRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthSigninRoute: AuthSigninRoute,
   AuthSignupRoute: AuthSignupRoute,
+  AuthWelcomeRoute: AuthWelcomeRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
