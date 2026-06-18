@@ -54,13 +54,13 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar(
         )}
       </div>
 
-      <div
-        className={`flex backdrop-blur-md rounded-full p-1 gap-0.5 border shrink-0 ${
-          cameraAvailable
-            ? 'bg-primary/30 hover:scale-[1.02] border-primary/30'
-            : 'bg-primary/20 hover:scale-[1.02] border-primary/20'
-        }`}
-      >
+        <div
+          className={`flex backdrop-blur-md rounded-full border shrink-0 ${
+            cameraAvailable
+              ? 'bg-primary/30 hover:scale-[1.02] border-primary/30'
+              : 'bg-primary/20 hover:scale-[1.02] border-primary/20'
+          }`}
+        >
         <button
           onClick={() => navigate({ to: '/cart' })}
           className={`flex items-center justify-center w-10 h-10 rounded-full transition-colors ${

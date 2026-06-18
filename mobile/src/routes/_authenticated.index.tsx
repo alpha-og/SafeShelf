@@ -1,19 +1,39 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useRef, useState } from 'react'
+import { useCallback, useRef } from 'react'
 import { BottomNavBar } from '@/components/BottomNavBar'
 import { CameraViewfinder } from '@/features/camera/components/CameraViewfinder'
 import { RecipesPage } from '@/features/recipes/components/RecipesPage'
 import { SearchScreen } from '@/features/search/components/SearchScreen'
 
+function validateSearch(search: Record<string, unknown>): { tab?: number } {
+  const raw = search.tab
+  if (raw !== undefined) {
+    const tab = Number(raw)
+    if (!Number.isNaN(tab)) {
+      return { tab }
+    }
+  }
+  return {}
+}
+
 export const Route = createFileRoute('/_authenticated/')({
   component: SwipeableContainer,
+  validateSearch,
 })
 
 function SwipeableContainer() {
-  const [index, setIndex] = useState(1)
+  const navigate = Route.useNavigate()
+  const { tab = 1 } = Route.useSearch()
   const touchStartX = useRef<number | null>(null)
   const touchStartY = useRef<number | null>(null)
+
+  const setTab = useCallback(
+    (newTab: number) => {
+      navigate({ search: { tab: newTab }, replace: true })
+    },
+    [navigate],
+  )
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX
@@ -27,10 +47,10 @@ function SwipeableContainer() {
     const deltaY = e.changedTouches[0].clientY - touchStartY.current
 
     if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
-      if (deltaX < 0 && index < 2) {
-        setIndex(index + 1)
-      } else if (deltaX > 0 && index > 0) {
-        setIndex(index - 1)
+      if (deltaX < 0 && tab < 2) {
+        setTab(tab + 1)
+      } else if (deltaX > 0 && tab > 0) {
+        setTab(tab - 1)
       }
     }
 
@@ -46,7 +66,7 @@ function SwipeableContainer() {
     >
       <motion.div
         initial={false}
-        animate={{ x: `${-index * (100 / 3)}%` }}
+        animate={{ x: `${-tab * (100 / 3)}%` }}
         transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
         className="flex w-[300vw] h-full"
       >
@@ -62,7 +82,7 @@ function SwipeableContainer() {
       </motion.div>
 
       <AnimatePresence>
-        {index !== 1 && <BottomNavBar key="navbar" activeIndex={index} onChange={setIndex} />}
+        {tab !== 1 && <BottomNavBar key="navbar" activeIndex={tab} onChange={setTab} />}
       </AnimatePresence>
     </div>
   )

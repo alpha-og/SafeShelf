@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { useNavigate, useParams } from '@tanstack/react-router'
+import { useParams, useRouter } from '@tanstack/react-router'
 import { BottomCta } from '@/components/BottomCta'
 import { SectionHeader } from '@/components/SectionHeader'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -17,7 +17,7 @@ import { ProductServingNote } from './ProductServingNote'
 
 export function ProductDetailPage() {
   const { barcode } = useParams({ from: '/_authenticated/product/$barcode' })
-  const navigate = useNavigate()
+  const router = useRouter()
   const { selectedStoreId } = useStore()
   const { items, addToCart, removeFromCart, updateQuantity } = useCart()
 
@@ -70,7 +70,7 @@ export function ProductDetailPage() {
         addToCart={addToCart}
         removeFromCart={removeFromCart}
         updateQuantity={updateQuantity}
-        onBack={() => navigate({ to: '/' })}
+        onBack={() => router.history.back()}
       />
 
       <div className="flex-1 min-h-0 overflow-y-auto px-4 pt-4 space-y-6 pb-20">
