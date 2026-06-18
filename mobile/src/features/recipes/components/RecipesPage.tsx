@@ -1,8 +1,7 @@
-import { useCallback, useRef } from 'react'
-import { Loader2, SearchX, Utensils } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
+import { Loader2, SearchX, Utensils } from 'lucide-react'
+import { useCallback, useRef } from 'react'
 import { EmptyState } from '@/components/EmptyState'
-import { PageHeader } from '@/components/PageHeader'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useRecipeSearch } from '../hooks/useRecipeSearch'
 import { RecipeCard } from './RecipeCard'
@@ -49,23 +48,20 @@ export function RecipesPage() {
   const showNoResults = hasFilters && !isLoading && recipes.length === 0 && !error && !rejected
 
   return (
-    <div className="flex flex-col h-full">
-      <PageHeader title="Recipes" />
-
-      <div className="px-4 py-3">
-        <RecipeSearchBar
-          searchText={searchText}
-          onSearchChange={setSearchText}
-          selectedCategories={selectedCategories}
-          onCategoriesChange={setSelectedCategories}
-          selectedAreas={selectedAreas}
-          onAreasChange={setSelectedAreas}
-          hasFilters={hasFilters}
-          onClearAll={clearAll}
-        />
-      </div>
-
-      <div className="flex-1 overflow-y-auto px-4 pb-4">
+    <div className="flex flex-col h-full bg-background pb-[var(--sab)]">
+      <div className="flex-1 overflow-y-auto px-4 relative">
+        <div className="sticky top-0 z-10 pt-[calc(var(--sat)_+_1rem)] pb-3 -mx-4 px-4">
+          <RecipeSearchBar
+            searchText={searchText}
+            onSearchChange={setSearchText}
+            selectedCategories={selectedCategories}
+            onCategoriesChange={setSelectedCategories}
+            selectedAreas={selectedAreas}
+            onAreasChange={setSelectedAreas}
+            hasFilters={hasFilters}
+            onClearAll={clearAll}
+          />
+        </div>
         {isLoading && (
           <div className="space-y-4">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -82,11 +78,7 @@ export function RecipesPage() {
         )}
 
         {error && !isLoading && (
-          <EmptyState
-            icon={SearchX}
-            title="Search failed"
-            description={error}
-          />
+          <EmptyState icon={SearchX} title="Search failed" description={error} />
         )}
 
         {rejected && !isLoading && (
@@ -116,7 +108,11 @@ export function RecipesPage() {
         {recipes.length > 0 && (
           <>
             {recipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} onPress={() => navigate({ to: '/recipe/$id', params: { id: recipe.id } })} />
+              <RecipeCard
+                key={recipe.id}
+                recipe={recipe}
+                onPress={() => navigate({ to: '/recipe/$id', params: { id: recipe.id } })}
+              />
             ))}
             <div ref={sentinelCallbackRef} className="h-4" />
             {isFetchingNextPage && (

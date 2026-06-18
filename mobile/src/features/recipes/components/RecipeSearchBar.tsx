@@ -26,7 +26,7 @@ export function RecipeSearchBar({
 }: RecipeSearchBarProps) {
   return (
     <div className="space-y-2">
-      <div className="flex items-center gap-1.5 rounded-xl border border-input bg-background px-3 py-1.5">
+      <div className="flex items-center gap-1.5 rounded-full bg-muted/30 backdrop-blur-md border border-border/50 px-3 py-1.5">
         <div className="relative flex-1">
           <Input
             value={searchText}
@@ -57,15 +57,25 @@ export function RecipeSearchBar({
       {hasFilters && (
         <div className="flex items-center gap-1.5 overflow-x-auto flex-nowrap scrollbar-none">
           {selectedCategories.map((cat) => (
-            <Badge key={cat} variant="secondary" className="gap-1 pl-2 pr-1 py-1 text-xs whitespace-nowrap">
+            <Badge
+              key={cat}
+              variant="default"
+              className="gap-1 pl-2 pr-1 py-1 text-xs whitespace-nowrap bg-primary/30 backdrop-blur-md border-primary/30 text-white hover:bg-primary/50"
+            >
               {cat}
-              <button onClick={() => onCategoriesChange(selectedCategories.filter((c) => c !== cat))}>
+              <button
+                onClick={() => onCategoriesChange(selectedCategories.filter((c) => c !== cat))}
+              >
                 <X className="h-3 w-3" />
               </button>
             </Badge>
           ))}
           {selectedAreas.map((area) => (
-            <Badge key={area} variant="outline" className="gap-1 pl-2 pr-1 py-1 text-xs whitespace-nowrap">
+            <Badge
+              key={area}
+              variant="default"
+              className="gap-1 pl-2 pr-1 py-1 text-xs whitespace-nowrap bg-primary/30 backdrop-blur-md border-primary/30 text-white hover:bg-primary/50"
+            >
               {area}
               <button onClick={() => onAreasChange(selectedAreas.filter((a) => a !== area))}>
                 <X className="h-3 w-3" />

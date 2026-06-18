@@ -1,11 +1,14 @@
-import { useState, useMemo, useEffect, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import {
+  getAllStoreInventory,
+  searchStoreInventory,
+} from '@/features/stores/services/storeInventoryApi'
+import { useDebounce } from '@/hooks/useDebounce'
 import { useStore } from '@/providers/StoreProvider'
-import { searchStoreInventory, getAllStoreInventory } from '@/features/stores/services/storeInventoryApi'
 import { SearchBar } from './SearchBar'
 import { SearchResultCard } from './SearchResultCard'
-import { useDebounce } from '@/hooks/useDebounce'
-import { useNavigate } from '@tanstack/react-router'
 
 const ITEMS_PER_PAGE = 20
 
@@ -40,12 +43,12 @@ export function SearchScreen() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      entries => {
+      (entries) => {
         if (entries[0].isIntersecting && paginatedItems.length < allItems.length) {
-          setPage(p => p + 1)
+          setPage((p) => p + 1)
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     )
 
     if (observerTarget.current) {
@@ -56,12 +59,11 @@ export function SearchScreen() {
   }, [paginatedItems.length, allItems.length])
 
   return (
-    <div className="flex flex-col h-full w-full bg-background pt-[calc(var(--sat)_+_1rem)] pb-[var(--sab)] px-4">
-      <div className="mb-4">
-        <SearchBar value={query} onChange={setQuery} />
-      </div>
-
-      <div className="flex-1 overflow-y-auto min-h-0 relative">
+    <div className="flex flex-col h-full w-full bg-background pb-[var(--sab)]">
+      <div className="flex-1 overflow-y-auto min-h-0 relative px-4">
+        <div className="sticky top-0 z-10 pt-[calc(var(--sat)_+_1rem)] pb-3 -mx-4 px-4">
+          <SearchBar value={query} onChange={setQuery} />
+        </div>
         {isLoading ? (
           <div className="flex justify-center py-8">
             <span className="text-muted-foreground animate-pulse">Loading inventory...</span>
@@ -72,7 +74,7 @@ export function SearchScreen() {
           </div>
         ) : (
           <div className="flex flex-col gap-3 pb-8">
-            {paginatedItems.map(item => (
+            {paginatedItems.map((item) => (
               <SearchResultCard
                 key={item.barcode}
                 item={item}
@@ -81,7 +83,7 @@ export function SearchScreen() {
                 }}
               />
             ))}
-            
+
             {paginatedItems.length < allItems.length && (
               <div ref={observerTarget} className="h-10 w-full flex items-center justify-center">
                 <span className="text-muted-foreground text-sm animate-pulse">Loading more...</span>

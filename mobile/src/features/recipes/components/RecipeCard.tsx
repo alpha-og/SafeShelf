@@ -9,11 +9,14 @@ interface RecipeCardProps {
 
 export function RecipeCard({ recipe, onPress }: RecipeCardProps) {
   return (
-    <Card className="overflow-hidden mb-4 shadow-sm active:scale-[0.98] transition-transform" onClick={onPress}>
+    <Card
+      className="overflow-hidden mb-4 shadow-sm active:scale-[0.98] transition-transform"
+      onClick={onPress}
+    >
       <CardContent className="p-0">
         <div className="flex">
           {recipe.thumbnail_url ? (
-            <div className="w-28 h-28 shrink-0 bg-muted">
+            <div className="w-28 h-28 shrink-0 bg-muted rounded-l-xl overflow-hidden border-r border-border/50">
               <img
                 src={recipe.thumbnail_url}
                 alt={recipe.name}
@@ -21,15 +24,13 @@ export function RecipeCard({ recipe, onPress }: RecipeCardProps) {
               />
             </div>
           ) : (
-            <div className="w-28 h-28 shrink-0 bg-muted flex items-center justify-center">
+            <div className="w-28 h-28 shrink-0 bg-muted rounded-l-xl overflow-hidden border-r border-border/50 flex items-center justify-center">
               <span className="text-muted-foreground text-xs font-medium">No Image</span>
             </div>
           )}
 
           <div className="flex-1 p-3 flex flex-col gap-1.5 min-w-0">
-            <h3 className="font-semibold leading-tight line-clamp-2 text-sm">
-              {recipe.name}
-            </h3>
+            <h3 className="font-semibold leading-tight line-clamp-2 text-sm">{recipe.name}</h3>
 
             <div className="flex flex-wrap gap-1">
               {recipe.category && (
