@@ -76,7 +76,7 @@ export function RecipeFilterSheet({
         <div className="shrink-0 flex gap-2 px-4 pb-3">
           <button
             onClick={() => setActiveTab('category')}
-            className={`flex-1 h-8 text-xs font-medium rounded-lg transition-colors ${
+            className={`flex-1 h-8 text-xs font-medium rounded-full transition-colors hover:scale-[1.02] ${
               activeTab === 'category'
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-muted/50 text-muted-foreground border border-border'
@@ -86,7 +86,7 @@ export function RecipeFilterSheet({
           </button>
           <button
             onClick={() => setActiveTab('area')}
-            className={`flex-1 h-8 text-xs font-medium rounded-lg transition-colors ${
+            className={`flex-1 h-8 text-xs font-medium rounded-full transition-colors hover:scale-[1.02] ${
               activeTab === 'area'
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-muted/50 text-muted-foreground border border-border'

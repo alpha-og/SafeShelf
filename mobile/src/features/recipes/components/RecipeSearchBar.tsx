@@ -26,13 +26,13 @@ export function RecipeSearchBar({
 }: RecipeSearchBarProps) {
   return (
     <div className="space-y-2">
-      <div className="flex items-center gap-1.5 rounded-full bg-muted/30 backdrop-blur-md border border-border/50 px-3 py-1.5">
+      <div className="flex items-center gap-1.5 rounded-full bg-muted/30 backdrop-blur-md border border-border/50 px-3 py-1">
         <div className="relative flex-1">
           <Input
             value={searchText}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search recipes…"
-            className="border-0 bg-transparent pr-7 py-1.5 h-auto text-base shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-muted-foreground"
+            className="border-0 bg-transparent pr-7 py-1 h-auto text-base shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-muted-foreground"
           />
           {searchText && (
             <button

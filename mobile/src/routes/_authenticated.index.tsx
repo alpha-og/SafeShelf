@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { BottomNavBar } from '@/components/BottomNavBar'
 import { CameraViewfinder } from '@/features/camera/components/CameraViewfinder'
 import type { ScanMode } from '@/features/camera/hooks/useCamera'
-import { RecipesPage } from '@/features/recipes/components/RecipesPage'
+import { RecipeHub } from '@/features/recipes/components/RecipeHub'
 import { SearchScreen } from '@/features/search/components/SearchScreen'
 
 const CAMERA_TAB = 1
@@ -85,7 +85,7 @@ function SwipeableContainer() {
         className={`flex w-[300vw] h-full relative ${captureActive ? 'z-[60]' : ''}`}
       >
         <div className="w-[100vw] h-full shrink-0 bg-background">
-          <RecipesPage />
+          <RecipeHub />
         </div>
         <div className="w-[100vw] h-full relative overflow-hidden shrink-0">
           <CameraViewfinder mode={mode} onCaptureActiveChange={setCaptureActive} />
