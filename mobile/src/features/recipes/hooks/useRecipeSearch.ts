@@ -75,6 +75,11 @@ export function useRecipeSearch() {
   const debouncedCategories = useDebounce(selectedCategories, DEBOUNCE_MS);
   const debouncedAreas = useDebounce(selectedAreas, DEBOUNCE_MS);
 
+  const hasFiltersRaw =
+    searchText.trim().length > 0 ||
+    selectedCategories.length > 0 ||
+    selectedAreas.length > 0;
+
   const hasFilters =
     debouncedSearchText.trim().length > 0 ||
     debouncedCategories.length > 0 ||
@@ -83,12 +88,12 @@ export function useRecipeSearch() {
   // Reset status and clear cached results when all filters are cleared
   useEffect(() => {
     if (!isInitialized.current) return;
-    if (!hasFilters) {
+    if (!hasFiltersRaw) {
       setSearchStatus("idle");
       setClarifyError(null);
       queryClient.resetQueries({ queryKey: ["recipes"] });
     }
-  }, [hasFilters, queryClient]);
+  }, [hasFiltersRaw, queryClient]);
 
   const queryEnabled =
     hasFilters && searchStatus !== "clarifying" && searchedOnce.current && isInitialized.current;
