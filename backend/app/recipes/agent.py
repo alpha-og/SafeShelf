@@ -88,7 +88,75 @@ exclude_ingredients (list[str]):
   user says "without", "no", "excluding", "except", or similar negative
   qualifiers.
 
+--- CONCEPTUAL INFERENCE ---
+
+When the query describes a cooking scenario, mood, climate, season,
+occasion, or dietary preference (rather than a specific dish, ingredient,
+or named cuisine), infer plausible categories, areas, and ingredients
+that match the intent. Be inclusive — include multiple likely options
+when uncertain. Downstream deduplication handles breadth.
+
+Common associations:
+- "warm climate", "hot weather", "tropical" → cuisines from hot/tropical
+  regions (Thai, Mexican, Indian, Caribbean, Malaysian, Filipino, Spanish,
+  Vietnamese); light ingredients (seafood, coconut, lime, mango, chili)
+- "cold weather", "winter", "hearty" → braised/roasted/stewed dishes
+  (Beef, Pork, Lamb, Chicken); areas (British, Irish, Polish, American);
+  hearty ingredients (potato, beef, root vegetables)
+- "comfort food", "soul food" → hearty American/British categories
+  (Beef, Chicken, Pasta, Pork, Dessert); areas (American, British,
+  Italian) — avoid health-oriented categories like Vegan, Vegetarian
+- "light", "summer", "fresh", "healthy" → lighter categories (Seafood,
+  Side, Vegetarian, Vegan); areas (Italian, Greek, Japanese, Mexican,
+  Mediterranean)
+- "quick", "easy", "weeknight", "simple" → fast categories (Chicken,
+  Pasta, Seafood, Side); common quick ingredients (eggs, pasta, rice,
+  chicken breast)
+- "spicy" → areas (Mexican, Indian, Thai, Caribbean, Jamaican, Korean);
+  ingredients (chili, pepper, curry)
+- "breakfast", "brunch" → categories (Breakfast); ingredients (eggs,
+  bacon, pancake, toast)
+- "party", "appetizer", "snack" → categories (Starter, Side,
+  Miscellaneous); areas []
+
 --- EXAMPLES ---
+
+Query: "warm climate dishes"
+  is_recipe_query: true
+  categories: ["Seafood", "Side", "Miscellaneous"]
+  ingredients: ["coconut", "lime"]
+  areas: ["Thai", "Mexican", "Indian", "Caribbean", "Spanish", "Vietnamese"]
+  exclude_ingredients: []
+
+Query: "comfort food ideas"
+  is_recipe_query: true
+  categories: ["Beef", "Chicken", "Pasta", "Pork", "Dessert"]
+  ingredients: []
+  areas: ["American", "Italian", "British", "Irish"]
+  exclude_ingredients: []
+
+Query: "light summer meals"
+  is_recipe_query: true
+  categories: ["Seafood", "Side", "Vegetarian", "Vegan"]
+  ingredients: []
+  areas: ["Italian", "Greek", "Japanese", "Mexican"]
+  exclude_ingredients: []
+
+Query: "quick weeknight dinner"
+  is_recipe_query: true
+  categories: ["Chicken", "Pasta", "Seafood", "Side"]
+  ingredients: []
+  areas: []
+  exclude_ingredients: []
+
+Query: "spicy food"
+  is_recipe_query: true
+  categories: ["Chicken", "Pork", "Seafood", "Miscellaneous"]
+  ingredients: ["chili"]
+  areas: ["Mexican", "Indian", "Thai", "Caribbean", "Jamaican", "Korean", "Chinese"]
+  exclude_ingredients: []
+
+--- EXAMPLES (continued) ---
 
 Query: "find me Italian chicken recipes with garlic and tomatoes"
   is_recipe_query: true
