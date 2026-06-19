@@ -47,10 +47,12 @@ export function ModeSwitcher({ mode, onModeChange, cameraAvailable }: ModeSwitch
   }, [currentIndex, onModeChange])
 
   const handleTouchStart = (e: React.TouchEvent) => {
+    e.stopPropagation()
     touchStartX.current = e.touches[0].clientX
   }
 
   const handleTouchEnd = (e: React.TouchEvent) => {
+    e.stopPropagation()
     const diff = e.changedTouches[0].clientX - touchStartX.current
     const threshold = 30
     if (diff > threshold) {
