@@ -86,6 +86,7 @@ export function RecipeFilterSheet({
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
                 onClick={handleDismiss}
+                onTouchStart={(e) => e.stopPropagation()}
               />
             )}
           </AnimatePresence>
@@ -109,6 +110,7 @@ export function RecipeFilterSheet({
                     handleDismiss()
                   }
                 }}
+                onTouchStart={(e) => e.stopPropagation()}
               >
                 <div className="flex-1 flex flex-col min-h-0">
                   <DragHandle variant="dark" />
