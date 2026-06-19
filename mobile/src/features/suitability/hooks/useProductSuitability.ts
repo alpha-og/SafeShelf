@@ -3,11 +3,12 @@ import { useMemo } from 'react'
 import { lookupByBarcode } from '@/features/products/services/product'
 import { evaluate } from '../evaluate'
 import { useAliases, useConditionRules } from '../services/rules'
-import type { SuitabilityResult } from '../types'
+import type { OverallStatus, SuitabilityResult } from '../types'
 import { useUserProfile } from './useUserProfile'
 
 interface UseProductSuitabilityReturn {
   result: SuitabilityResult | null
+  memberStatuses?: { name: string; overall: OverallStatus }[]
   isLoading: boolean
 }
 
@@ -33,8 +34,17 @@ export function useProductSuitability(
     return evaluate(product, profile, rules, aliases ?? {})
   }, [product, profile, rules, aliases])
 
+  const memberStatuses = useMemo<{ name: string; overall: OverallStatus }[] | undefined>(() => {
+    if (!product || !context?.members?.length) return undefined
+    return context.members.map((member) => ({
+      name: member.name,
+      overall: evaluate(product, member.profile, rules, aliases ?? {}).overall,
+    }))
+  }, [product, context, rules, aliases])
+
   return {
     result,
+    memberStatuses,
     isLoading: productLoading || profileLoading || rulesLoading || aliasesLoading,
   }
 }

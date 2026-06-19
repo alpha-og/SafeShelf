@@ -35,7 +35,11 @@ export function SearchResultCard({ item, onClick }: SearchResultCardProps) {
     return () => observer.disconnect()
   }, [])
 
-  const { result, isLoading } = useProductSuitability(item.barcode, isVisible)
+  const { result, isLoading, memberStatuses } = useProductSuitability(item.barcode, isVisible)
+  const hasConflict =
+    memberStatuses &&
+    memberStatuses.some((s) => s.overall === 'suitable') &&
+    memberStatuses.some((s) => s.overall === 'unsuitable')
 
   return (
     <Card
@@ -63,7 +67,7 @@ export function SearchResultCard({ item, onClick }: SearchResultCardProps) {
           <div className="flex-1 p-3 flex flex-col gap-1.5 min-w-0">
             {result && !isLoading && (
               <div className="flex justify-end -mt-1 -mr-1">
-                <StatusDot status={result.overall} className="w-4 h-4" />
+                <StatusDot status={result.overall} split={hasConflict} className="w-4 h-4" />
               </div>
             )}
             <h3 className="font-semibold leading-tight line-clamp-2 text-sm">

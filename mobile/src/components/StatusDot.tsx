@@ -18,9 +18,20 @@ function dotColor(status: DotStatus): string {
 
 interface StatusDotProps {
   status: DotStatus
+  split?: boolean
   className?: string
 }
 
-export function StatusDot({ status, className }: StatusDotProps) {
+export function StatusDot({ status, split, className }: StatusDotProps) {
+  if (split) {
+    return (
+      <span
+        className={cn('w-3 h-3 rounded-full shrink-0', className)}
+        style={{
+          background: 'linear-gradient(45deg, var(--color-status-fail) 50%, var(--color-status-pass) 50%)',
+        }}
+      />
+    )
+  }
   return <span className={cn('w-3 h-3 rounded-full shrink-0', dotColor(status), className)} />
 }
