@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { BottomNavBar } from '@/components/BottomNavBar'
 import { CameraViewfinder } from '@/features/camera/components/CameraViewfinder'
@@ -38,8 +38,8 @@ function SwipeableContainer() {
     if (tab === CAMERA_TAB) setMode('auto')
   }, [tab])
 
-  // Hidden while a scanned/captured result is on screen so the bar doesn't
-  // block it; restored once the user retakes or dismisses the result.
+  // When a scan result sheet is open, bump the camera tab's z-index above the
+  // bottom bar so the sheet sits on top.
   const [captureActive, setCaptureActive] = useState(false)
 
   const setTab = useCallback(
@@ -82,7 +82,7 @@ function SwipeableContainer() {
         initial={false}
         animate={{ x: `${-tab * (100 / 3)}%` }}
         transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
-        className="flex w-[300vw] h-full"
+        className={`flex w-[300vw] h-full relative ${captureActive ? 'z-[60]' : ''}`}
       >
         <div className="w-[100vw] h-full shrink-0 bg-background">
           <RecipesPage />
@@ -95,17 +95,12 @@ function SwipeableContainer() {
         </div>
       </motion.div>
 
-      <AnimatePresence>
-        {!captureActive && (
-          <BottomNavBar
-            key="navbar"
-            activeIndex={tab}
-            onChange={setTab}
-            mode={mode}
-            onModeChange={setMode}
-          />
-        )}
-      </AnimatePresence>
+      <BottomNavBar
+        activeIndex={tab}
+        onChange={setTab}
+        mode={mode}
+        onModeChange={setMode}
+      />
     </div>
   )
 }

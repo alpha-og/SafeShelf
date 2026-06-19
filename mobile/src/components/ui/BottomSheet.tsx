@@ -263,7 +263,7 @@ function SnapSheet({
     <motion.div
       key="bottom-sheet"
       className={cn(
-        'absolute inset-x-0 bottom-0 z-20 flex flex-col bg-background rounded-t-3xl overflow-hidden shadow-[0_-10px_40px_rgba(0,0,0,0.3)]',
+        'absolute inset-x-0 bottom-0 z-[60] flex flex-col bg-background rounded-t-3xl overflow-hidden shadow-[0_-10px_40px_rgba(0,0,0,0.3)]',
         className,
       )}
       style={{ height: `calc(100dvh - ${topOffset}px)` }}
