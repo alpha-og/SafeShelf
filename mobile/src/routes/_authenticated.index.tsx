@@ -1,10 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { BottomNavBar } from '@/components/BottomNavBar'
 import { CameraViewfinder } from '@/features/camera/components/CameraViewfinder'
+import type { ScanMode } from '@/features/camera/hooks/useCamera'
 import { RecipesPage } from '@/features/recipes/components/RecipesPage'
 import { SearchScreen } from '@/features/search/components/SearchScreen'
+
+const CAMERA_TAB = 1
 
 function validateSearch(search: Record<string, unknown>): { tab?: number } {
   const raw = search.tab
@@ -27,6 +30,17 @@ function SwipeableContainer() {
   const { tab = 1 } = Route.useSearch()
   const touchStartX = useRef<number | null>(null)
   const touchStartY = useRef<number | null>(null)
+
+  // Scan mode lives here so the bottom bar (mode selector) and the viewfinder
+  // share it. Entering the camera tab resets it to 'auto'.
+  const [mode, setMode] = useState<ScanMode>('auto')
+  useEffect(() => {
+    if (tab === CAMERA_TAB) setMode('auto')
+  }, [tab])
+
+  // Hidden while a scanned/captured result is on screen so the bar doesn't
+  // block it; restored once the user retakes or dismisses the result.
+  const [captureActive, setCaptureActive] = useState(false)
 
   const setTab = useCallback(
     (newTab: number) => {
@@ -74,7 +88,7 @@ function SwipeableContainer() {
           <RecipesPage />
         </div>
         <div className="w-[100vw] h-full relative overflow-hidden shrink-0">
-          <CameraViewfinder />
+          <CameraViewfinder mode={mode} onCaptureActiveChange={setCaptureActive} />
         </div>
         <div className="w-[100vw] h-full shrink-0 bg-background">
           <SearchScreen />
@@ -82,7 +96,15 @@ function SwipeableContainer() {
       </motion.div>
 
       <AnimatePresence>
-        {tab !== 1 && <BottomNavBar key="navbar" activeIndex={tab} onChange={setTab} />}
+        {!captureActive && (
+          <BottomNavBar
+            key="navbar"
+            activeIndex={tab}
+            onChange={setTab}
+            mode={mode}
+            onModeChange={setMode}
+          />
+        )}
       </AnimatePresence>
     </div>
   )

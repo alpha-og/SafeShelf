@@ -2,26 +2,25 @@ import { AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { SessionBanner } from '@/features/cart/components/SessionBanner'
 import { useCamera } from '../hooks/useCamera'
+import type { ScanMode } from '../hooks/useCamera'
 import { scanStore } from '../services/scanStore'
 import { CameraPreview } from './CameraPreview'
 import { CaptureButton } from './CaptureButton'
 import { CapturePreview } from './CapturePreview'
 import { GalleryButton } from './GalleryButton'
-import { ModeSwitcher } from './ModeSwitcher'
 import { TopBar } from './TopBar'
 
-export function CameraViewfinder() {
-  const {
-    videoRef,
-    mode,
-    error,
-    isCameraReady,
-    capturePhoto,
-    pickFromGallery,
-    setMode,
-    stopCamera,
-    startCamera,
-  } = useCamera()
+interface CameraViewfinderProps {
+  /** Active scan mode, owned by the bottom bar so it and the viewfinder stay in sync. */
+  mode: ScanMode
+  /** Notifies the parent when a capture/scan result is on screen, so it can hide
+   *  the bottom bar (which would otherwise block the result). */
+  onCaptureActiveChange?: (active: boolean) => void
+}
+
+export function CameraViewfinder({ mode, onCaptureActiveChange }: CameraViewfinderProps) {
+  const { videoRef, error, isCameraReady, capturePhoto, pickFromGallery, stopCamera, startCamera } =
+    useCamera()
   const [capturedImage, setCapturedImage] = useState<string | null>(() => scanStore.capturedImage)
 
   useEffect(() => {
@@ -30,6 +29,10 @@ export function CameraViewfinder() {
       stopCamera()
     }
   }, [capturedImage, stopCamera])
+
+  useEffect(() => {
+    onCaptureActiveChange?.(capturedImage !== null)
+  }, [capturedImage, onCaptureActiveChange])
 
   const handleCapture = async () => {
     const photo = await capturePhoto()
@@ -59,7 +62,9 @@ export function CameraViewfinder() {
 
         <SessionBanner />
 
-        <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center pb-[calc(2rem_+_var(--sab))] sm:pb-[calc(4rem_+_var(--sab))] gap-4 sm:gap-6">
+        {/* Capture controls sit above the shared bottom bar (which now hosts the
+            mode selector), so they're padded clear of it. */}
+        <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center pb-[calc(7rem+var(--sab))] sm:pb-[calc(8rem+var(--sab))]">
           <div className="flex items-center gap-6 sm:gap-8">
             <GalleryButton onClick={handleGalleryPick} cameraAvailable={isCameraReady} />
             <CaptureButton
@@ -69,7 +74,6 @@ export function CameraViewfinder() {
             />
             <div className="w-12 sm:w-14" />
           </div>
-          <ModeSwitcher mode={mode} onModeChange={setMode} cameraAvailable={isCameraReady} />
         </div>
       </div>
 
