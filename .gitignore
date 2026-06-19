@@ -5,6 +5,7 @@ node_modules/
 # Vite
 mobile/dist/
 mobile/.vite/
+mobile/.tanstack/
 
 # Capacitor CLI cache (auto-generated)
 mobile/.capacitor/
