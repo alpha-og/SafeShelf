@@ -485,7 +485,7 @@ def _has_any_excluded(recipe: RecipeItem, excluded: list[str]) -> bool:
     )
 
 
-async def run_search(client: AsyncClient, q: RecipeQuery) -> list[RecipeItem]:
+async def _execute_search(client: AsyncClient, q: RecipeQuery) -> list[RecipeItem]:
     if not q.categories and not q.areas and not q.ingredients:
         return []
 
@@ -523,6 +523,47 @@ async def run_search(client: AsyncClient, q: RecipeQuery) -> list[RecipeItem]:
         ]
 
     return deduped
+
+
+_FALLBACK_CATEGORIES = ['Chicken', 'Seafood', 'Pasta', 'Beef', 'Vegetarian', 'Dessert']
+
+
+async def _fallback_search(client: AsyncClient) -> list[RecipeItem]:
+    tasks = [
+        _search_recipes_internal(client, cat, None, None)
+        for cat in _FALLBACK_CATEGORIES
+    ]
+    results = await asyncio.gather(*tasks)
+    seen: set[str] = set()
+    deduped: list[RecipeItem] = []
+    for batch in results:
+        for r in batch:
+            if r.id not in seen:
+                seen.add(r.id)
+                deduped.append(r)
+    return deduped
+
+
+async def run_search(client: AsyncClient, q: RecipeQuery) -> list[RecipeItem]:
+    # Exact search with all constraints
+    results = await _execute_search(client, q)
+    if results:
+        return results
+
+    # Relaxation 1: drop ingredient constraint if there was one
+    if q.ingredients:
+        results = await _execute_search(client, q.model_copy(update={'ingredients': []}))
+        if results:
+            return results
+
+    # Relaxation 2: drop area constraint too
+    if q.areas:
+        results = await _execute_search(client, q.model_copy(update={'areas': [], 'ingredients': []}))
+        if results:
+            return results
+
+    # Ultimate fallback: popular categories
+    return await _fallback_search(client)
 
 
 _llm: ChatOpenAI | None = None
