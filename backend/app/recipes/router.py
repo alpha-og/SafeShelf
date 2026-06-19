@@ -1,7 +1,19 @@
 from fastapi import APIRouter, Depends
 
-from app.recipes.schemas import SearchRequest, SearchResponse, SuggestRequest, SuggestResponse
-from app.recipes.service import get_recipe_handler, search_recipes_handler, suggest_recipes
+from app.recipes.schemas import (
+    ClarifyRequest,
+    ClarifyResponse,
+    SearchRequest,
+    SearchResponse,
+    SuggestRequest,
+    SuggestResponse,
+)
+from app.recipes.service import (
+    clarify_handler,
+    get_recipe_handler,
+    search_recipes_handler,
+    suggest_recipes,
+)
 from app.recipes.tools import RecipeItem
 from app.shared.deps import get_current_user, get_session
 
@@ -31,3 +43,11 @@ async def search(
     _current_user=Depends(get_current_user),
 ):
     return await search_recipes_handler(req)
+
+
+@router.post('/clarify', response_model=ClarifyResponse)
+async def clarify(
+    req: ClarifyRequest,
+    _current_user=Depends(get_current_user),
+):
+    return await clarify_handler(req)

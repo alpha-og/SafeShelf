@@ -3,9 +3,10 @@ import logging
 import re
 
 from httpx import AsyncClient
+from langchain_core.messages import SystemMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.recipes.tools import (
     RecipeItem,
@@ -15,12 +16,22 @@ from app.shared.config import settings
 
 logger = logging.getLogger(__name__)
 
+class ClarificationField(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+    id: str
+    label: str
+    description: str | None = None
+    schema_: dict = Field(default={}, validation_alias='schema', serialization_alias='schema')
+
+
 class RecipeQuery(BaseModel):
     is_recipe_query: bool = True
     categories: list[str] = []
     ingredients: list[str] = []
     areas: list[str] = []
     exclude_ingredients: list[str] = []
+    needs_clarification: bool = False
+    clarifications: list[ClarificationField] = []
 
 
 class ValidationResult(BaseModel):
@@ -435,11 +446,12 @@ def _get_llm() -> ChatOpenAI:
     return _llm
 
 
-async def extract_query(query: str) -> RecipeQuery:
-    prompt = ChatPromptTemplate.from_messages([
-        ('system', EXTRACTION_PROMPT),
-        ('human', '{query}'),
-    ])
+async def extract_query(query: str, system_extra: str | None = None) -> RecipeQuery:
+    messages = [SystemMessage(content=EXTRACTION_PROMPT)]
+    if system_extra:
+        messages.append(SystemMessage(content=system_extra))
+    messages.append(('human', '{query}'))
+    prompt = ChatPromptTemplate.from_messages(messages)
     chain = prompt | _get_llm().with_structured_output(RecipeQuery, method='json_mode')
     return await chain.ainvoke({'query': query})
 
