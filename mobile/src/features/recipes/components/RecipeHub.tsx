@@ -1,6 +1,7 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Compass, Search as SearchIcon } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { getItem, setItem } from '@/lib/storage'
 import { useRecipeSearch } from '../hooks/useRecipeSearch'
 import { DiscoverPage } from './DiscoverPage'
 import { RecipeSearchBar } from './RecipeSearchBar'
@@ -10,26 +11,24 @@ type Tab = 'discover' | 'search'
 
 const TAB_STORAGE_KEY = 'recipe_active_tab'
 
-function loadSavedTab(): Tab {
-  try {
-    const saved = sessionStorage.getItem(TAB_STORAGE_KEY)
-    if (saved === 'search' || saved === 'discover') return saved
-  } catch { /* noop */ }
-  return 'discover'
-}
-
 const spring = { type: 'spring', stiffness: 500, damping: 30, mass: 1 } as const
 const fade = { duration: 0.15 }
 
 export function RecipeHub() {
-  const [activeTab, setActiveTab] = useState<Tab>(loadSavedTab)
+  const [activeTab, setActiveTab] = useState<Tab>('discover')
   const search = useRecipeSearch()
+
+  useEffect(() => {
+    getItem<Tab>(TAB_STORAGE_KEY).then((saved) => {
+      if (saved === 'search' || saved === 'discover') {
+        setActiveTab(saved)
+      }
+    })
+  }, [])
 
   const handleTabChange = useCallback((tab: Tab) => {
     setActiveTab(tab)
-    try {
-      sessionStorage.setItem(TAB_STORAGE_KEY, tab)
-    } catch { /* noop */ }
+    setItem(TAB_STORAGE_KEY, tab)
   }, [])
 
   return (

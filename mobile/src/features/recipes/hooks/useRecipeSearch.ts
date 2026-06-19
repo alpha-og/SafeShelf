@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDebounce } from "@/hooks/useDebounce";
+import { getItem, setItem } from "@/lib/storage";
 import { clarifyRecipes, searchRecipes } from "../services/recipe";
 import type { ClarificationField, RecipeItem } from "../services/recipe";
 
@@ -20,40 +21,34 @@ export type SearchStatus =
   | "dismissed"
   | "error";
 
-function loadSearchState(): SearchState | null {
-  try {
-    const raw = sessionStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-
 export function useRecipeSearch() {
   const queryClient = useQueryClient();
+  const isInitialized = useRef(false);
+  const searchedOnce = useRef(false);
   const savedState = useRef<SearchState | null>(null);
-  if (savedState.current === null) {
-    savedState.current = loadSearchState();
-  }
 
-  const [searchText, _setSearchText] = useState(
-    savedState.current?.searchText ?? "",
-  );
-  const [selectedCategories, _setSelectedCategories] = useState<string[]>(
-    savedState.current?.selectedCategories ?? [],
-  );
-  const [selectedAreas, _setSelectedAreas] = useState<string[]>(
-    savedState.current?.selectedAreas ?? [],
-  );
+  const [searchText, _setSearchText] = useState("");
+  const [selectedCategories, _setSelectedCategories] = useState<string[]>([]);
+  const [selectedAreas, _setSelectedAreas] = useState<string[]>([]);
   const [searchStatus, setSearchStatus] = useState<SearchStatus>("idle");
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const [clarifications, setClarifications] = useState<ClarificationField[]>(
-    [],
-  );
+  const [clarifications, setClarifications] = useState<ClarificationField[]>([]);
   const [clarifyError, setClarifyError] = useState<string | null>(null);
   const [clarifyResults, setClarifyResults] = useState<RecipeItem[] | null>(null);
 
-  const searchedOnce = useRef(savedState.current !== null);
+  // Async restore saved state on mount
+  useEffect(() => {
+    getItem<SearchState>(STORAGE_KEY).then((saved) => {
+      if (saved) {
+        savedState.current = saved;
+        _setSearchText(saved.searchText);
+        _setSelectedCategories(saved.selectedCategories);
+        _setSelectedAreas(saved.selectedAreas);
+        searchedOnce.current = true;
+      }
+      isInitialized.current = true;
+    });
+  }, []);
 
   const setSearchText = useCallback((value: string) => {
     searchedOnce.current = true;
@@ -70,19 +65,10 @@ export function useRecipeSearch() {
     _setSelectedAreas(areas);
   }, []);
 
+  // Async persist state changes
   useEffect(() => {
-    try {
-      sessionStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({
-          searchText,
-          selectedCategories,
-          selectedAreas,
-        } satisfies SearchState),
-      );
-    } catch {
-      /* sessionStorage unavailable */
-    }
+    if (!isInitialized.current) return;
+    setItem(STORAGE_KEY, { searchText, selectedCategories, selectedAreas } satisfies SearchState);
   }, [searchText, selectedCategories, selectedAreas]);
 
   const debouncedSearchText = useDebounce(searchText, DEBOUNCE_MS);
@@ -102,6 +88,9 @@ export function useRecipeSearch() {
       queryClient.resetQueries({ queryKey: ["recipes"] });
     }
   }, [hasFilters, queryClient]);
+
+  const queryEnabled =
+    hasFilters && searchStatus !== "clarifying" && searchedOnce.current && isInitialized.current;
 
   const query = useInfiniteQuery({
     queryKey: ["recipes", debouncedSearchText, debouncedCategories, debouncedAreas],
@@ -135,8 +124,7 @@ export function useRecipeSearch() {
       const loaded = lastPage.page * lastPage.page_size;
       return loaded < lastPage.total ? lastPage.page + 1 : undefined;
     },
-    enabled:
-      hasFilters && searchStatus !== "clarifying" && searchedOnce.current,
+    enabled: queryEnabled,
     staleTime: 30_000,
   });
 
