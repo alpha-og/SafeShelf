@@ -12,5 +12,5 @@ export const SCAN_MODES: ScanModeOption[] = [
   { value: 'auto', label: 'Auto', icon: Scan },
   { value: 'barcode', label: 'Barcode', icon: ScanLine },
   { value: 'image', label: 'Image', icon: Image },
-  { value: 'nutrient-label', label: 'Nutrient', icon: FileText },
+  { value: 'nutrient-label', label: 'Label', icon: FileText },
 ]

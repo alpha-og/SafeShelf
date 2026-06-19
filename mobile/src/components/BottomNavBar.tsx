@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { Camera, ChefHat, ChevronUp, Search } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { ScanMode } from '@/features/camera/hooks/useCamera'
 import { SCAN_MODES } from '@/features/camera/scanModes'
 
@@ -21,6 +21,7 @@ const tabs = [
 
 export function BottomNavBar({ activeIndex, onChange, mode, onModeChange }: BottomNavBarProps) {
   const [modeMenuOpen, setModeMenuOpen] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
   const onCamera = activeIndex === CAMERA_TAB
   const activeMode = SCAN_MODES.find((m) => m.value === mode) ?? SCAN_MODES[0]
 
@@ -29,17 +30,37 @@ export function BottomNavBar({ activeIndex, onChange, mode, onModeChange }: Bott
     if (!onCamera) setModeMenuOpen(false)
   }, [onCamera])
 
+  // Close mode menu when tapping outside the entire bottom-nav component.
+  useEffect(() => {
+    if (!modeMenuOpen) return
+
+    function handleOutsideTap(e: MouseEvent | TouchEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setModeMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleOutsideTap, true)
+    document.addEventListener('touchstart', handleOutsideTap, true)
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideTap, true)
+      document.removeEventListener('touchstart', handleOutsideTap, true)
+    }
+  }, [modeMenuOpen])
+
   function handleTabClick(i: number) {
     if (i === CAMERA_TAB && onCamera) {
-      // Already on camera — toggle the mode selector instead of re-navigating.
       setModeMenuOpen((open) => !open)
     } else {
+      setModeMenuOpen(false)
       onChange(i)
     }
   }
 
   return (
     <motion.div
+      ref={containerRef}
       initial={{ y: 24, opacity: 0, scale: 0.95 }}
       animate={{ y: 0, opacity: 1, scale: 1 }}
       exit={{ y: 24, opacity: 0, scale: 0.95 }}
@@ -49,40 +70,37 @@ export function BottomNavBar({ activeIndex, onChange, mode, onModeChange }: Bott
       {/* Drop-up mode menu: all four modes side by side, active highlighted. */}
       <AnimatePresence>
         {modeMenuOpen && (
-          <>
-            <div className="fixed inset-0 z-40" onClick={() => setModeMenuOpen(false)} />
-            <motion.div
-              initial={{ y: 8, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 8, opacity: 0 }}
-              transition={{ duration: 0.15, ease: 'easeOut' }}
-              className="absolute bottom-full left-1/2 z-50 mb-2 -translate-x-1/2 flex items-center gap-1 rounded-full border border-primary/30 bg-primary/30 backdrop-blur-md px-1.5 py-1.5 shadow-2xl"
-            >
-              {SCAN_MODES.map((m) => {
-                const isActive = m.value === mode
-                return (
-                  <button
-                    key={m.value}
-                    type="button"
-                    onClick={() => {
-                      onModeChange(m.value)
-                      setModeMenuOpen(false)
-                    }}
-                    className={`flex flex-col items-center gap-1 rounded-2xl px-3 py-2 transition-colors ${
-                      isActive
-                        ? 'bg-primary/50 text-white'
-                        : 'text-white/60 hover:text-white/90 hover:bg-primary/20'
-                    }`}
-                  >
-                    <m.icon className="h-5 w-5 shrink-0" />
-                    <span className="text-[11px] font-medium leading-none whitespace-nowrap">
-                      {m.label}
-                    </span>
-                  </button>
-                )
-              })}
-            </motion.div>
-          </>
+          <motion.div
+            initial={{ y: 8, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 8, opacity: 0 }}
+            transition={{ duration: 0.15, ease: 'easeOut' }}
+            className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 flex items-center gap-1 rounded-full border border-primary/30 bg-primary/30 backdrop-blur-md px-1.5 py-1.5 shadow-2xl"
+          >
+            {SCAN_MODES.map((m) => {
+              const isActive = m.value === mode
+              return (
+                <button
+                  key={m.value}
+                  type="button"
+                  onClick={() => {
+                    onModeChange(m.value)
+                    setModeMenuOpen(false)
+                  }}
+                  className={`flex flex-row items-center gap-1.5 rounded-full px-3 py-1.5 transition-colors ${
+                    isActive
+                      ? 'bg-primary/50 text-white'
+                      : 'text-white/60 hover:text-white/90 hover:bg-primary/20'
+                  }`}
+                >
+                  <m.icon className="h-5 w-5 shrink-0" />
+                  <span className="text-[11px] font-medium leading-none whitespace-nowrap">
+                    {m.label}
+                  </span>
+                </button>
+              )
+            })}
+          </motion.div>
         )}
       </AnimatePresence>
 
@@ -97,7 +115,7 @@ export function BottomNavBar({ activeIndex, onChange, mode, onModeChange }: Bott
               key={tab.label}
               type="button"
               onClick={() => handleTabClick(i)}
-              className={`relative flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              className={`relative flex items-center justify-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                 isActive ? 'text-white' : 'text-white/50 hover:text-white/80 hover:scale-[1.02]'
               }`}
             >
