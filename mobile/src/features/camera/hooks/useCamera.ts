@@ -5,14 +5,12 @@ export type ScanMode = 'auto' | 'barcode' | 'image' | 'nutrient-label'
 
 interface UseCameraReturn {
   videoRef: React.RefObject<HTMLVideoElement | null>
-  mode: ScanMode
   error: string | null
   isCameraReady: boolean
   startCamera: () => Promise<void>
   stopCamera: () => void
   capturePhoto: () => Promise<string | null>
   pickFromGallery: () => Promise<string | null>
-  setMode: (mode: ScanMode) => void
 }
 
 interface CapacitorGlobal {
@@ -67,7 +65,6 @@ function pickFromGalleryWeb(): Promise<string | null> {
 export function useCamera(): UseCameraReturn {
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const streamRef = useRef<MediaStream | null>(null)
-  const [mode, setMode] = useState<ScanMode>('auto')
   const [error, setError] = useState<string | null>(null)
   const [isCameraReady, setIsCameraReady] = useState(false)
 
@@ -166,13 +163,11 @@ export function useCamera(): UseCameraReturn {
 
   return {
     videoRef,
-    mode,
     error,
     isCameraReady,
     startCamera,
     stopCamera,
     capturePhoto,
     pickFromGallery,
-    setMode,
   }
 }
