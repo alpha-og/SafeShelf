@@ -82,6 +82,7 @@ export function useRecipeSearch() {
 
   // Reset status and clear cached results when all filters are cleared
   useEffect(() => {
+    if (!isInitialized.current) return;
     if (!hasFilters) {
       setSearchStatus("idle");
       setClarifyError(null);
