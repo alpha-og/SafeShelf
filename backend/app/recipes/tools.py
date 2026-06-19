@@ -93,14 +93,15 @@ async def _lookup_recipes(client: AsyncClient, ids: list[str]) -> list[RecipeIte
             meals = data.get('meals')
             if not meals:
                 return None
-            return meals[0]
+            raw = meals[0]
+            return raw if isinstance(raw, dict) else None
         except (HTTPError, KeyError, ValueError) as exc:
             logger.warning('recipe lookup failed for id "%s": %s', id_, exc)
             return None
 
     raw_meals = await asyncio.gather(*[fetch_one(id_) for id_ in ids])
 
-    return [_meal_to_item(m) for m in raw_meals if m is not None]
+    return [_meal_to_item(m) for m in raw_meals if isinstance(m, dict)]
 
 
 def _meal_to_item(meal: dict) -> RecipeItem:
@@ -142,7 +143,10 @@ async def lookup_recipe_by_id(client: AsyncClient, id_: str) -> RecipeItem | Non
         meals = (resp.json()).get('meals')
         if not meals:
             return None
-        return _meal_to_item(meals[0])
+        raw = meals[0]
+        if not isinstance(raw, dict):
+            return None
+        return _meal_to_item(raw)
     except (HTTPError, KeyError, ValueError) as exc:
         logger.warning('recipe lookup failed for id "%s": %s', id_, exc)
         return None

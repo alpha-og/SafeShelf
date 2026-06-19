@@ -4,9 +4,11 @@ import random
 from httpx import AsyncClient
 
 from app.recipes.agent import RecipeQuery, extract_query, run_search, validate_query
+from app.recipes.product_matching import match_ingredients
 from app.recipes.schemas import (
     ClarifyRequest,
     ClarifyResponse,
+    RecipeProductsResponse,
     SearchRequest,
     SearchResponse,
     SuggestRequest,
@@ -35,6 +37,27 @@ async def get_recipe_handler(id: str) -> RecipeItem:
     if recipe is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Recipe not found')
     return recipe
+
+
+async def get_recipe_products_handler(
+    id: str, store_id: str, session,
+) -> RecipeProductsResponse:
+
+    recipe = await get_recipe_handler(id)
+    if not recipe.ingredients:
+        return RecipeProductsResponse(
+            recipe_id=recipe.id,
+            recipe_name=recipe.name,
+            mappings=[],
+        )
+
+    mappings = await match_ingredients(session, recipe.ingredients, store_id)
+
+    return RecipeProductsResponse(
+        recipe_id=recipe.id,
+        recipe_name=recipe.name,
+        mappings=mappings,
+    )
 
 
 async def suggest_recipes(req: SuggestRequest, session) -> dict:
@@ -222,4 +245,41 @@ async def clarify_handler(req: ClarifyRequest) -> ClarifyResponse:
         recipes=[r.model_dump() for r in all_recipes],
         total=len(all_recipes),
         session_id=session.session_id,
+    )
+
+
+async def feed_handler(page: int = 1, page_size: int = 10) -> SearchResponse:
+    popular_categories = random.sample(CATEGORIES, min(3, len(CATEGORIES)))
+    random_categories = random.sample(
+        [c for c in CATEGORIES if c not in popular_categories],
+        min(2, len(CATEGORIES) - 3),
+    )
+    all_cats = popular_categories + random_categories
+
+    async with AsyncClient() as client:
+        tasks = []
+        for cat in all_cats:
+            tasks.append(_search_recipes_internal(client, cat, None, None))
+        results = await asyncio.gather(*tasks)
+
+    seen: set[str] = set()
+    deduped: list[RecipeItem] = []
+    for batch in results:
+        for r in batch:
+            if r.id not in seen:
+                seen.add(r.id)
+                deduped.append(r)
+
+    random.shuffle(deduped)
+
+    total = len(deduped)
+    start = (page - 1) * page_size
+    sliced = deduped[start : start + page_size]
+
+    return SearchResponse(
+        success=True,
+        recipes=[r.model_dump() for r in sliced],
+        total=total,
+        page=page,
+        page_size=page_size,
     )

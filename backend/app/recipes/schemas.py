@@ -58,3 +58,29 @@ class ClarifyResponse(BaseModel):
     clarifications: list[ClarificationField] | None = None
     error: str | None = None
     rejection_reason: str | None = None
+
+
+class FeedRequest(BaseModel):
+    page: int = 1
+    page_size: int = 10
+
+
+class ProductVariant(BaseModel):
+    barcode: str
+    product_name: str
+    product_image: str | None = None
+    brand: str | None = None
+    quantity: str | None = None
+    price: float
+    in_stock: bool
+
+
+class IngredientMapping(BaseModel):
+    ingredient: str
+    options: list[ProductVariant] = []
+
+
+class RecipeProductsResponse(BaseModel):
+    recipe_id: str
+    recipe_name: str
+    mappings: list[IngredientMapping]
