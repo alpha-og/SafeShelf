@@ -2,6 +2,7 @@ import type React from 'react'
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import type { ProductInfo } from '@/features/products/services/product'
+import { generateId } from '@/lib/id'
 import { getItem, removeItem, setItem } from '@/lib/storage'
 import { useProfiles } from '@/providers/ProfilesProvider'
 import { api } from '@/lib/axios'
@@ -11,6 +12,17 @@ export interface CartItem {
   product: ProductInfo
   quantity: number
 }
+
+/** A shopping session archived when the cart was cleared or restarted, so it
+ *  can be recovered from the cart's Session History. */
+export interface SavedSession {
+  id: string
+  savedAt: string
+  items: CartItem[]
+}
+
+/** Keep history bounded so storage doesn't grow without limit. */
+const MAX_HISTORY = 15
 
 interface CartContextValue {
   items: CartItem[]
@@ -27,6 +39,12 @@ interface CartContextValue {
   continueSession: () => void
   /** Empty the active cart to begin a fresh shopping session and dismiss the banner. */
   startNewSession: () => Promise<void>
+  /** Past sessions for the active selection, newest first. */
+  sessionHistory: SavedSession[]
+  /** Bring a past session back into the cart (archiving the current one first). */
+  restoreSession: (id: string) => Promise<void>
+  /** Permanently remove a past session from history. */
+  deleteSession: (id: string) => Promise<void>
 }
 
 const CartContext = createContext<CartContextValue | null>(null)
@@ -42,11 +60,21 @@ function cartKeyFor(profileId: string | null, groupId: string | null): string | 
   return null
 }
 
+/** Storage key for the archived session history of the active selection. Mirrors
+ *  cartKeyFor so each profile/group keeps its own history. */
+function historyKeyFor(profileId: string | null, groupId: string | null): string | null {
+  if (profileId) return `cart_history:profile:${profileId}`
+  if (groupId) return `cart_history:group:${groupId}`
+  return null
+}
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const { activeProfile, activeGroup, isLoading: profilesLoading } = useProfiles()
   const cartKey = cartKeyFor(activeProfile?.id ?? null, activeGroup?.id ?? null)
+  const historyKey = historyKeyFor(activeProfile?.id ?? null, activeGroup?.id ?? null)
 
   const [items, setItems] = useState<CartItem[]>([])
+  const [sessionHistory, setSessionHistory] = useState<SavedSession[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [previousSessionPending, setPreviousSessionPending] = useState(false)
   // The banner should only appear on a full reload, not on every selection
@@ -78,8 +106,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           }
         }
 
+        const history = historyKey ? ((await getItem<SavedSession[]>(historyKey)) ?? []) : []
+
         if (cancelled) return
         setItems(stored)
+        setSessionHistory(history)
         if (firstLoadRef.current && stored.length > 0) setPreviousSessionPending(true)
       } finally {
         if (!cancelled) {
@@ -99,11 +130,45 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (cartKey) await setItem(cartKey, newItems)
   }
 
+  const saveHistory = async (next: SavedSession[]) => {
+    setSessionHistory(next)
+    if (historyKey) await setItem(historyKey, next)
+  }
+
+  /** Push the given items onto the history (newest first) unless empty. Returns
+   *  the resulting history so callers can chain further edits without races. */
+  const archive = async (toArchive: CartItem[]): Promise<SavedSession[]> => {
+    if (toArchive.length === 0) return sessionHistory
+    const entry: SavedSession = {
+      id: generateId(),
+      savedAt: new Date().toISOString(),
+      items: toArchive,
+    }
+    const next = [entry, ...sessionHistory].slice(0, MAX_HISTORY)
+    await saveHistory(next)
+    return next
+  }
+
   const continueSession = () => setPreviousSessionPending(false)
 
   const startNewSession = async () => {
+    await archive(items)
     await saveCart([])
     setPreviousSessionPending(false)
+  }
+
+  const restoreSession = async (id: string) => {
+    const session = sessionHistory.find((s) => s.id === id)
+    if (!session) return
+    // Archive whatever's in the cart now so it isn't lost, then swap the saved
+    // session in and drop it from history.
+    const afterArchive = await archive(items)
+    await saveHistory(afterArchive.filter((s) => s.id !== id))
+    await saveCart(session.items)
+  }
+
+  const deleteSession = async (id: string) => {
+    await saveHistory(sessionHistory.filter((s) => s.id !== id))
   }
 
   const { selectedStoreId } = useStore()
@@ -168,6 +233,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }
 
   const clearCart = async () => {
+    await archive(items)
     await saveCart([])
   }
 
@@ -183,6 +249,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         updateQuantity,
         continueSession,
         startNewSession,
+        sessionHistory,
+        restoreSession,
+        deleteSession,
       }}
     >
       {children}

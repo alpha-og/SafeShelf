@@ -22,6 +22,24 @@ function titleCase(tag: string): string {
     .join(' ')
 }
 
+/** Append `additions` to `existing`, skipping any whose name already appears
+ * (case-insensitive). Used to fold prescription-extracted items into a profile. */
+export function mergeConstraints(
+  existing: ConstraintItem[],
+  additions: ConstraintItem[],
+): ConstraintItem[] {
+  const seen = new Set(existing.map((c) => c.name.trim().toLowerCase()))
+  const merged = [...existing]
+  for (const item of additions) {
+    const key = item.name.trim().toLowerCase()
+    if (key && !seen.has(key)) {
+      seen.add(key)
+      merged.push(item)
+    }
+  }
+  return merged
+}
+
 async function searchConditions(query: string): Promise<ConstraintItem[]> {
   const res = await api.get<ConstraintItem[]>(CONDITION_SEARCH_ENDPOINT, {
     params: { q: query },

@@ -2,12 +2,14 @@ import { useRef, useState } from 'react'
 import { PageHeader } from '@/components/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import type { ConstraintItem } from '../services/constraints'
-import { DEFAULT_SERVING_SETTINGS, type PrescriptionFile, type ServingSettings } from '../types'
+import type { HealthData } from '@/features/health-report/types'
+import { type ConstraintItem, mergeConstraints } from '../services/constraints'
+import { DEFAULT_SERVING_SETTINGS, type ServingSettings } from '../types'
+import { AdditionalInfoSection } from './AdditionalInfoSection'
 import { BudgetAndServingFields } from './BudgetAndServingFields'
 import { ConditionsAndAllergensFields } from './ConditionsAndAllergensFields'
 import { DietaryToggleList } from './DietaryToggleList'
-import { PrescriptionUpload } from './PrescriptionUpload'
+import { HealthReportImport } from './HealthReportImport'
 
 export interface ProfileWizardValues {
   name: string
@@ -17,7 +19,8 @@ export interface ProfileWizardValues {
   servingSettings: ServingSettings
   conditions: ConstraintItem[]
   allergens: ConstraintItem[]
-  prescriptions: PrescriptionFile[]
+  healthData: HealthData | null
+  healthReportFileName: string | null
 }
 
 interface ProfileWizardProps {
@@ -46,7 +49,8 @@ export function ProfileWizard({
   const [servingSettings, setServingSettings] = useState(DEFAULT_SERVING_SETTINGS)
   const [conditions, setConditions] = useState<ConstraintItem[]>([])
   const [allergens, setAllergens] = useState<ConstraintItem[]>([])
-  const [prescriptions, setPrescriptions] = useState<PrescriptionFile[]>([])
+  const [healthData, setHealthData] = useState<HealthData | null>(null)
+  const [healthReportFileName, setHealthReportFileName] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   // `submitting` (state) is what disables the button visually, but state
   // updates aren't applied synchronously — a duplicate click/tap fired
@@ -71,7 +75,8 @@ export function ProfileWizard({
         servingSettings,
         conditions,
         allergens,
-        prescriptions,
+        healthData,
+        healthReportFileName,
       })
       // On success the caller navigates away and this wizard unmounts. We
       // deliberately leave the guard engaged: resetting it here would re-open
@@ -147,7 +152,28 @@ export function ProfileWizard({
               allergens={allergens}
               onAllergensChange={setAllergens}
             />
-            <PrescriptionUpload prescriptions={prescriptions} onChange={setPrescriptions} />
+            <HealthReportImport
+              onImported={(fields) => {
+                if (fields.age != null) setAge(String(fields.age))
+                setDietaryPreferences((prev) => [
+                  ...prev,
+                  ...fields.dietaryPreferences.filter((d) => !prev.includes(d)),
+                ])
+                setConditions((prev) => mergeConstraints(prev, fields.conditions))
+                setAllergens((prev) => mergeConstraints(prev, fields.allergens))
+                setHealthData(fields.healthData)
+                setHealthReportFileName(fields.sourceFileName)
+              }}
+            />
+
+            <AdditionalInfoSection
+              healthData={healthData}
+              fileName={healthReportFileName}
+              onDelete={() => {
+                setHealthData(null)
+                setHealthReportFileName(null)
+              }}
+            />
           </>
         )}
       </main>

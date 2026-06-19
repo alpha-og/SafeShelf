@@ -37,7 +37,8 @@ Output JSON must match this exact schema:
     "highCholesterol": <true|false|null>,
     "thyroidDisorder": <true|false|null>,
     "heartDisease": <true|false|null>,
-    "kidneyDisease": <true|false|null>
+    "kidneyDisease": <true|false|null>,
+    "otherConditions": ["<condition name>", ...]
   },
   "allergies": {
     "peanut": <true|false|null>,
@@ -102,6 +103,10 @@ Rules:
 - For medical conditions: set true ONLY if the report explicitly diagnoses \
   or indicates the condition. Set false if the report explicitly says the \
   condition is absent. Set null if the report does not mention it.
+- For "otherConditions": list EVERY diagnosed/known medical condition the report \
+  mentions (e.g. in a "Known Medical Conditions" or diagnosis section), copied \
+  VERBATIM as written, including the ones that also map to the boolean fields \
+  above. Do not summarise, merge, or drop any. Use [] if none are listed.
 - For allergies: set true ONLY if the report explicitly lists the allergen. \
   Set false if the report explicitly says no allergy to that substance. \
   Set null if not mentioned.
