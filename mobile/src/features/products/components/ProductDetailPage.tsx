@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useParams, useRouter } from '@tanstack/react-router'
+import { motion } from 'framer-motion'
 import { BottomCta } from '@/components/BottomCta'
 import { SectionHeader } from '@/components/SectionHeader'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -8,6 +9,7 @@ import { SuitabilityBreakdown } from '@/features/suitability/components/Suitabil
 import { useSuitability } from '@/features/suitability/hooks/useSuitability'
 import { useCart } from '@/providers/CartProvider'
 import { useStore } from '@/providers/StoreProvider'
+import { BANNER_COMPACT, BANNER_FULL, useCollapsibleBanner } from '@/hooks/useCollapsibleBanner'
 import { lookupByBarcode } from '../services/product'
 import { ProductHero } from './ProductHero'
 import { ProductInfoSections } from './ProductInfoSections'
@@ -36,6 +38,8 @@ export function ProductDetailPage() {
     ? items.find((i) => i.product.barcode === product.barcode)
     : undefined
 
+  const { scrollRef, collapsed } = useCollapsibleBanner()
+
   if (isLoading) {
     return (
       <div className="flex flex-col flex-1 min-h-0 bg-background text-foreground">
@@ -63,53 +67,77 @@ export function ProductDetailPage() {
 
   return (
     <div className="relative flex flex-col flex-1 min-h-0 bg-background text-foreground">
-      <ProductHero
-        product={product}
-        suitability={suitability}
-        cartItem={cartItem}
-        addToCart={addToCart}
-        removeFromCart={removeFromCart}
-        updateQuantity={updateQuantity}
-        onBack={() => router.history.back()}
-      />
-
-      <div className="flex-1 min-h-0 overflow-y-auto px-4 pt-4 space-y-6 pb-20">
-        <ProductServingNote serving={suitability?.serving} />
-
-        {suitability && suitability.checks.length > 0 && (
-          <section>
-            <SectionHeader>Suitability</SectionHeader>
-            <SuitabilityBreakdown checks={suitability.checks} />
-          </section>
-        )}
-
-        <ProductScoreBadges
-          nutriscoreGrade={product.nutriscoreGrade}
-          ecoscoreGrade={product.ecoscoreGrade}
-          novaGroup={product.novaGroup}
-          labels={product.labels}
+      <motion.div
+        animate={{ height: collapsed ? BANNER_COMPACT : BANNER_FULL }}
+        transition={{ type: 'spring', bounce: 0.1, duration: 0.35 }}
+        className="relative shrink-0 overflow-hidden rounded-b-2xl z-10"
+      >
+        <motion.div
+          animate={{ opacity: collapsed ? 1 : 0 }}
+          transition={{ duration: 0.2 }}
+          className="absolute inset-0 z-[5] bg-linear-to-t from-overlay/80 via-overlay/20 to-transparent pointer-events-none"
         />
 
-        <section>
-          <SectionHeader>Nutrition</SectionHeader>
-          <ProductNutrientTable
-            nutrients={product.nutrients}
-            servingInfo={suitability?.serving ?? null}
-            nutrientLevels={product.nutrientLevels}
+        <motion.div
+          animate={{ opacity: collapsed ? 1 : 0 }}
+          transition={{ duration: 0.2 }}
+          className="absolute inset-0 z-10 flex items-end pb-4 px-4 pointer-events-none"
+        >
+          <span className="text-xl font-bold text-white capitalize drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)] truncate">
+            {product.productName || 'Unknown Product'}
+          </span>
+        </motion.div>
+
+        <ProductHero
+          product={product}
+          suitability={suitability}
+          cartItem={cartItem}
+          addToCart={addToCart}
+          removeFromCart={removeFromCart}
+          updateQuantity={updateQuantity}
+          onBack={() => router.history.back()}
+        />
+      </motion.div>
+
+      <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto">
+        <div className="px-4 pt-4 space-y-6 pb-20">
+          <ProductServingNote serving={suitability?.serving} />
+
+          {suitability && suitability.checks.length > 0 && (
+            <section>
+              <SectionHeader>Suitability</SectionHeader>
+              <SuitabilityBreakdown checks={suitability.checks} />
+            </section>
+          )}
+
+          <ProductScoreBadges
+            nutriscoreGrade={product.nutriscoreGrade}
+            ecoscoreGrade={product.ecoscoreGrade}
+            novaGroup={product.novaGroup}
+            labels={product.labels}
           />
-        </section>
 
-        <ProductInfoSections
-          categories={product.categories}
-          allergens={product.allergens}
-          allergenTraces={product.allergenTraces}
-          ingredients={product.ingredients}
-        />
+          <section>
+            <SectionHeader>Nutrition</SectionHeader>
+            <ProductNutrientTable
+              nutrients={product.nutrients}
+              servingInfo={suitability?.serving ?? null}
+              nutrientLevels={product.nutrientLevels}
+            />
+          </section>
 
-        <div className="flex justify-center pb-2">
-          <p className="text-[10px] text-muted-foreground/60 font-mono tracking-widest uppercase">
-            Barcode: {product.barcode}
-          </p>
+          <ProductInfoSections
+            categories={product.categories}
+            allergens={product.allergens}
+            allergenTraces={product.allergenTraces}
+            ingredients={product.ingredients}
+          />
+
+          <div className="flex justify-center pb-2">
+            <p className="text-[10px] text-muted-foreground/60 font-mono tracking-widest uppercase">
+              Barcode: {product.barcode}
+            </p>
+          </div>
         </div>
       </div>
 

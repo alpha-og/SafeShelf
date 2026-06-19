@@ -113,7 +113,7 @@ export function ProductHero({
 
       <div className="absolute bottom-0 left-0 right-0 p-5 flex items-end justify-between gap-4">
         <div className="space-y-1 min-w-0">
-          <h1 className="text-2xl font-bold text-overlay-foreground truncate">
+          <h1 className="text-2xl font-bold text-overlay-foreground truncate capitalize">
             {product.productName || 'Unknown Product'}
           </h1>
           {product.brand && (
