@@ -22,7 +22,8 @@ export function useProductSuitability(
     staleTime: 5 * 60 * 1000,
   })
 
-  const { data: profile, isLoading: profileLoading } = useUserProfile()
+  const { data: context, isLoading: profileLoading } = useUserProfile()
+  const profile = context?.profile
   const conditionCodes = profile?.conditionCodes ?? []
   const { rules, isLoading: rulesLoading } = useConditionRules(conditionCodes)
   const { data: aliases, isLoading: aliasesLoading } = useAliases()
