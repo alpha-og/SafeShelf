@@ -55,8 +55,11 @@ query into structured fields.
 --- FIELDS ---
 
 is_recipe_query (bool, default true):
-  Whether the query is about food, cooking, or recipes. Set to false when the \
-query is clearly unrelated (e.g., "what's the weather", "tell me a joke").
+  Whether the query is about food, cooking, or recipes. Default to true for \
+ANY query that could plausibly relate to food, cooking, eating, meals, or \
+recipes — err on the side of inclusion. Only set to false when the query is \
+definitively about something else (e.g., "what's the weather", "tell me a \
+joke", "how do I fix my car").
 
 categories (list[str]):
   TheMealDB meal categories mentioned.
@@ -129,7 +132,41 @@ Common associations:
   bacon, pancake, toast)
 - "party", "appetizer", "snack" → categories (Starter, Side,
   Miscellaneous); areas []
+- "dinner", "supper", "evening meal" → hearty categories (Beef, Chicken,
+  Pasta, Pork, Seafood); broad areas
+- "lunch", "midday" → lighter categories (Chicken, Seafood, Side)
+- single ingredient query like just "chicken", "beef", "pasta" → include
+  the ingredient AND its matching category; broad areas for variety
 
+needs_clarification (bool, default false):
+  Set to true when the query is ambiguous about what the user actually \
+wants to eat. If the query mentions specific ingredients, dish names, or \
+cuisines you can infer from (e.g., "chicken", "pasta", "Italian", "taco"), \
+set to false and extract those. If the query is vague about the actual \
+food (e.g., "something healthy", "comfort food", "dinner", "surprise me", \
+"quick meal", "feed me"), set to true and ask clarifying questions about \
+what they're looking for. Err on the side of asking — users would rather \
+answer a quick question than scroll through irrelevant results.
+
+clarifications (list[object]):
+  When needs_clarification is true, provide 1-3 questions to clarify the \
+user's intent. Each question must have:
+  - id: short unique identifier
+  - label: the question text shown to the user
+  - description: optional helper text
+  - schema: a JSON Schema fragment describing the expected answer format
+
+  Supported schema patterns:
+  - Single choice: { "type": "string", "enum": ["A", "B", "C"] }
+  - Multi choice: { "type": "array", "items": { "type": "string", \
+"enum": ["A", "B", "C"] }, "uniqueItems": true }
+  - Free text: { "type": "string" }
+  - Number: { "type": "integer" }
+  - Yes/No: { "type": "boolean" }
+
+  Prefer enum choices when possible. Use free text only as fallback.
+  Keep questions independent — the user should be able to answer them all \
+in one go.
 --- EXAMPLES ---
 
 Query: "warm climate dishes"
@@ -175,6 +212,8 @@ Query: "find me Italian chicken recipes with garlic and tomatoes"
   ingredients: ["chicken", "garlic", "tomato"]
   areas: ["Italian"]
   exclude_ingredients: []
+  needs_clarification: false
+  clarifications: []
 
 Query: "chicken or beef recipes"
   is_recipe_query: true
@@ -182,24 +221,79 @@ Query: "chicken or beef recipes"
   ingredients: []
   areas: []
   exclude_ingredients: []
+  needs_clarification: false
+  clarifications: []
 
-Query: "desserts without chocolate"
+Query: "something healthy for dinner"
   is_recipe_query: true
-  categories: ["Dessert"]
-  ingredients: []
-  areas: []
-  exclude_ingredients: ["chocolate"]
-
-Query: "vegan pasta with mushrooms no cheese"
-  is_recipe_query: true
-  categories: ["Pasta", "Vegan"]
-  ingredients: ["mushrooms"]
-  areas: []
-  exclude_ingredients: ["cheese"]
+  needs_clarification: true
+  clarifications:
+    - id: cuisine
+      label: What type of cuisine are you in the mood for?
+      schema: { "type": "string", "enum": ["Italian", "Japanese", \
+"Mexican", "Indian", "American", "Mediterranean", "No preference"] }
+    - id: diet
+      label: Any dietary preference?
+      schema: { "type": "string", "enum": ["No preference", \
+"Vegetarian", "Vegan", "Low-calorie", "High-protein", "Gluten-free"] }
 
 Query: "what's the weather in Tokyo"
   is_recipe_query: false
-  (all other fields empty)
+
+Query: "comfort food with chicken"
+  is_recipe_query: true
+  categories: ["Chicken"]
+  ingredients: ["chicken"]
+  areas: ["American", "Italian", "British", "Irish"]
+  needs_clarification: false
+  clarifications: []
+
+Query: "chicken"
+  is_recipe_query: true
+  categories: ["Chicken"]
+  ingredients: ["chicken"]
+  areas: []
+  needs_clarification: false
+  clarifications: []
+
+Query: "dinner ideas"
+  is_recipe_query: true
+  needs_clarification: true
+  clarifications:
+    - id: preference
+      label: What kind of food are you craving?
+      schema: { "type": "string", "enum": ["Something light & healthy", \
+"Hearty comfort food", "Quick & easy", "Surprise me"] }
+    - id: cuisine
+      label: Any cuisine preference?
+      schema: { "type": "string", "enum": ["No preference", \
+"Italian", "Mexican", "Japanese", "Indian", "American", "Mediterranean"] }
+
+Query: "surprise me"
+  is_recipe_query: true
+  needs_clarification: true
+  clarifications:
+    - id: preference
+      label: What sounds good to you right now?
+      schema: { "type": "string", "enum": ["Something healthy", \
+"Hearty comfort food", "Quick & easy", "I'll pick"] }
+    - id: cuisine
+      label: Any cuisine preference?
+      schema: { "type": "string", "enum": ["No preference", \
+"Italian", "Mexican", "Japanese", "Indian", "American", "Mediterranean"] }
+
+Query: "feed me"
+  is_recipe_query: true
+  needs_clarification: true
+  clarifications:
+    - id: preference
+      label: What sounds good to you right now?
+      schema: { "type": "string", "enum": ["Something healthy", \
+"Hearty comfort food", "Quick & easy", "Surprise me", "I'll pick"] }
+    - id: cuisine
+      label: Any cuisine preference?
+      schema: { "type": "string", "enum": ["No preference", \
+"Italian", "Mexican", "Japanese", "Indian", "American", "Mediterranean"] }
 
 --- OUTPUT ---
 
