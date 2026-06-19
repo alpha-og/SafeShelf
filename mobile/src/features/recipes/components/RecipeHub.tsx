@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Compass, Search as SearchIcon } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useRecipeSearch } from '../hooks/useRecipeSearch'
@@ -8,12 +8,29 @@ import { RecipesPage } from './RecipesPage'
 
 type Tab = 'discover' | 'search'
 
+const TAB_STORAGE_KEY = 'recipe_active_tab'
+
+function loadSavedTab(): Tab {
+  try {
+    const saved = sessionStorage.getItem(TAB_STORAGE_KEY)
+    if (saved === 'search' || saved === 'discover') return saved
+  } catch { /* noop */ }
+  return 'discover'
+}
+
 const spring = { type: 'spring', stiffness: 500, damping: 30, mass: 1 } as const
 const fade = { duration: 0.15 }
 
 export function RecipeHub() {
-  const [activeTab, setActiveTab] = useState<Tab>('discover')
+  const [activeTab, setActiveTab] = useState<Tab>(loadSavedTab)
   const search = useRecipeSearch()
+
+  const handleTabChange = useCallback((tab: Tab) => {
+    setActiveTab(tab)
+    try {
+      sessionStorage.setItem(TAB_STORAGE_KEY, tab)
+    } catch { /* noop */ }
+  }, [])
 
   return (
     <div className="flex flex-col h-full bg-background">
@@ -49,7 +66,7 @@ export function RecipeHub() {
                     transition={spring}
                     className="flex gap-0.5"
                   >
-                    <button onClick={() => setActiveTab('discover')} className="flex items-center justify-center w-9 h-9 rounded-full text-foreground/60 transition-all duration-200 hover:bg-primary/40 hover:text-foreground hover:scale-105 active:scale-90">
+                    <button onClick={() => handleTabChange('discover')} className="flex items-center justify-center w-9 h-9 rounded-full text-foreground/60 transition-all duration-200 hover:bg-primary/40 hover:text-foreground hover:scale-105 active:scale-90">
                       <Compass className="h-4 w-4" />
                     </button>
                     <button className="flex items-center justify-center w-9 h-9 rounded-full bg-primary/40 text-foreground transition-all duration-200 hover:scale-105 active:scale-90">
@@ -68,7 +85,7 @@ export function RecipeHub() {
                     <button className="flex items-center h-9 px-5 text-sm font-medium rounded-full bg-primary/40 text-foreground transition-all duration-200 hover:scale-105 active:scale-90">
                       Discover
                     </button>
-                    <button onClick={() => setActiveTab('search')} className="flex items-center h-9 px-5 text-sm font-medium rounded-full text-foreground/60 transition-all duration-200 hover:bg-primary/40 hover:text-foreground hover:scale-105 active:scale-90">
+                    <button onClick={() => handleTabChange('search')} className="flex items-center h-9 px-5 text-sm font-medium rounded-full text-foreground/60 transition-all duration-200 hover:bg-primary/40 hover:text-foreground hover:scale-105 active:scale-90">
                       Search
                     </button>
                   </motion.div>
