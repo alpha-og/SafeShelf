@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDebounce } from "@/hooks/useDebounce";
 import { clarifyRecipes, searchRecipes } from "../services/recipe";
 import type { ClarificationField, RecipeItem } from "../services/recipe";
@@ -30,6 +30,7 @@ function loadSearchState(): SearchState | null {
 }
 
 export function useRecipeSearch() {
+  const queryClient = useQueryClient();
   const savedState = useRef<SearchState | null>(null);
   if (savedState.current === null) {
     savedState.current = loadSearchState();
@@ -93,13 +94,14 @@ export function useRecipeSearch() {
     debouncedCategories.length > 0 ||
     debouncedAreas.length > 0;
 
-  // Reset status when all filters are cleared
+  // Reset status and clear cached results when all filters are cleared
   useEffect(() => {
     if (!hasFilters) {
       setSearchStatus("idle");
       setClarifyError(null);
+      queryClient.resetQueries({ queryKey: ["recipes"] });
     }
-  }, [hasFilters]);
+  }, [hasFilters, queryClient]);
 
   const query = useInfiniteQuery({
     queryKey: ["recipes", debouncedSearchText, debouncedCategories, debouncedAreas],
@@ -189,7 +191,8 @@ export function useRecipeSearch() {
     setSessionId(null);
     setClarifications([]);
     setClarifyError(null);
-  }, []);
+    queryClient.resetQueries({ queryKey: ["recipes"] });
+  }, [queryClient]);
 
   const queryRecipes =
     query.data?.pages.flatMap((p) => {
