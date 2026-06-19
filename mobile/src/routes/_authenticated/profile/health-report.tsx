@@ -108,9 +108,6 @@ function RouteComponent() {
   }
 
   return (
-    <HealthReportPage
-      onSaveToProfile={handleSaveToProfile}
-      onCreateProfile={handleCreateProfile}
-    />
+    <HealthReportPage onSaveToProfile={handleSaveToProfile} onCreateProfile={handleCreateProfile} />
   )
 }

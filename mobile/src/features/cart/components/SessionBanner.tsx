@@ -34,12 +34,7 @@ export function SessionBanner() {
           <Button className="w-full" size="lg" onClick={continueSession}>
             Continue shopping
           </Button>
-          <Button
-            variant="outline"
-            className="w-full gap-1.5"
-            size="lg"
-            onClick={startNewSession}
-          >
+          <Button variant="outline" className="w-full gap-1.5" size="lg" onClick={startNewSession}>
             <RotateCcw className="h-4 w-4" />
             Start a new session
           </Button>

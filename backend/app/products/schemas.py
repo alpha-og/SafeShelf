@@ -1,6 +1,20 @@
 from pydantic import BaseModel
 
 
+class CategoryResponse(BaseModel):
+    id: str
+    name: str
+    off_tag: str | None = None
+
+class ProductResponse(BaseModel):
+    id: str
+    barcode: str
+    product_name: str
+    product_image: str | None = None
+    brand: str | None = None
+    quantity: str | None = None
+    categories: list[CategoryResponse] = []
+
 class BarcodeResponse(BaseModel):
     barcode: str
     product_name: str | None = None

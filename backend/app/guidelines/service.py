@@ -2,6 +2,8 @@ from fastapi import HTTPException
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
+from app.shared.who_icd import fetch_icd11_code, get_valid_who_token
+from app.guidelines.embeddings import embed_and_store_guideline, retrieve_disease_context
 from app.guidelines.agent import URLS, extract_thresholds, scrape_guidelines
 from app.guidelines.models import ConditionThreshold, IngredientAlias
 from app.guidelines.schemas import sanitize_rules
@@ -10,10 +12,44 @@ from app.shared.who_icd import fetch_icd11_code, get_valid_who_token
 
 async def import_guidelines(session: AsyncSession) -> dict:
     imported = []
+    DISEASES_TO_IMPORT = [
+    "Diabetes Mellitus", 
+    "Hypertension", 
+    "Chronic Kidney Disease", 
+    "Celiac Disease",
+    "Hypercholesterolemia",
+    "Obesity and Overweight",
+    "Cardiovascular Disease",
+    "Asthma",
+    "Coronary Heart Disease",
+    "Hyperthyroidism",
+    "Osteoporosis",
+    "Irritable Bowel Syndrome",
+    "Parkinson's Disease",
+    "Gastroesophageal Reflux Disease",
+    "Hypothyroidism",
+    "Anemia",
+    "Cirrhosis",
+    "Migraine",
+
+    ]
     who_token = await get_valid_who_token()
     for url in URLS:
         raw_text = await scrape_guidelines(url)
-        bootstrap = await extract_thresholds(raw_text)
+        await embed_and_store_guideline(url, raw_text)
+
+    for target_disease in DISEASES_TO_IMPORT:
+        icd_data = await fetch_icd11_code(target_disease, who_token)
+        standard_name = icd_data.get("standard_name", target_disease)
+        icd_code = icd_data.get("icd11_code", "UNKNOWN")
+        aliases = icd_data.get("aliases", [])
+
+        context = await retrieve_disease_context(disease=standard_name, aliases=aliases)
+        
+        if not context.strip():
+            continue 
+
+        bootstrap = await extract_thresholds(standard_name, context)
 
         for ct in bootstrap.get('condition_thresholds', []):
             disease = ct['disease']

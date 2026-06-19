@@ -30,10 +30,6 @@ async function initNative(): Promise<boolean> {
 
 const initPromise: Promise<boolean> = initNative()
 
-function _isBrowser(): boolean {
-  return typeof window !== 'undefined' && !Capacitor.isNativePlatform()
-}
-
 async function getToken(): Promise<string | null> {
   const native = await initPromise
   if (native && nativeDb) {

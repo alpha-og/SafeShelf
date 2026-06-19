@@ -14,13 +14,16 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated.index'
 import { Route as OnboardingOnboardingRouteImport } from './routes/_onboarding.onboarding'
-import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticated.history'
+import { Route as AuthenticatedStoresRouteImport } from './routes/_authenticated.stores'
+import { Route as AuthenticatedRecipesRouteImport } from './routes/_authenticated.recipes'
+import { Route as AuthenticatedRecentScansRouteImport } from './routes/_authenticated.recent-scans'
 import { Route as AuthenticatedCartRouteImport } from './routes/_authenticated.cart'
 import { Route as AuthWelcomeRouteImport } from './routes/_auth.welcome'
 import { Route as AuthSignupRouteImport } from './routes/_auth.signup'
 import { Route as AuthSigninRouteImport } from './routes/_auth.signin'
 import { Route as AuthenticatedProfileRouteRouteImport } from './routes/_authenticated/profile/route'
 import { Route as AuthenticatedProfileIndexRouteImport } from './routes/_authenticated/profile/index'
+import { Route as AuthenticatedRecipeIdRouteImport } from './routes/_authenticated/recipe/$id'
 import { Route as AuthenticatedProfileNewRouteImport } from './routes/_authenticated/profile/new'
 import { Route as AuthenticatedProfileHealthReportRouteImport } from './routes/_authenticated/profile/health-report'
 import { Route as AuthenticatedProfileProfileIdRouteImport } from './routes/_authenticated/profile/$profileId'
@@ -51,11 +54,22 @@ const OnboardingOnboardingRoute = OnboardingOnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => OnboardingRoute,
 } as any)
-const AuthenticatedHistoryRoute = AuthenticatedHistoryRouteImport.update({
-  id: '/history',
-  path: '/history',
+const AuthenticatedStoresRoute = AuthenticatedStoresRouteImport.update({
+  id: '/stores',
+  path: '/stores',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedRecipesRoute = AuthenticatedRecipesRouteImport.update({
+  id: '/recipes',
+  path: '/recipes',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedRecentScansRoute =
+  AuthenticatedRecentScansRouteImport.update({
+    id: '/recent-scans',
+    path: '/recent-scans',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedCartRoute = AuthenticatedCartRouteImport.update({
   id: '/cart',
   path: '/cart',
@@ -88,6 +102,11 @@ const AuthenticatedProfileIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedProfileRouteRoute,
   } as any)
+const AuthenticatedRecipeIdRoute = AuthenticatedRecipeIdRouteImport.update({
+  id: '/recipe/$id',
+  path: '/recipe/$id',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedProfileNewRoute = AuthenticatedProfileNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -137,13 +156,16 @@ export interface FileRoutesByFullPath {
   '/signup': typeof AuthSignupRoute
   '/welcome': typeof AuthWelcomeRoute
   '/cart': typeof AuthenticatedCartRoute
-  '/history': typeof AuthenticatedHistoryRoute
+  '/recent-scans': typeof AuthenticatedRecentScansRoute
+  '/recipes': typeof AuthenticatedRecipesRoute
+  '/stores': typeof AuthenticatedStoresRoute
   '/onboarding': typeof OnboardingOnboardingRoute
   '/profile/groups': typeof AuthenticatedProfileGroupsRouteRouteWithChildren
   '/product/$barcode': typeof AuthenticatedProductBarcodeRoute
   '/profile/$profileId': typeof AuthenticatedProfileProfileIdRoute
   '/profile/health-report': typeof AuthenticatedProfileHealthReportRoute
   '/profile/new': typeof AuthenticatedProfileNewRoute
+  '/recipe/$id': typeof AuthenticatedRecipeIdRoute
   '/profile/': typeof AuthenticatedProfileIndexRoute
   '/profile/groups/$groupId': typeof AuthenticatedProfileGroupsGroupIdRoute
   '/profile/groups/new': typeof AuthenticatedProfileGroupsNewRoute
@@ -154,13 +176,16 @@ export interface FileRoutesByTo {
   '/signup': typeof AuthSignupRoute
   '/welcome': typeof AuthWelcomeRoute
   '/cart': typeof AuthenticatedCartRoute
-  '/history': typeof AuthenticatedHistoryRoute
+  '/recent-scans': typeof AuthenticatedRecentScansRoute
+  '/recipes': typeof AuthenticatedRecipesRoute
+  '/stores': typeof AuthenticatedStoresRoute
   '/onboarding': typeof OnboardingOnboardingRoute
   '/profile/groups': typeof AuthenticatedProfileGroupsRouteRouteWithChildren
   '/product/$barcode': typeof AuthenticatedProductBarcodeRoute
   '/profile/$profileId': typeof AuthenticatedProfileProfileIdRoute
   '/profile/health-report': typeof AuthenticatedProfileHealthReportRoute
   '/profile/new': typeof AuthenticatedProfileNewRoute
+  '/recipe/$id': typeof AuthenticatedRecipeIdRoute
   '/profile': typeof AuthenticatedProfileIndexRoute
   '/profile/groups/$groupId': typeof AuthenticatedProfileGroupsGroupIdRoute
   '/profile/groups/new': typeof AuthenticatedProfileGroupsNewRoute
@@ -175,7 +200,9 @@ export interface FileRoutesById {
   '/_auth/signup': typeof AuthSignupRoute
   '/_auth/welcome': typeof AuthWelcomeRoute
   '/_authenticated/cart': typeof AuthenticatedCartRoute
-  '/_authenticated/history': typeof AuthenticatedHistoryRoute
+  '/_authenticated/recent-scans': typeof AuthenticatedRecentScansRoute
+  '/_authenticated/recipes': typeof AuthenticatedRecipesRoute
+  '/_authenticated/stores': typeof AuthenticatedStoresRoute
   '/_onboarding/onboarding': typeof OnboardingOnboardingRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/profile/groups': typeof AuthenticatedProfileGroupsRouteRouteWithChildren
@@ -183,6 +210,7 @@ export interface FileRoutesById {
   '/_authenticated/profile/$profileId': typeof AuthenticatedProfileProfileIdRoute
   '/_authenticated/profile/health-report': typeof AuthenticatedProfileHealthReportRoute
   '/_authenticated/profile/new': typeof AuthenticatedProfileNewRoute
+  '/_authenticated/recipe/$id': typeof AuthenticatedRecipeIdRoute
   '/_authenticated/profile/': typeof AuthenticatedProfileIndexRoute
   '/_authenticated/profile/groups/$groupId': typeof AuthenticatedProfileGroupsGroupIdRoute
   '/_authenticated/profile/groups/new': typeof AuthenticatedProfileGroupsNewRoute
@@ -196,13 +224,16 @@ export interface FileRouteTypes {
     | '/signup'
     | '/welcome'
     | '/cart'
-    | '/history'
+    | '/recent-scans'
+    | '/recipes'
+    | '/stores'
     | '/onboarding'
     | '/profile/groups'
     | '/product/$barcode'
     | '/profile/$profileId'
     | '/profile/health-report'
     | '/profile/new'
+    | '/recipe/$id'
     | '/profile/'
     | '/profile/groups/$groupId'
     | '/profile/groups/new'
@@ -213,13 +244,16 @@ export interface FileRouteTypes {
     | '/signup'
     | '/welcome'
     | '/cart'
-    | '/history'
+    | '/recent-scans'
+    | '/recipes'
+    | '/stores'
     | '/onboarding'
     | '/profile/groups'
     | '/product/$barcode'
     | '/profile/$profileId'
     | '/profile/health-report'
     | '/profile/new'
+    | '/recipe/$id'
     | '/profile'
     | '/profile/groups/$groupId'
     | '/profile/groups/new'
@@ -233,7 +267,9 @@ export interface FileRouteTypes {
     | '/_auth/signup'
     | '/_auth/welcome'
     | '/_authenticated/cart'
-    | '/_authenticated/history'
+    | '/_authenticated/recent-scans'
+    | '/_authenticated/recipes'
+    | '/_authenticated/stores'
     | '/_onboarding/onboarding'
     | '/_authenticated/'
     | '/_authenticated/profile/groups'
@@ -241,6 +277,7 @@ export interface FileRouteTypes {
     | '/_authenticated/profile/$profileId'
     | '/_authenticated/profile/health-report'
     | '/_authenticated/profile/new'
+    | '/_authenticated/recipe/$id'
     | '/_authenticated/profile/'
     | '/_authenticated/profile/groups/$groupId'
     | '/_authenticated/profile/groups/new'
@@ -289,11 +326,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingOnboardingRouteImport
       parentRoute: typeof OnboardingRoute
     }
-    '/_authenticated/history': {
-      id: '/_authenticated/history'
-      path: '/history'
-      fullPath: '/history'
-      preLoaderRoute: typeof AuthenticatedHistoryRouteImport
+    '/_authenticated/stores': {
+      id: '/_authenticated/stores'
+      path: '/stores'
+      fullPath: '/stores'
+      preLoaderRoute: typeof AuthenticatedStoresRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/recipes': {
+      id: '/_authenticated/recipes'
+      path: '/recipes'
+      fullPath: '/recipes'
+      preLoaderRoute: typeof AuthenticatedRecipesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/recent-scans': {
+      id: '/_authenticated/recent-scans'
+      path: '/recent-scans'
+      fullPath: '/recent-scans'
+      preLoaderRoute: typeof AuthenticatedRecentScansRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/cart': {
@@ -337,6 +388,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/profile/'
       preLoaderRoute: typeof AuthenticatedProfileIndexRouteImport
       parentRoute: typeof AuthenticatedProfileRouteRoute
+    }
+    '/_authenticated/recipe/$id': {
+      id: '/_authenticated/recipe/$id'
+      path: '/recipe/$id'
+      fullPath: '/recipe/$id'
+      preLoaderRoute: typeof AuthenticatedRecipeIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/profile/new': {
       id: '/_authenticated/profile/new'
@@ -448,17 +506,23 @@ const AuthenticatedProfileRouteRouteWithChildren =
 interface AuthenticatedRouteChildren {
   AuthenticatedProfileRouteRoute: typeof AuthenticatedProfileRouteRouteWithChildren
   AuthenticatedCartRoute: typeof AuthenticatedCartRoute
-  AuthenticatedHistoryRoute: typeof AuthenticatedHistoryRoute
+  AuthenticatedRecentScansRoute: typeof AuthenticatedRecentScansRoute
+  AuthenticatedRecipesRoute: typeof AuthenticatedRecipesRoute
+  AuthenticatedStoresRoute: typeof AuthenticatedStoresRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedProductBarcodeRoute: typeof AuthenticatedProductBarcodeRoute
+  AuthenticatedRecipeIdRoute: typeof AuthenticatedRecipeIdRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedProfileRouteRoute: AuthenticatedProfileRouteRouteWithChildren,
   AuthenticatedCartRoute: AuthenticatedCartRoute,
-  AuthenticatedHistoryRoute: AuthenticatedHistoryRoute,
+  AuthenticatedRecentScansRoute: AuthenticatedRecentScansRoute,
+  AuthenticatedRecipesRoute: AuthenticatedRecipesRoute,
+  AuthenticatedStoresRoute: AuthenticatedStoresRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedProductBarcodeRoute: AuthenticatedProductBarcodeRoute,
+  AuthenticatedRecipeIdRoute: AuthenticatedRecipeIdRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(

@@ -100,6 +100,7 @@ const DIETARY_INGREDIENT_MAP: Record<string, string[]> = {
     'bulgur',
   ],
   'dairy-free': [
+    'dairy',
     'milk',
     'cream',
     'cheese',
@@ -395,7 +396,7 @@ function checkNutrients(
       const meetsRule = applyOperator(converted, rule.value, rule.operator)
 
       if (!meetsRule) {
-        const pct = (converted / rule.value) * 100
+        const pct = rule.value !== 0 ? (converted / rule.value) * 100 : 0
         const dailyHint = getDailyHint(rule.nutrient, rule.value, rule.unit)
         const dailyStr = dailyHint ? ` ${dailyHint}` : ''
         const limitWord =
@@ -460,11 +461,15 @@ function checkDietary(
   dietaryPreferences: string[],
   aliases: Record<string, string>,
   labels: string[],
+  productCategories: string[],
+  productAllergens: string[],
 ): SuitabilityCheck[] {
   if (!dietaryPreferences.length) return []
 
   const ingredientLower = productIngredients.map((i) => i.toLowerCase())
   const labelsLower = labels.map((l) => l.toLowerCase())
+  const categoriesLower = productCategories.map((c) => c.toLowerCase())
+  const allergensLower = productAllergens.map((a) => a.toLowerCase())
   const checks: SuitabilityCheck[] = []
 
   for (const pref of dietaryPreferences) {
@@ -478,9 +483,12 @@ function checkDietary(
       for (const item of disallowed) {
         const trigger = aliases[item.toLowerCase()] ?? item
         const triggerLower = trigger.toLowerCase()
-        const matched = ingredientLower.some(
-          (ing) => ing.includes(triggerLower) || ing.includes(item.toLowerCase()),
-        )
+        const matched =
+          ingredientLower.some(
+            (ing) => ing.includes(triggerLower) || ing.includes(item.toLowerCase()),
+          ) ||
+          categoriesLower.some((c) => c.includes(triggerLower) || c.includes(item.toLowerCase())) ||
+          allergensLower.some((a) => a.includes(triggerLower) || a.includes(item.toLowerCase()))
         if (matched) {
           checks.push({
             type: 'diet',
@@ -551,6 +559,8 @@ export function evaluate(
       profile.dietaryPreferences,
       aliases,
       product.labels,
+      product.categories,
+      product.allergens,
     ),
   )
 

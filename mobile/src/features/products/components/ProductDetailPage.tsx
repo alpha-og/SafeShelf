@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { useNavigate, useParams } from '@tanstack/react-router'
+import { useParams, useRouter } from '@tanstack/react-router'
 import { BottomCta } from '@/components/BottomCta'
 import { SectionHeader } from '@/components/SectionHeader'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -7,6 +7,7 @@ import { CartCta } from '@/features/cart/components/CartCta'
 import { SuitabilityBreakdown } from '@/features/suitability/components/SuitabilityBreakdown'
 import { useSuitability } from '@/features/suitability/hooks/useSuitability'
 import { useCart } from '@/providers/CartProvider'
+import { useStore } from '@/providers/StoreProvider'
 import { lookupByBarcode } from '../services/product'
 import { ProductHero } from './ProductHero'
 import { ProductInfoSections } from './ProductInfoSections'
@@ -16,7 +17,8 @@ import { ProductServingNote } from './ProductServingNote'
 
 export function ProductDetailPage() {
   const { barcode } = useParams({ from: '/_authenticated/product/$barcode' })
-  const navigate = useNavigate()
+  const router = useRouter()
+  const { selectedStoreId } = useStore()
   const { items, addToCart, removeFromCart, updateQuantity } = useCart()
 
   const {
@@ -24,7 +26,7 @@ export function ProductDetailPage() {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['product', barcode],
+    queryKey: ['product', barcode, selectedStoreId],
     queryFn: () => lookupByBarcode(barcode),
     enabled: !!barcode,
   })
@@ -68,7 +70,7 @@ export function ProductDetailPage() {
         addToCart={addToCart}
         removeFromCart={removeFromCart}
         updateQuantity={updateQuantity}
-        onBack={() => navigate({ to: '/' })}
+        onBack={() => router.history.back()}
       />
 
       <div className="flex-1 min-h-0 overflow-y-auto px-4 pt-4 space-y-6 pb-20">

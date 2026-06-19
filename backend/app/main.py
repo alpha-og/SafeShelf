@@ -23,6 +23,8 @@ from app.shared.exceptions import (
 )
 from app.shared.middleware import setup_middleware
 
+import app.products.models  
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
