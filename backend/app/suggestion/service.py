@@ -3,6 +3,7 @@ from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.products.models import Product
+from app.stores.models import Store, StoreInventory
 from app.suggestion.embeddings import query_similar_products
 
 
@@ -34,7 +35,6 @@ async def get_product_suggestions(
         return []
 
     # 3. Fetch the matched products from the database
-    from app.stores.models import Store, StoreInventory
 
     stmt_matches = (
         select(Product)

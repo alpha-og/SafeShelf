@@ -38,40 +38,42 @@ def _get_document_string(product: Product) -> str:
 async def upsert_product_embedding(product: Product):
     await upsert_products_batch([product])
 
-async def upsert_products_batch(products: list[Product]):
+async def upsert_products_batch(products: list[Product], chunk_size: int = 5000):
     if not products:
         return
 
-    ids = []
-    documents = []
-    metadatas = []
-
-    for p in products:
-        doc_str = _get_document_string(p)
-        ids.append(p.barcode)
-        documents.append(doc_str)
-        metadatas.append({})
-
     model = _get_embedding_model()
-    embeddings = model.encode(
-        documents,
-        normalize_embeddings=True,
-        show_progress_bar=False,
-    ).tolist()
+    collection = _get_collection()
 
-    _get_collection().upsert(
-        ids=ids,
-        documents=documents,
-        embeddings=embeddings,
-        metadatas=metadatas
-    )
+    # Process in chunks to stay under ChromaDB's max batch size of 5461
+    for i in range(0, len(products), chunk_size):
+        chunk = products[i:i + chunk_size]
+        ids = []
+        documents = []
+
+        for p in chunk:
+            doc_str = _get_document_string(p)
+            ids.append(p.barcode)
+            documents.append(doc_str)
+
+        embeddings = model.encode(
+            documents,
+            normalize_embeddings=True,
+            show_progress_bar=False,
+        ).tolist()
+
+        collection.upsert(
+            ids=ids,
+            documents=documents,
+            embeddings=embeddings
+        )
 
 async def query_similar_products(product: Product, n_results: int = 10) -> list[str]:
     # 1. Lightweight lookup for pre-existing embedding
     res = _get_collection().get(ids=[product.barcode], include=["embeddings"])
     embeddings = res.get("embeddings")
 
-    if embeddings and len(embeddings) > 0 and embeddings[0] is not None:
+    if embeddings is not None and len(embeddings) > 0 and embeddings[0] is not None:
         query_embedding = embeddings[0]
     else:
         # 2. Safety Net Fallback: Compute and cache embedding dynamically if missing
@@ -86,14 +88,20 @@ async def query_similar_products(product: Product, n_results: int = 10) -> list[
         _get_collection().upsert(
             ids=[product.barcode],
             documents=[doc_str],
-            embeddings=[query_embedding],
-            metadatas=[{}]
+            embeddings=[query_embedding]
         )
 
     # 3. Query similarity
-    results = _get_collection().query(
+    collection = _get_collection()
+    count = collection.count()
+    actual_n_results = min(n_results + 1, count)
+
+    if actual_n_results == 0:
+        return []
+
+    results = collection.query(
         query_embeddings=[query_embedding],
-        n_results=n_results+1,
+        n_results=actual_n_results,
     )
 
     # Chroma returns ids, which are barcodes

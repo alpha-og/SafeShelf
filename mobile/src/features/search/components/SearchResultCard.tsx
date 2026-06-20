@@ -9,9 +9,10 @@ import { cn } from '@/lib/utils'
 interface SearchResultCardProps {
   item: InventoryResponse
   onClick: (barcode: string) => void
+  showPrice?: boolean
 }
 
-export function SearchResultCard({ item, onClick }: SearchResultCardProps) {
+export function SearchResultCard({ item, onClick, showPrice = true }: SearchResultCardProps) {
   const [isVisible, setIsVisible] = useState(false)
   const [imageError, setImageError] = useState(false)
   const [loaded, setLoaded] = useState(false)
@@ -77,7 +78,9 @@ export function SearchResultCard({ item, onClick }: SearchResultCardProps) {
             <p className="text-xs text-muted-foreground truncate">Barcode: {item.barcode}</p>
 
             <div className="flex items-center justify-between mt-auto">
-              <span className="font-semibold text-primary">₹{(item.price || 0).toFixed(2)}</span>
+              {showPrice && (
+                <span className="font-semibold text-primary">₹{(item.price || 0).toFixed(2)}</span>
+              )}
               <span
                 className={cn(
                   'text-xs font-medium',

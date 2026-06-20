@@ -16,6 +16,7 @@ import { ProductInfoSections } from './ProductInfoSections'
 import { ProductNutrientTable } from './ProductNutrientTable'
 import { ProductScoreBadges } from './ProductScoreBadges'
 import { ProductServingNote } from './ProductServingNote'
+import { ProductSuggestions } from './ProductSuggestions'
 
 export function ProductDetailPage() {
   const { barcode } = useParams({ from: '/_authenticated/product/$barcode' })
@@ -132,6 +133,8 @@ export function ProductDetailPage() {
             allergenTraces={product.allergenTraces}
             ingredients={product.ingredients}
           />
+
+          <ProductSuggestions barcode={product.barcode!} />
 
           <div className="flex justify-center pb-2">
             <p className="text-[10px] text-muted-foreground/60 font-mono tracking-widest uppercase">

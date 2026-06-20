@@ -54,3 +54,25 @@ export async function lookupByBarcode(barcode: string): Promise<ProductInfo | nu
     return null
   }
 }
+
+export interface SuggestionResponse {
+  id: string
+  barcode: string
+  product_name: string | null
+  product_image: string | null
+  brand: string | null
+  quantity: string | null
+  categories: { id: string; name: string; off_tag: string | null }[]
+}
+
+export async function getSuggestions(barcode: string, storeId?: string, n = 5): Promise<SuggestionResponse[]> {
+  try {
+    const response = await api.get(`/v1/suggestion/${barcode}`, {
+      params: { store_id: storeId, n }
+    })
+    return response.data as SuggestionResponse[]
+  } catch (err) {
+    console.error('Failed to get suggestions:', err)
+    return []
+  }
+}

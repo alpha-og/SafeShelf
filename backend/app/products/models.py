@@ -23,3 +23,6 @@ class Product(SQLModel, table=True):
 
     inventory: list["StoreInventory"] = Relationship(back_populates="product")
     categories: list[Category] = Relationship(back_populates="products", link_model=ProductCategory)
+
+
+from app.stores.models import StoreInventory
