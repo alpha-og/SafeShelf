@@ -37,6 +37,8 @@ export function ProductDetailPage() {
     stepper,
     agentError,
     agentUsed,
+    triggerMode,
+    startAgentEval,
   } = useSuitability(product ?? null)
   const cartItem = product?.barcode
     ? items.find((i) => i.product.barcode === product.barcode)
@@ -82,18 +84,25 @@ export function ProductDetailPage() {
       <div className="flex-1 min-h-0 overflow-y-auto px-4 pt-4 space-y-6 pb-20">
         <ProductServingNote serving={suitability?.serving} />
 
-        {suitability && (suitability.checks.length > 0 || isAgentLoading || agentError || agentUsed) && (
-          <section>
-            <SectionHeader>Suitability</SectionHeader>
-            <SuitabilityBreakdown
-              checks={suitability.checks}
-              isAgentLoading={isAgentLoading}
-              stepper={stepper}
-              agentError={agentError}
-              agentUsed={agentUsed}
-            />
-          </section>
-        )}
+        {suitability &&
+          (suitability.checks.length > 0 ||
+            isAgentLoading ||
+            agentError ||
+            agentUsed ||
+            triggerMode === 'manual') && (
+            <section>
+              <SectionHeader>Suitability</SectionHeader>
+              <SuitabilityBreakdown
+                checks={suitability.checks}
+                isAgentLoading={isAgentLoading}
+                stepper={stepper}
+                agentError={agentError}
+                agentUsed={agentUsed}
+                triggerMode={triggerMode}
+                startAgentEval={startAgentEval}
+              />
+            </section>
+          )}
 
         <ProductScoreBadges
           nutriscoreGrade={product.nutriscoreGrade}

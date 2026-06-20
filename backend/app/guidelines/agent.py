@@ -2,7 +2,7 @@ import json
 
 import httpx
 from bs4 import BeautifulSoup
-from langchain_groq import ChatGroq
+from langchain_openai import ChatOpenAI
 from langchain_core.messages import SystemMessage, HumanMessage
 from app.shared.config import settings
 from io import BytesIO
@@ -21,9 +21,10 @@ HEADERS = {
 }
 
 
-llm = ChatGroq(
+llm = ChatOpenAI(
+    model=settings.GROQ_MODEL,
     api_key=settings.GROQ_API_KEY,
-    model=settings.GROQ_MODEL,  # llama-3.3-70b-versatile
+    base_url='https://api.groq.com/openai/v1',
     temperature=0.1,
 )
 

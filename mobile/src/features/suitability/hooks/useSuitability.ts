@@ -6,6 +6,7 @@ import { useAliases, useConditionRules } from '../services/rules'
 import type { SuitabilityContext, SuitabilityResult, UserProfile, SuitabilityCheck, StepperState } from '../types'
 import { useUserProfile } from './useUserProfile'
 import { getAccessToken } from '@/lib/axios'
+import { getItem } from '@/lib/storage'
 
 interface UseSuitabilityReturn {
   result: SuitabilityResult | null
@@ -15,6 +16,7 @@ interface UseSuitabilityReturn {
   isAgentLoading: boolean
   agentError: (Error & { status?: number }) | null
   agentUsed: boolean
+  triggerMode: 'auto' | 'manual'
   startAgentEval: () => Promise<void>
 }
 
@@ -25,6 +27,22 @@ export function useSuitability(
 ): UseSuitabilityReturn {
   const { data: autoContext, isLoading: profileLoading } = useUserProfile()
   const queryClient = useQueryClient()
+
+  const [triggerMode, setTriggerMode] = useState<'auto' | 'manual'>('auto')
+
+  useEffect(() => {
+    async function loadSetting() {
+      try {
+        const mode = await getItem<'auto' | 'manual'>('agent_trigger_mode')
+        if (mode) {
+          setTriggerMode(mode)
+        }
+      } catch (err) {
+        console.error('Failed to load trigger mode setting:', err)
+      }
+    }
+    loadSetting()
+  }, [])
 
   const context: SuitabilityContext | null = profile
     ? { profile, members: null }
@@ -268,7 +286,7 @@ export function useSuitability(
       } else if (cached && typeof cached === 'object') {
         setAgentChecks(cached.checks ?? [])
         if (cached.stepper) {
-          setStepper(cached.stepper) // Restores exact stepper details and original summary messages!
+          setStepper(cached.stepper)
         }
       }
       setIsAgentLoading(false)
@@ -289,6 +307,12 @@ export function useSuitability(
       return
     }
 
+    // ⚡ If manual trigger mode is enabled, wait for manual trigger!
+    if (triggerMode === 'manual') {
+      setIsAgentLoading(false)
+      return
+    }
+
     startAgentEval()
 
     return () => {
@@ -304,6 +328,7 @@ export function useSuitability(
     startAgentEval,
     queryClient,
     cacheKey,
+    triggerMode,
   ])
 
   const result = useMemo<SuitabilityResult | null>(() => {
@@ -320,6 +345,7 @@ export function useSuitability(
     isAgentLoading,
     agentError,
     agentUsed,
+    triggerMode,
     startAgentEval,
   }
 }
