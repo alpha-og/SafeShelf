@@ -37,6 +37,7 @@ class RecipeQuery(BaseModel):
     ingredients: list[str] = []
     areas: list[str] = []
     exclude_ingredients: list[str] = []
+    search_text: str = ''
     needs_clarification: bool = False
     clarifications: list[ClarificationField] = []
 
@@ -108,6 +109,23 @@ exclude_ingredients (list[str]):
   Ingredients the user explicitly wants to avoid. Only populate when the
   user says "without", "no", "excluding", "except", or similar negative
   qualifiers.
+
+search_text (str, default ""):
+  The user's own free-text food terms from their original query — especially
+  terms that describe a type of dish, cooking method, or food category that
+  does NOT fit neatly into categories, ingredients, or areas above. This
+  field is used as a fuzzy name/description match in the recipe database.
+  Rules:
+  - Always include the user's original food-related search terms here,
+    even when they also appear in other fields.
+  - Examples of terms to put here: "pastry", "casserole", "one pot",
+    "sheet pan", "crockpot", "salad", "soup", "stew", "cookies",
+    "muffins", "bread", "pie", "pudding", "dip", "skillet".
+  - For queries that are already fully captured by categories,
+    ingredients, or areas (e.g. "chicken" → category + ingredient),
+    leave this empty — the other fields suffice.
+  - Do NOT copy the entire Additional context block into this field.
+    Only include the user's ORIGINAL query terms.
 
 --- CONCEPTUAL INFERENCE ---
 
@@ -636,7 +654,7 @@ _DB_SEARCH_LIMIT = 500
 
 async def _db_execute_search(session: AsyncSession, q: RecipeQuery) -> list[RecipeItem]:
     """Query the Recipe table with the given criteria, post-filter in Python."""
-    if not q.categories and not q.areas and not q.ingredients:
+    if not q.categories and not q.areas and not q.ingredients and not q.search_text:
         return []
 
     conditions: list = []
@@ -651,6 +669,12 @@ async def _db_execute_search(session: AsyncSession, q: RecipeQuery) -> list[Reci
         ing_filter = _build_ingredient_filter(q.ingredients)
         if ing_filter is not None:
             conditions.append(ing_filter)
+
+    if q.search_text:
+        words = set(re.findall(r'[a-z]+', q.search_text.lower()))
+        for w in sorted(words, key=len, reverse=True):
+            if len(w) > 2:
+                conditions.append(Recipe.name.ilike(f'%{w}%'))
 
     stmt = select(Recipe)
     if conditions:
