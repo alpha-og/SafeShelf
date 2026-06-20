@@ -87,6 +87,70 @@ async def _seed_inventory():
         await asyncio.sleep(1)
     success('API fetch complete')
 
+    CUSTOM_PRODUCE = [
+        {
+            'code': 'PROD-APPLE-01',
+            'product_name': 'Fresh Apples (Fuji)',
+            'category': 'Fruits',
+            'image_url': 'https://images.unsplash.com/photo-1560806887-1e4cd0b6fd6c?w=500&q=80',
+            'quantity': '1 kg'
+        },
+        {
+            'code': 'PROD-BANANA-01',
+            'product_name': 'Fresh Cavendish Bananas',
+            'category': 'Fruits',
+            'image_url': 'https://images.unsplash.com/photo-1571501478200-2f3b79ce1c2a?w=500&q=80',
+            'quantity': '1 dozen'
+        },
+        {
+            'code': 'PROD-SPINACH-01',
+            'product_name': 'Fresh Spinach Bunch',
+            'category': 'Vegetables',
+            'image_url': 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=500&q=80',
+            'quantity': '250 g'
+        },
+        {
+            'code': 'PROD-TOMATO-01',
+            'product_name': 'Fresh Red Tomatoes',
+            'category': 'Vegetables',
+            'image_url': 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=500&q=80',
+            'quantity': '1 kg'
+        },
+        {
+            'code': 'PROD-CARROT-01',
+            'product_name': 'Fresh Carrots',
+            'category': 'Vegetables',
+            'image_url': 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=500&q=80',
+            'quantity': '500 g'
+        },
+        {
+            'code': 'PROD-POTATO-01',
+            'product_name': 'Fresh Potatoes',
+            'category': 'Vegetables',
+            'image_url': 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=500&q=80',
+            'quantity': '1 kg'
+        },
+        {
+            'code': 'PROD-ONION-01',
+            'product_name': 'Red Onions',
+            'category': 'Vegetables',
+            'image_url': 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=500&q=80',
+            'quantity': '1 kg'
+        },
+    ]
+
+    for item in CUSTOM_PRODUCE:
+        cat_name = item['category']
+        if cat_name not in category_product_map:
+            category_product_map[cat_name] = []
+        category_product_map[cat_name].append({
+            'code': item['code'],
+            'product_name': item['product_name'],
+            'image_url': item['image_url'],
+            'brands': 'Fresh Farm Produce',
+            'quantity': item['quantity']
+        })
+
     info('Seeding products and inventory...')
     async with async_session() as session:
         stores = (await session.exec(select(Store))).all()
@@ -139,15 +203,29 @@ async def _seed_inventory():
                     continue
                 seen_barcodes.add(barcode)
 
+                is_custom = barcode.startswith('PROD-')
+                is_produce = cat_name in ('Fruits', 'Vegetables')
+
                 for store in stores:
-                    if random.random() <= 0.30:
+                    prob = 0.30
+                    if is_custom:
+                        prob = 0.95
+                    elif is_produce:
+                        prob = 0.70
+
+                    if random.random() <= prob:
                         if cat_type == 'Staples':
                             stock_qty = random.randint(50, 150)
                         elif cat_type == 'Perishables':
-                            stock_qty = random.randint(5, 30)
+                            stock_qty = random.randint(20, 80)
                         else:
                             stock_qty = random.randint(10, 50)
-                        price = round(random.uniform(20.0, 1500.0), 2)
+                        
+                        if is_custom:
+                            price = round(random.uniform(30.0, 150.0), 2)
+                        else:
+                            price = round(random.uniform(20.0, 1500.0), 2)
+                            
                         await session.merge(StoreInventory(
                             store_id=store.id,
                             product_id=prod.id,
