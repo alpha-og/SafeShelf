@@ -35,6 +35,7 @@ class DeepEvaluateRequest(BaseModel):
     user_profile: dict
     per_serving_nutrients: dict[str, dict[str, float | str]] = {}
     health_data: dict | None = None
+    local_evaluation_result: dict | None = None
 
 
 class DeepEvaluateResponse(BaseModel):

@@ -50,6 +50,7 @@ async def deep_evaluate(req: DeepEvaluateRequest) -> StreamingResponse:
             "user_profile": req.user_profile,
             "per_serving_nutrients": req.per_serving_nutrients,
             "health_data": req.health_data,
+            "local_evaluation_result": req.local_evaluation_result,
             "disease_contexts": {},
             "personalized_rules": [],
             "nutrient_checks": [],

@@ -189,7 +189,7 @@ export function SuitabilityBreakdown({
       {localChecks.length > 0 && (
         <div className="border border-border rounded-xl p-4 bg-card shadow-xs space-y-3">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Local Rules Verification
+            On-Device Analysis
           </h3>
           <ChecksList checks={localChecks} />
         </div>

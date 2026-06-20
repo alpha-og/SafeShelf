@@ -6,6 +6,7 @@ class AgentState(TypedDict):
     user_profile: dict[str, Any]
     per_serving_nutrients: dict[str, dict[str, Any]]
     health_data: dict[str, Any] | None
+    local_evaluation_result: dict[str, Any] | None
 
     disease_contexts: dict[str, str]
     personalized_rules: list[dict[str, Any]]

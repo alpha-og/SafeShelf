@@ -127,6 +127,7 @@ export function useSuitability(
           user_profile: currentContext.profile,
           per_serving_nutrients: perServingNutrients,
           health_data: healthData,
+          local_evaluation_result: currentLocalResult,
         }),
         signal: controller.signal,
       })

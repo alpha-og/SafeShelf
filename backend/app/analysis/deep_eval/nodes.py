@@ -241,6 +241,19 @@ async def _run_ingredient_eval(state: AgentState) -> dict:
             exclusions_by_condition.append(f"- {disease}: {', '.join(e.lower() for e in exclusions)}")
     exclusions_str = "\n".join(exclusions_by_condition) if exclusions_by_condition else "(none)"
 
+    local_eval = state.get("local_evaluation_result")
+    local_eval_str = "(none)"
+    if local_eval and isinstance(local_eval, dict):
+        checks = local_eval.get("checks", [])
+        if checks:
+            formatted_checks = []
+            for c in checks:
+                status = c.get("status", "unknown")
+                label = c.get("label", "unknown")
+                detail = c.get("detail", "")
+                formatted_checks.append(f"- [{status.upper()}] {label}: {detail}")
+            local_eval_str = "\n".join(formatted_checks)
+
     if not ingredients:
         return {"ingredient_checks": [], "ingredient_has_fails": False}
 
@@ -248,7 +261,8 @@ async def _run_ingredient_eval(state: AgentState) -> dict:
         f"INGREDIENTS:\n{', '.join(ingredients) if ingredients else '(none)'}\n\n"
         f"ALLERGENS:\n{', '.join(allergens) if allergens else '(none)'}\n\n"
         f"DIETARY PREFERENCES:\n{', '.join(dietary_preferences) if dietary_preferences else '(none)'}\n\n"
-        f"MEDICAL EXCLUSIONS:\n{exclusions_str}"
+        f"MEDICAL EXCLUSIONS:\n{exclusions_str}\n\n"
+        f"ON-DEVICE EVALUATION RESULT:\n{local_eval_str}"
     )
 
     response = await llm.ainvoke([
