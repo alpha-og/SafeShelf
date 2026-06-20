@@ -27,6 +27,7 @@ export function RecipeCard({ recipe, onPress }: RecipeCardProps) {
               <img
                 src={recipe.thumbnail_url}
                 alt={recipe.name}
+                referrerPolicy="no-referrer"
                 className={`w-full h-full object-cover transition-opacity duration-200 ${loaded ? 'opacity-100' : 'opacity-0'}`}
                 onLoad={() => setLoaded(true)}
                 onError={() => setImageError(true)}

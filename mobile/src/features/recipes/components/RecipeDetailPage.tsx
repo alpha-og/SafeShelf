@@ -30,6 +30,7 @@ function ProductMiniCard({ product }: { product: ProductVariant }) {
           <img
             src={product.product_image}
             alt={product.product_name}
+            referrerPolicy="no-referrer"
             className={`absolute inset-0 w-full h-full object-cover ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
             onLoad={() => setImgLoaded(true)}
             onError={() => setImgError(true)}
@@ -213,8 +214,9 @@ export function RecipeDetailPage() {
 
           {recipe.thumbnail_url && !imageError && (
             <img
-              src={`${recipe.thumbnail_url}/preview`}
+              src={recipe.thumbnail_url}
               alt={recipe.name}
+              referrerPolicy="no-referrer"
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${loaded ? 'opacity-100' : 'opacity-0'}`}
               onLoad={() => setLoaded(true)}
               onError={() => setImageError(true)}
@@ -248,14 +250,6 @@ export function RecipeDetailPage() {
                   {recipe.area}
                 </Badge>
               )}
-              {recipe.tags.map((tag) => (
-                <Badge
-                  key={tag}
-                  className="text-[11px] px-2 py-0.5 bg-white/20 text-overlay-foreground/70"
-                >
-                  {tag}
-                </Badge>
-              ))}
             </div>
           </div>
         </div>
@@ -326,6 +320,24 @@ export function RecipeDetailPage() {
 
           {instructionsSteps.length > 0 && (
             <InstructionsSection steps={instructionsSteps} />
+          )}
+
+          {(recipe.author_name || recipe.source) && (
+            <section className="space-y-1.5">
+              <SectionHeader>From</SectionHeader>
+              <div className="rounded-2xl border border-border px-4 py-3 space-y-1">
+                {recipe.author_name && (
+                  <p className="text-sm text-foreground/80">
+                    By <span className="font-medium">{recipe.author_name}</span>
+                  </p>
+                )}
+                {recipe.source && (
+                  <p className="text-xs text-muted-foreground">
+                    Source: {recipe.source === 'foodcom' ? 'Food.com' : recipe.source}
+                  </p>
+                )}
+              </div>
+            </section>
           )}
 
           {(recipe.youtube_url || recipe.source_url) && (

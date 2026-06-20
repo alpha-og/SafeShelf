@@ -12,6 +12,8 @@ export interface RecipeItem {
   tags: string[]
   youtube_url: string | null
   source_url: string | null
+  author_name: string | null
+  source: string | null
 }
 
 export interface ClarificationField {
