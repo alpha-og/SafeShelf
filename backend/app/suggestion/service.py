@@ -20,8 +20,8 @@ async def get_product_suggestions(
     if not product:
         return []
 
-    # 2. Query similar products (using a larger candidate pool if filtering by store_id)
-    candidate_limit = n * 2 if store_id else n + 1
+    # Use a larger candidate pool to account for brand deduplication filtering
+    candidate_limit = n * 5 if store_id else n * 4
     matched_barcodes = await query_similar_products(product, n_results=candidate_limit)
 
     # Filter out current barcode
@@ -55,15 +55,56 @@ async def get_product_suggestions(
     # Map from barcode to product object to preserve ordering
     product_map = {p.barcode: p for p in matched_products}
 
-    # Return matched products in order, up to n
+    scanned_brand = (product.brand or "").strip().lower()
+    scanned_name_tokens = set((product.product_name or "").lower().split())
+
+    def _is_same_family(p: Product) -> bool:
+        p_brand = (p.brand or "").strip().lower()
+        p_name_lower = (p.product_name or "").lower()
+
+        # Same brand string
+        if p_brand and scanned_brand and p_brand == scanned_brand:
+            return True
+
+        # Scanned brand keyword appears in suggestion's product name
+        if scanned_brand:
+            for token in scanned_brand.split():
+                if len(token) > 3 and token in p_name_lower:
+                    return True
+
+        # Suggestion's brand keyword appears in scanned product name
+        if p_brand:
+            for token in p_brand.split():
+                if len(token) > 3 and token in scanned_name_tokens:
+                    return True
+
+        return False
+
+    seen_brands: set[str] = set()
     ordered_products = []
+
     for b in filtered_barcodes:
-        if b in product_map:
-            ordered_products.append(product_map[b])
-            if len(ordered_products) == n:
-                break
+        if b not in product_map:
+            continue
+
+        p = product_map[b]
+        p_brand = (p.brand or "").strip().lower()
+
+        # Skip same-family products (brand or name overlap)
+        if _is_same_family(p):
+            continue
+
+        if p_brand and p_brand in seen_brands:
+            continue
+
+        seen_brands.add(p_brand)
+        ordered_products.append(p)
+
+        if len(ordered_products) == n:
+            break
 
     return ordered_products
+
 
 
 async def embed_all_products_task(session: AsyncSession, batch_size: int = 100) -> int:
