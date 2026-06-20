@@ -91,7 +91,7 @@ function SwipeableContainer() {
           <CameraViewfinder mode={mode} onCaptureActiveChange={setCaptureActive} />
         </div>
         <div className="w-[100vw] h-full shrink-0 bg-background">
-          <SearchScreen />
+          <SearchScreen onSheetOpenChange={setCaptureActive} />
         </div>
       </motion.div>
 

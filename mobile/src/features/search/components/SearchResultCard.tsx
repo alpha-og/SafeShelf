@@ -87,7 +87,7 @@ export function SearchResultCard({ item, onClick, showPrice = true }: SearchResu
                   item.in_stock ? 'text-emerald-500' : 'text-destructive',
                 )}
               >
-                {item.in_stock ? `In Stock (${item.quantity})` : 'Out of Stock'}
+                {item.in_stock ? 'Available' : 'Out of Stock'}
               </span>
             </div>
           </div>

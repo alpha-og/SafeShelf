@@ -20,6 +20,7 @@ interface ProductSheetProps {
   onDismiss: () => void
   dismissRef?: React.MutableRefObject<(() => void) | null>
   topOffset?: number
+  portal?: boolean
 }
 
 export function ProductSheet({
@@ -29,6 +30,7 @@ export function ProductSheet({
   onDismiss,
   dismissRef,
   topOffset = 0,
+  portal = false,
 }: ProductSheetProps) {
   const navigate = useNavigate()
   const { result: suitability } = useSuitability(result)
@@ -47,7 +49,7 @@ export function ProductSheet({
       snapPoints={{ peek: 50, full: 0 }}
       showDragHandle={false}
       topOffset={topOffset}
-      portal={false}
+      portal={portal}
       dragMomentum={false}
       dismissRef={dismissRef}
       onSnapChange={setIsFull}

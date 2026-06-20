@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { lookupByBarcode } from '@/features/products/services/product'
+import { ProductSheet } from '@/features/products/components/ProductSheet'
 import {
   getAllStoreInventory,
   searchStoreInventory,
@@ -12,12 +14,27 @@ import { SearchResultCard } from './SearchResultCard'
 
 const ITEMS_PER_PAGE = 20
 
-export function SearchScreen() {
+interface SearchScreenProps {
+  onSheetOpenChange?: (open: boolean) => void
+}
+
+export function SearchScreen({ onSheetOpenChange }: SearchScreenProps = {}) {
   const { selectedStoreId } = useStore()
   const [query, setQuery] = useState('')
   const debouncedQuery = useDebounce(query, 300)
   const [page, setPage] = useState(1)
+  const [selectedBarcode, setSelectedBarcode] = useState<string | null>(null)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    onSheetOpenChange?.(!!selectedBarcode)
+  }, [selectedBarcode, onSheetOpenChange])
+
+  const { data: productDetails, isLoading: isLoadingDetails, error: detailsError } = useQuery({
+    queryKey: ['productDetails', selectedBarcode],
+    queryFn: () => lookupByBarcode(selectedBarcode!),
+    enabled: !!selectedBarcode,
+  })
 
   const { data: allItems = [], isLoading } = useQuery({
     queryKey: ['storeInventory', selectedStoreId, debouncedQuery],
@@ -79,7 +96,7 @@ export function SearchScreen() {
                 key={item.barcode}
                 item={item}
                 onClick={(barcode) => {
-                  navigate({ to: '/product/$barcode', params: { barcode } })
+                  setSelectedBarcode(barcode)
                 }}
               />
             ))}
@@ -92,6 +109,14 @@ export function SearchScreen() {
           </div>
         )}
       </div>
+
+      <ProductSheet
+        isProcessing={!!selectedBarcode && isLoadingDetails}
+        result={productDetails ?? null}
+        error={detailsError ? "Failed to load product details" : null}
+        onDismiss={() => setSelectedBarcode(null)}
+        portal={true}
+      />
     </div>
   )
 }
