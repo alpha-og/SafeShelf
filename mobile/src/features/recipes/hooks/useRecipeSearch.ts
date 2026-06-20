@@ -12,6 +12,7 @@ interface SearchState {
   searchText: string;
   selectedCategories: string[];
   selectedAreas: string[];
+  clarifyResults: RecipeItem[] | null;
 }
 
 export type SearchStatus =
@@ -25,7 +26,6 @@ export function useRecipeSearch() {
   const queryClient = useQueryClient();
   const isInitialized = useRef(false);
   const searchedOnce = useRef(false);
-  const savedState = useRef<SearchState | null>(null);
 
   const [searchText, _setSearchText] = useState("");
   const [selectedCategories, _setSelectedCategories] = useState<string[]>([]);
@@ -36,15 +36,16 @@ export function useRecipeSearch() {
   const [clarifyError, setClarifyError] = useState<string | null>(null);
   const [clarifyResults, setClarifyResults] = useState<RecipeItem[] | null>(null);
 
-  // Async restore saved state on mount
+  // Async restore saved state on mount — don't set searchedOnce, query only on user input
   useEffect(() => {
     getItem<SearchState>(STORAGE_KEY).then((saved) => {
       if (saved) {
-        savedState.current = saved;
         _setSearchText(saved.searchText);
         _setSelectedCategories(saved.selectedCategories);
         _setSelectedAreas(saved.selectedAreas);
-        searchedOnce.current = true;
+        if (saved.clarifyResults) {
+          setClarifyResults(saved.clarifyResults);
+        }
       }
       isInitialized.current = true;
     });
@@ -65,11 +66,13 @@ export function useRecipeSearch() {
     _setSelectedAreas(areas);
   }, []);
 
-  // Async persist state changes
+  // Async persist state changes (including clarifyResults)
   useEffect(() => {
     if (!isInitialized.current) return;
-    setItem(STORAGE_KEY, { searchText, selectedCategories, selectedAreas } satisfies SearchState);
-  }, [searchText, selectedCategories, selectedAreas]);
+    setItem(STORAGE_KEY, {
+      searchText, selectedCategories, selectedAreas, clarifyResults,
+    } satisfies SearchState);
+  }, [searchText, selectedCategories, selectedAreas, clarifyResults]);
 
   const debouncedSearchText = useDebounce(searchText, DEBOUNCE_MS);
   const debouncedCategories = useDebounce(selectedCategories, DEBOUNCE_MS);
@@ -85,24 +88,36 @@ export function useRecipeSearch() {
     debouncedCategories.length > 0 ||
     debouncedAreas.length > 0;
 
+  // Reset status when user changes input while dismissed
+  useEffect(() => {
+    if (searchStatus !== "dismissed") return;
+    if (hasFiltersRaw) {
+      setSearchStatus("idle");
+    }
+  }, [hasFiltersRaw, searchText, selectedCategories, selectedAreas, searchStatus]);
+
   // Reset status and clear cached results when all filters are cleared
   useEffect(() => {
     if (!isInitialized.current) return;
     if (!hasFiltersRaw) {
       setSearchStatus("idle");
+      setClarifyResults(null);
       setClarifyError(null);
       queryClient.resetQueries({ queryKey: ["recipes"] });
     }
   }, [hasFiltersRaw, queryClient]);
 
   const queryEnabled =
-    hasFilters && searchStatus !== "clarifying" && searchedOnce.current && isInitialized.current;
+    hasFilters
+    && searchStatus !== "clarifying"
+    && searchStatus !== "dismissed"
+    && searchedOnce.current
+    && isInitialized.current;
 
   const query = useInfiniteQuery({
     queryKey: ["recipes", debouncedSearchText, debouncedCategories, debouncedAreas],
     queryFn: async ({ pageParam }) => {
       if (pageParam === 1) {
-        setClarifyResults(null);
         setSearchStatus("searching");
       }
       const res = await searchRecipes(
@@ -119,6 +134,7 @@ export function useRecipeSearch() {
       } else if (res.status === "rejected" || (!res.success && res.error)) {
         setSearchStatus("error");
       } else {
+        setClarifyResults(null);
         setSearchStatus("idle");
       }
 
@@ -162,7 +178,6 @@ export function useRecipeSearch() {
 
   const dismissClarifications = () => {
     setSearchStatus("dismissed");
-    setClarifyResults(null);
     setSessionId(null);
     setClarifications([]);
   };
