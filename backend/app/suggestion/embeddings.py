@@ -42,6 +42,7 @@ async def upsert_products_batch(products: list[Product], chunk_size: int = 5000)
     if not products:
         return
 
+
     model = _get_embedding_model()
     collection = _get_collection()
 
@@ -75,6 +76,8 @@ async def query_similar_products(product: Product, n_results: int = 10) -> list[
 
     if embeddings is not None and len(embeddings) > 0 and embeddings[0] is not None:
         query_embedding = embeddings[0]
+        if hasattr(query_embedding, "tolist"):
+            query_embedding = query_embedding.tolist()
     else:
         # 2. Safety Net Fallback: Compute and cache embedding dynamically if missing
         doc_str = _get_document_string(product)

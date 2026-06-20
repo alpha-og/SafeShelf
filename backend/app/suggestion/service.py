@@ -8,13 +8,11 @@ from app.suggestion.embeddings import query_similar_products
 
 
 async def get_product_suggestions(
-    barcode: str, session: AsyncSession, n: int = 5, store_id: str | None = None
+    barcode: str, session: AsyncSession, n: int = 10, store_id: str | None = None
 ) -> list[Product]:
     # 1. Fetch current product by barcode
     stmt = (
-        select(Product)
-        .where(Product.barcode == barcode)
-        .options(selectinload(Product.categories))
+        select(Product).where(Product.barcode == barcode).options(selectinload(Product.categories))
     )
     res = await session.execute(stmt)
     product = res.scalar_one_or_none()
@@ -23,7 +21,7 @@ async def get_product_suggestions(
         return []
 
     # 2. Query similar products (using a larger candidate pool if filtering by store_id)
-    candidate_limit = n * 4 if store_id else n + 1
+    candidate_limit = n * 2 if store_id else n + 1
     matched_barcodes = await query_similar_products(product, n_results=candidate_limit)
 
     # Filter out current barcode
@@ -44,11 +42,11 @@ async def get_product_suggestions(
 
     if store_id:
         stmt_matches = (
-            stmt_matches
-            .join(StoreInventory)
-            .join(Store)
+            stmt_matches.join(Product.inventory)
+            .join(StoreInventory.store)
             .where(Store.uuid == store_id)
             .where(StoreInventory.stock_quantity > 0)
+            .options(selectinload(Product.inventory))
         )
 
     res_matches = await session.execute(stmt_matches)
@@ -67,14 +65,28 @@ async def get_product_suggestions(
 
     return ordered_products
 
-async def embed_all_products_task(session: AsyncSession) -> int:
+
+async def embed_all_products_task(session: AsyncSession, batch_size: int = 100) -> int:
     from app.suggestion.embeddings import upsert_products_batch
-    stmt = select(Product).options(selectinload(Product.categories))
-    res = await session.execute(stmt)
-    products = res.scalars().all()
 
-    if not products:
-        return 0
+    offset = 0
+    total_embedded = 0
 
-    await upsert_products_batch(products)
-    return len(products)
+    while True:
+        stmt = (
+            select(Product)
+            .options(selectinload(Product.categories))
+            .offset(offset)
+            .limit(batch_size)
+        )
+        res = await session.execute(stmt)
+        products = res.scalars().all()
+
+        if not products:
+            break
+
+        await upsert_products_batch(products)
+        total_embedded += len(products)
+        offset += batch_size
+
+    return total_embedded

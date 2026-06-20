@@ -30,7 +30,7 @@ async def embed_all(session: AsyncSession = Depends(get_session)):
 @router.get("/{barcode}", response_model=list[ProductResponse])
 async def get_suggestions(
     barcode: str,
-    n: int = Query(default=5, ge=1, le=20),
+    n: int = Query(default=10, ge=1, le=20),
     store_id: str | None = Query(default=None),
     session: AsyncSession = Depends(get_session)
 ):
