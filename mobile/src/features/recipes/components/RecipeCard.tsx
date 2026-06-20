@@ -19,7 +19,7 @@ export function RecipeCard({ recipe, onPress }: RecipeCardProps) {
     >
       <CardContent className="p-0">
         <div className="flex">
-          <div className="w-28 h-28 shrink-0 bg-muted rounded-l-xl overflow-hidden border-r border-border/50 relative">
+          <div className="w-28 h-28 shrink-0 bg-background rounded-l-xl overflow-hidden border-r border-border/50 relative">
             <div className="absolute inset-0 flex items-center justify-center">
               <ImageOff className="w-5 h-5 text-muted-foreground/40" />
             </div>

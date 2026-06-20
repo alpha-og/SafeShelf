@@ -17,8 +17,9 @@ import { deleteProfile } from '../services/profileStorage'
 // turns green instead of the default red/primary tint. Keeping rows uniform
 // avoids the elevated-card look (and the stray divider line it produced when
 // sitting between bordered rows).
-const ACTIVE_ROW_CLASSES = 'bg-emerald-500/10'
-const ACTIVE_BUBBLE_CLASSES = 'bg-emerald-500/20 text-emerald-600 border-emerald-500/30'
+const ACTIVE_ROW_CLASSES =
+  'border-primary/40 bg-primary/20 shadow-[0_10px_30px_-24px_hsl(var(--primary))]'
+const ACTIVE_BUBBLE_CLASSES = 'bg-primary/30 text-primary border-primary/50'
 
 export function ProfileHubPage() {
   const navigate = useNavigate()
@@ -65,14 +66,14 @@ export function ProfileHubPage() {
           <div className="px-4">
             <FormError error={error} fallback="Couldn't delete this profile" />
           </div>
-          <div>
+          <div className="px-3 space-y-2">
             {profiles.map((profile) => {
               const isActive = profile.id === activeProfile?.id
               return (
                 <div
                   key={profile.id}
                   className={cn(
-                    'w-full flex items-center gap-3 px-4 py-3.5 border-b border-border transition-colors',
+                    'w-full flex items-center gap-3 rounded-2xl border border-border/70 bg-card/90 px-4 py-3.5 transition-[color,background-color,border-color,box-shadow] backdrop-blur-sm',
                     isActive && ACTIVE_ROW_CLASSES,
                   )}
                 >
@@ -86,7 +87,7 @@ export function ProfileHubPage() {
                       size="md"
                       className={isActive ? ACTIVE_BUBBLE_CLASSES : undefined}
                     />
-                    <span className="flex-1 min-w-0 text-sm text-foreground truncate">
+                    <span className="flex-1 min-w-0 truncate text-sm font-medium text-foreground">
                       {profile.name}
                     </span>
                   </button>
@@ -115,9 +116,9 @@ export function ProfileHubPage() {
             <button
               type="button"
               onClick={() => navigate({ to: '/profile/new' })}
-              className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-foreground transition-colors hover:bg-accent"
+              className="w-full flex items-center gap-3 rounded-2xl border border-dashed border-primary/50 bg-card/75 px-4 py-3.5 text-sm text-primary transition-colors hover:bg-accent/60"
             >
-              <Plus className="h-5 w-5 text-muted-foreground shrink-0" />
+              <Plus className="h-5 w-5 text-primary shrink-0" />
               <span className="flex-1 text-left">Add profile</span>
             </button>
           </div>
@@ -127,9 +128,9 @@ export function ProfileHubPage() {
           <SectionHeader variant="default" className="px-4">
             Groups
           </SectionHeader>
-          <div>
+          <div className="px-3 space-y-2">
             {groups.length === 0 && (
-              <div className="px-4 py-6 text-sm text-muted-foreground text-center">
+              <div className="rounded-2xl border border-amber-200/80 bg-amber-50/80 px-4 py-6 text-center text-sm text-muted-foreground">
                 No groups yet. Club profiles together to shop for everyone at once.
               </div>
             )}
@@ -140,8 +141,8 @@ export function ProfileHubPage() {
                 <div
                   key={group.id}
                   className={cn(
-                    'w-full flex items-center gap-3 px-4 py-3.5 border-b border-border transition-colors',
-                    isActive && ACTIVE_ROW_CLASSES,
+                    'w-full flex items-center gap-3 rounded-2xl border border-border/70 bg-card/90 px-4 py-3.5 transition-[color,background-color,border-color,box-shadow] backdrop-blur-sm',
+                    isActive && 'border-orange-300 bg-orange-50/80 shadow-[0_10px_30px_-24px_#f59e0b]',
                   )}
                 >
                   <button
@@ -153,8 +154,8 @@ export function ProfileHubPage() {
                       className={cn(
                         'inline-flex items-center justify-center shrink-0 rounded-full border h-10 w-10',
                         isActive
-                          ? ACTIVE_BUBBLE_CLASSES
-                          : 'bg-primary/15 text-primary border-primary/20',
+                          ? 'bg-orange-100 text-orange-700 border-orange-400'
+                          : 'bg-orange-50 text-orange-600 border-orange-200',
                       )}
                     >
                       <Users className="h-5 w-5" />
@@ -182,9 +183,9 @@ export function ProfileHubPage() {
             <button
               type="button"
               onClick={() => navigate({ to: '/profile/groups/new' })}
-              className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-foreground transition-colors hover:bg-accent"
+              className="w-full flex items-center gap-3 rounded-2xl border border-dashed border-orange-300/70 bg-card/75 px-4 py-3.5 text-sm text-orange-500 transition-colors hover:bg-orange-50"
             >
-              <Plus className="h-5 w-5 text-muted-foreground shrink-0" />
+              <Plus className="h-5 w-5 text-orange-500 shrink-0" />
               <span className="flex-1 text-left">Add group</span>
             </button>
           </div>
@@ -194,13 +195,13 @@ export function ProfileHubPage() {
           <SectionHeader variant="default" className="px-4">
             Health Report
           </SectionHeader>
-          <div>
+          <div className="px-3">
             <button
               type="button"
               onClick={() => navigate({ to: '/profile/health-report' })}
-              className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-foreground transition-colors hover:bg-accent"
+              className="w-full flex items-center gap-3 rounded-2xl border border-cyan-200/80 bg-cyan-50/70 px-4 py-3.5 text-sm text-foreground transition-colors hover:bg-cyan-100/70"
             >
-              <FileText className="h-5 w-5 text-muted-foreground shrink-0" />
+              <FileText className="h-5 w-5 text-cyan-600 shrink-0" />
               <span className="flex-1 text-left">Upload & manage health reports</span>
             </button>
           </div>

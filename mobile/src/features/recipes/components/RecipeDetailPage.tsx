@@ -95,7 +95,7 @@ export function RecipeDetailPage() {
 
           <div className="absolute top-0 left-0 z-20 p-3">
             <button
-              className="flex items-center justify-center w-9 h-9 rounded-full bg-primary/30 backdrop-blur-md text-white/80 hover:bg-primary/40 transition-colors border border-primary/30"
+              className="flex items-center justify-center w-9 h-9 rounded-full bg-primary/55 backdrop-blur-md text-white hover:bg-primary/65 transition-colors border border-primary/50"
                   onClick={() => router.history.back()}
             >
               <ArrowLeft className="h-5 w-5" />
@@ -148,7 +148,7 @@ export function RecipeDetailPage() {
                       i < recipe.ingredients.length - 1 ? 'border-b border-border' : ''
                     } ${i % 2 === 0 ? 'bg-muted/30' : ''}`}
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary/40 shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary/65 shrink-0" />
                     <span className="flex-1 text-foreground">{ingredient}</span>
                     <span className="text-muted-foreground text-xs tabular-nums">
                       {recipe.measurements[i] || ''}

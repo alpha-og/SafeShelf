@@ -11,7 +11,7 @@ export function QuantityAdjuster({ quantity, onIncrement, onDecrement }: Quantit
   return (
     <div className="flex items-stretch gap-0.5">
       <button
-        className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary/70 hover:bg-primary/20 hover:text-primary hover:scale-[1.02] transition-colors"
+        className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/20 text-primary/70 hover:bg-primary/30 hover:text-primary hover:scale-[1.02] transition-colors"
         onClick={onDecrement}
       >
         <Minus className="h-4 w-4" />
@@ -20,7 +20,7 @@ export function QuantityAdjuster({ quantity, onIncrement, onDecrement }: Quantit
         {quantity}
       </span>
       <button
-        className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/20 text-primary hover:bg-primary/30 hover:scale-[1.02] transition-colors"
+        className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/40 text-primary hover:bg-primary/50 hover:scale-[1.02] transition-colors"
         onClick={onIncrement}
       >
         <Plus className="h-4 w-4" />

@@ -59,7 +59,7 @@ export function ProductHero({
 
       <div className="absolute top-0 left-0 z-20 p-3">
         <button
-          className="flex items-center justify-center w-9 h-9 rounded-full bg-primary/30 backdrop-blur-md text-white/80 hover:bg-primary/40 hover:scale-[1.02] transition-colors border border-primary/30"
+          className="flex items-center justify-center w-9 h-9 rounded-full bg-primary/55 backdrop-blur-md text-white hover:bg-primary/65 hover:scale-[1.02] transition-colors border border-primary/50"
           onClick={onBack}
         >
           <ArrowLeft className="h-5 w-5" />
@@ -69,7 +69,7 @@ export function ProductHero({
       {!hideCartIcon && product.barcode && (
         <div className="absolute top-0 right-0 z-20 p-3">
           {cartItem ? (
-            <div className="flex items-center gap-0.5 bg-primary/30 backdrop-blur-md rounded-full px-1.5 py-1 border border-primary/30 hover:scale-[1.02]">
+            <div className="flex items-center gap-0.5 bg-primary/55 backdrop-blur-md rounded-full px-1.5 py-1 border border-primary/50 hover:scale-[1.02]">
               <button
                 className="flex items-center justify-center w-7 h-7 rounded-full text-primary hover:bg-primary-foreground/10 hover:scale-[1.02] transition-colors"
                 onClick={() => removeFromCart(cartItem.product.barcode!)}
@@ -100,7 +100,7 @@ export function ProductHero({
             </div>
           ) : (
             <button
-              className="flex items-center justify-center w-9 h-9 rounded-full bg-primary/30 backdrop-blur-md text-white/80 hover:bg-primary/40 hover:scale-[1.02] transition-colors border border-primary/30"
+              className="flex items-center justify-center w-9 h-9 rounded-full bg-primary/55 backdrop-blur-md text-white hover:bg-primary/65 hover:scale-[1.02] transition-colors border border-primary/50"
               onClick={() => addToCart(product)}
             >
               <ShoppingCart className="h-4 w-4" />

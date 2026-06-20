@@ -59,10 +59,10 @@ export function CartCta({
 
   if (cartItem) {
     return (
-      <div className="h-14 flex items-center gap-2 bg-mauve-500/15 border border-primary/25 rounded-2xl pl-3 pr-1 shadow-sm">
+      <div className="h-14 flex items-center gap-2 bg-mauve-500/15 border border-primary/50 rounded-2xl pl-3 pr-1 shadow-sm">
         <button
           type="button"
-          className="flex items-center justify-center w-10 h-10 rounded-full text-primary/50 hover:bg-primary/10 hover:text-primary hover:scale-[1.02] transition-colors shrink-0"
+          className="flex items-center justify-center w-10 h-10 rounded-full text-primary/50 hover:bg-primary/20 hover:text-primary hover:scale-[1.02] transition-colors shrink-0"
           onClick={() => removeFromCart(cartItem.product.barcode!)}
         >
           <Trash2 className="h-5 w-5" />
@@ -89,7 +89,10 @@ export function CartCta({
 
   return (
     <>
-      <ShinyButton className="h-14 w-full" onClick={handleAdd}>
+      <ShinyButton
+        className={`h-14 w-full border-2 bg-white text-black ${isUnsuitable ? 'border-red-400' : 'border-green-400'}`}
+        onClick={handleAdd}
+      >
         <ShoppingCart className="h-6 w-6" />
         Add to Cart
       </ShinyButton>

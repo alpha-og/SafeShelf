@@ -67,7 +67,7 @@ export function RecipeFilterSheet({
         variant="ghost"
         size="icon"
         onClick={() => setOpen(true)}
-        className="rounded-full h-8 w-8 shrink-0 bg-primary/30 backdrop-blur-md border border-primary/30 hover:bg-primary/40"
+        className="rounded-full h-8 w-8 shrink-0 bg-primary/55 backdrop-blur-md border border-primary/50 hover:bg-primary/65"
       >
         <SlidersHorizontal className="h-4 w-4" />
       </Button>

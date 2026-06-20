@@ -29,7 +29,7 @@ function StoresPage() {
       <header className="px-6 py-4">
         <button
           onClick={() => router.history.back()}
-          className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 border border-primary/20 hover:bg-primary/20 hover:scale-[1.02] transition-all mb-2"
+          className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 border border-primary/40 hover:bg-primary/30 hover:scale-[1.02] transition-all mb-2"
         >
           <ArrowLeft className="h-4 w-4" />
         </button>
@@ -53,7 +53,7 @@ function StoresPage() {
                 className={`flex flex-col p-5 rounded-2xl border text-left transition-all active:scale-[0.98]
                   ${
                     selectedStoreId === store.id
-                      ? 'border-primary bg-primary/10 shadow-sm shadow-primary/20'
+                      ? 'border-primary bg-primary/20 shadow-sm shadow-primary/40'
                       : 'border-border/50 bg-card hover:bg-muted/50'
                   }`}
               >

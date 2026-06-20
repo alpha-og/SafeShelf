@@ -29,7 +29,7 @@ export function DietaryToggleList({ selected, onChange }: DietaryToggleListProps
               'rounded-full border px-3 py-1.5 text-sm transition-colors',
               checked
                 ? 'bg-primary text-primary-foreground border-transparent'
-                : 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/20',
+                : 'bg-primary/20 text-primary border-primary/40 hover:bg-primary/30',
             )}
           >
             {option.label}

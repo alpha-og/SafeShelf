@@ -75,7 +75,7 @@ export function BottomNavBar({ activeIndex, onChange, mode, onModeChange }: Bott
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 8, opacity: 0 }}
             transition={{ duration: 0.15, ease: 'easeOut' }}
-            className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 flex items-center gap-1 rounded-full border border-primary/30 bg-primary/30 backdrop-blur-md px-1.5 py-1.5 shadow-2xl"
+            className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 flex items-center gap-1 rounded-full border border-primary/30 bg-primary/30 backdrop-blur-md px-1.5 py-1 shadow-2xl"
           >
             {SCAN_MODES.map((m) => {
               const isActive = m.value === mode
@@ -87,14 +87,14 @@ export function BottomNavBar({ activeIndex, onChange, mode, onModeChange }: Bott
                     onModeChange(m.value)
                     setModeMenuOpen(false)
                   }}
-                  className={`flex flex-row items-center gap-1.5 rounded-full px-3 py-1.5 transition-colors ${
+                  className={`flex flex-row items-center gap-1 rounded-full px-2.5 py-1 transition-colors ${
                     isActive
-                      ? 'bg-primary/50 text-white'
-                      : 'text-white/60 hover:text-white/90 hover:bg-primary/20'
+                      ? 'bg-primary/75 text-white'
+                      : 'text-white/80 hover:text-white hover:bg-primary/40'
                   }`}
                 >
-                  <m.icon className="h-5 w-5 shrink-0" />
-                  <span className="text-[11px] font-medium leading-none whitespace-nowrap">
+                  <m.icon className="h-4 w-4 shrink-0" />
+                  <span className="text-[10px] font-medium leading-none whitespace-nowrap">
                     {m.label}
                   </span>
                 </button>
@@ -104,7 +104,7 @@ export function BottomNavBar({ activeIndex, onChange, mode, onModeChange }: Bott
         )}
       </AnimatePresence>
 
-      <nav className="flex items-center gap-1 bg-primary/30 backdrop-blur-md border border-primary/30 rounded-full px-2 py-1.5 shadow-2xl">
+      <nav className="flex items-center gap-0.5 bg-primary/36 border border-primary/20 rounded-2xl px-2 py-1.5 shadow-lg">
         {tabs.map((tab, i) => {
           const isActive = i === activeIndex
           const isCameraSelector = i === CAMERA_TAB && onCamera
@@ -115,14 +115,14 @@ export function BottomNavBar({ activeIndex, onChange, mode, onModeChange }: Bott
               key={tab.label}
               type="button"
               onClick={() => handleTabClick(i)}
-              className={`relative flex items-center justify-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                isActive ? 'text-white' : 'text-white/50 hover:text-white/80 hover:scale-[1.02]'
+              className={`relative flex items-center justify-center gap-1 rounded-full px-3 py-2 text-xs font-medium transition-colors ${
+                isActive ? 'text-white' : 'text-white/80 hover:text-white hover:scale-[1.02]'
               }`}
             >
               {isActive && (
                 <motion.div
                   layoutId="activeTab"
-                  className="absolute inset-0 bg-primary/40 rounded-full"
+                  className="absolute inset-0 bg-primary/65 rounded-full"
                   transition={{ type: 'spring', bounce: 0.2, duration: 0.4 }}
                 />
               )}
@@ -130,7 +130,7 @@ export function BottomNavBar({ activeIndex, onChange, mode, onModeChange }: Bott
               <span className="relative z-10">{label}</span>
               {isCameraSelector && (
                 <ChevronUp
-                  className={`h-3.5 w-3.5 relative z-10 transition-transform ${
+                  className={`h-3 w-3 relative z-10 transition-transform ${
                     modeMenuOpen ? 'rotate-180' : ''
                   }`}
                 />

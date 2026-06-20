@@ -48,9 +48,9 @@ export function RecipesPage() {
   const showNoResults = hasFilters && !isLoading && recipes.length === 0 && !error && !rejected
 
   return (
-    <div className="flex flex-col h-full bg-background pb-[var(--sab)]">
+    <div className="flex flex-col h-full pb-[var(--sab)]">
       <div className="flex-1 overflow-y-auto px-4 relative">
-        <div className="sticky top-0 z-10 pt-[calc(var(--sat)_+_1rem)] pb-3 -mx-4 px-4">
+        <div className="sticky top-0 z-10 bg-background pt-[calc(var(--sat)_+_1rem)] pb-3 -mx-4 px-4">
           <RecipeSearchBar
             searchText={searchText}
             onSearchChange={setSearchText}

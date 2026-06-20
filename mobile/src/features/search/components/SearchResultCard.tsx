@@ -49,7 +49,7 @@ export function SearchResultCard({ item, onClick }: SearchResultCardProps) {
     >
       <CardContent className="p-0">
         <div className="flex">
-          <div className="w-28 h-28 shrink-0 bg-muted rounded-l-xl overflow-hidden border-r border-border/50 relative">
+          <div className="w-28 h-28 shrink-0 bg-background rounded-l-xl overflow-hidden border-r border-border/50 relative">
             <div className="absolute inset-0 flex items-center justify-center">
               <PackageX className="w-6 h-6 text-muted-foreground/50" />
             </div>

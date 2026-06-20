@@ -74,7 +74,7 @@ function SwipeableContainer() {
 
   return (
     <div
-      className="w-full h-full overflow-hidden relative bg-black"
+      className="w-full h-full overflow-hidden relative bg-background"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
@@ -84,13 +84,13 @@ function SwipeableContainer() {
         transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
         className={`flex w-[300vw] h-full relative ${captureActive ? 'z-[60]' : ''}`}
       >
-        <div className="w-[100vw] h-full shrink-0 bg-background">
+        <div className="w-[100vw] h-full shrink-0">
           <RecipesPage />
         </div>
-        <div className="w-[100vw] h-full relative overflow-hidden shrink-0">
+        <div className="w-[100vw] h-full relative overflow-hidden shrink-0 bg-black">
           <CameraViewfinder mode={mode} onCaptureActiveChange={setCaptureActive} />
         </div>
-        <div className="w-[100vw] h-full shrink-0 bg-background">
+        <div className="w-[100vw] h-full shrink-0">
           <SearchScreen />
         </div>
       </motion.div>

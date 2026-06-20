@@ -93,7 +93,7 @@ export function ProductNutrientTable({
       return (
         <Badge
           variant="outline"
-          className="text-[10px] px-1 py-0 h-4 bg-primary/10 text-primary border-primary/20 hover:scale-105"
+          className="text-[10px] px-1 py-0 h-4 bg-primary/20 text-primary border-primary/40 hover:scale-105"
         >
           {lvl}
         </Badge>

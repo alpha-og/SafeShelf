@@ -28,7 +28,7 @@ export function ThemeToggle() {
       size="icon"
       aria-label={`${LABELS[mode]} — tap to change`}
       onClick={cycle}
-      className="bg-primary/10 backdrop-blur-md border-primary/20 hover:bg-primary/20 hover:scale-[1.02]"
+      className="border-primary/30 bg-primary/20 text-primary shadow-[0_10px_24px_-18px_hsl(var(--primary))] backdrop-blur-md hover:bg-primary/30 hover:scale-[1.02]"
     >
       <Icon className="h-4 w-4" />
     </Button>

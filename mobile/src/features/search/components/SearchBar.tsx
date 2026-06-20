@@ -23,7 +23,7 @@ export function SearchBar({
   }, [autoFocus])
 
   return (
-    <div className="relative flex items-center w-full bg-muted/30 backdrop-blur-md border border-border/50 rounded-full px-4 py-2.5 shadow-sm transition-colors focus-within:border-primary/50 focus-within:bg-muted/50">
+    <div className="relative flex items-center w-full bg-background border border-border/50 rounded-full px-4 py-2.5 shadow-sm transition-colors focus-within:border-primary/50">
       <Search className="w-5 h-5 text-muted-foreground mr-2 shrink-0" />
       <input
         ref={inputRef}

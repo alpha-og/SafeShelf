@@ -13,13 +13,13 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, onBack, icon: Icon, actions, className }: PageHeaderProps) {
   return (
-    <header className={cn('border-b border-border shrink-0', className)}>
+    <header className={cn('shrink-0 border-b border-border/80 bg-background/90 backdrop-blur-sm', className)}>
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
         {onBack && (
           <Button
             variant="outline"
             size="icon"
-            className="bg-primary/10 backdrop-blur-md border-primary/20 hover:bg-primary/20 hover:scale-[1.02]"
+            className="border-primary/30 bg-primary/20 text-primary shadow-[0_10px_24px_-18px_hsl(var(--primary))] backdrop-blur-md hover:bg-primary/30 hover:scale-[1.02]"
             onClick={onBack}
           >
             <ArrowLeft className="h-5 w-5" />

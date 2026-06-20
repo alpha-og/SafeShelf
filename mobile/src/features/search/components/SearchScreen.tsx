@@ -59,9 +59,9 @@ export function SearchScreen() {
   }, [paginatedItems.length, allItems.length])
 
   return (
-    <div className="flex flex-col h-full w-full bg-background pb-[var(--sab)]">
+    <div className="flex flex-col h-full w-full pb-[var(--sab)]">
       <div className="flex-1 overflow-y-auto min-h-0 relative px-4">
-        <div className="sticky top-0 z-10 pt-[calc(var(--sat)_+_1rem)] pb-3 -mx-4 px-4">
+        <div className="sticky top-0 z-10 bg-background pt-[calc(var(--sat)_+_1rem)] pb-3 -mx-4 px-4">
           <SearchBar value={query} onChange={setQuery} />
         </div>
         {isLoading ? (

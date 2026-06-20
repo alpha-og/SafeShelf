@@ -127,7 +127,7 @@ export function SearchableMultiSelect({
           {selected.map((item) => (
             <span
               key={item.id}
-              className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 text-primary border border-primary/20 pl-3 pr-1.5 py-1 text-sm"
+              className="inline-flex items-center gap-1.5 rounded-full bg-primary/20 text-primary border border-primary/40 pl-3 pr-1.5 py-1 text-sm"
             >
               {item.name}
               <button

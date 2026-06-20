@@ -55,7 +55,6 @@ export function CameraViewfinder({ mode, onCaptureActiveChange }: CameraViewfind
       <div
         className={`absolute inset-0 transition-opacity duration-200 ${capturedImage ? 'opacity-0 pointer-events-none' : ''}`}
       >
-        <div className="absolute inset-0 bg-black/[0.04]" />
         <CameraPreview videoRef={videoRef} isCameraReady={isCameraReady} error={error} />
 
         <TopBar cameraAvailable={isCameraReady} />

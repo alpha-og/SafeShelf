@@ -19,7 +19,7 @@ export function Avatar({ name, size = 'md', className }: AvatarProps) {
       role="img"
       aria-label={name}
       className={cn(
-        'inline-flex items-center justify-center shrink-0 rounded-full bg-primary/15 text-primary font-semibold border border-primary/20',
+        'inline-flex items-center justify-center shrink-0 rounded-full border border-primary/30 bg-secondary text-primary font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.65)]',
         SIZE_CLASSES[size],
         className,
       )}

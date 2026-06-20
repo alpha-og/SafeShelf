@@ -12,7 +12,10 @@ export function CameraPreview({ videoRef, isCameraReady, error }: CameraPreviewP
     return (
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
         <Camera className="h-12 w-12 text-muted-foreground" />
-        <p className="text-sm text-muted-foreground text-center px-4">{error}</p>
+        <p className="text-sm font-bold text-muted-foreground text-center px-4">Permission denied</p>
+        <p className="text-xs text-muted-foreground/70 text-center px-8 max-w-[260px]">
+          Enable camera permission to scan food products
+        </p>
       </div>
     )
   }

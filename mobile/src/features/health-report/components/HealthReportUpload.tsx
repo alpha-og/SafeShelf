@@ -24,8 +24,8 @@ export function HealthReportUpload({ onFileSelected, disabled }: HealthReportUpl
 
   return (
     <div className="flex flex-col items-center gap-4 py-12">
-      <div className="rounded-full bg-primary/10 p-4">
-        <Upload className="h-8 w-8 text-primary" />
+      <div className="rounded-full bg-green-100 p-4">
+        <Upload className="h-8 w-8 text-green-600" />
       </div>
       <p className="text-sm text-muted-foreground text-center max-w-xs">
         Upload a medical report PDF and let AI extract your health information
@@ -37,7 +37,7 @@ export function HealthReportUpload({ onFileSelected, disabled }: HealthReportUpl
         className="hidden"
         onChange={handleChange}
       />
-      <Button size="lg" onClick={handleClick} disabled={disabled}>
+      <Button size="lg" onClick={handleClick} disabled={disabled} className="bg-green-500 hover:bg-green-600 text-white">
         Upload PDF
       </Button>
     </div>
