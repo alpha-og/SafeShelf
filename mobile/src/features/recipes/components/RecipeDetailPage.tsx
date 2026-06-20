@@ -24,8 +24,8 @@ function ProductMiniCard({ product }: { product: ProductVariant }) {
       }
       className="w-28 shrink-0 rounded-2xl border bg-card active:scale-[0.98] transition-transform cursor-pointer overflow-hidden hover:scale-[1.02]"
     >
-      <div className="aspect-square bg-muted relative flex items-center justify-center">
-        <ImageOff className="w-5 h-5 text-muted-foreground/30" />
+      <div className="aspect-square bg-muted relative overflow-hidden rounded-[inherit]">
+        <ImageOff className="absolute inset-0 m-auto w-5 h-5 text-muted-foreground/30" />
         {product.product_image && !imgError && (
           <img
             src={product.product_image}
@@ -36,14 +36,14 @@ function ProductMiniCard({ product }: { product: ProductVariant }) {
             onError={() => setImgError(true)}
           />
         )}
-      </div>
-      <div className="p-1.5 space-y-0.5">
-        <p className="text-[11px] text-card-foreground leading-tight line-clamp-2">
-          {product.product_name}
-        </p>
-        <p className="text-[11px] font-semibold text-card-foreground tabular-nums">
-          ${product.price.toFixed(2)}
-        </p>
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent pt-6 px-1.5 pb-1.5 space-y-0.5">
+          <p className="text-[11px] text-white leading-tight line-clamp-2">
+{product.product_name.replace(/\b\w/g, c => c.toUpperCase())}
+          </p>
+          <p className="text-[11px] font-semibold text-white tabular-nums">
+            ${product.price.toFixed(2)}
+          </p>
+        </div>
       </div>
     </div>
   )
