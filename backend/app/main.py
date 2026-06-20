@@ -10,11 +10,12 @@ from sqlmodel import SQLModel
 # which can hang on Windows due to a WMI query in Python 3.14.
 from app.shared import _patch_platform  # noqa: F401
 
+from app.shared.config import settings
+
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO, format='%(levelname)s:     %(message)s')
+logging.basicConfig(level=getattr(logging, settings.LOG_LEVEL.upper(), logging.INFO), format='%(levelname)s:     %(message)s')
 
 from app.api.v1 import v1_router
-from app.shared.config import settings
 from app.shared.db import engine
 from app.shared.exceptions import (
     global_exception_handler,
@@ -23,7 +24,8 @@ from app.shared.exceptions import (
 )
 from app.shared.middleware import setup_middleware
 
-import app.products.models  
+import app.products.models
+import app.recipes.models  
 
 
 @asynccontextmanager
