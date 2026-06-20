@@ -33,7 +33,15 @@ export function ProductDetailPage() {
     enabled: !!barcode,
   })
 
-  const { result: suitability } = useSuitability(product ?? null)
+  const {
+    result: suitability,
+    isAgentLoading,
+    stepper,
+    agentError,
+    agentUsed,
+    triggerMode,
+    startAgentEval,
+  } = useSuitability(product ?? null)
   const cartItem = product?.barcode
     ? items.find((i) => i.product.barcode === product.barcode)
     : undefined
@@ -67,26 +75,38 @@ export function ProductDetailPage() {
 
   return (
     <div className="relative flex flex-col flex-1 min-h-0 bg-background text-foreground">
-      <motion.div
-        animate={{ height: collapsed ? BANNER_COMPACT : BANNER_FULL }}
-        transition={{ type: 'spring', bounce: 0.1, duration: 0.35 }}
-        className="relative shrink-0 overflow-hidden rounded-b-2xl z-10"
-      >
-        <motion.div
-          animate={{ opacity: collapsed ? 1 : 0 }}
-          transition={{ duration: 0.2 }}
-          className="absolute inset-0 z-[5] bg-linear-to-t from-overlay/80 via-overlay/20 to-transparent pointer-events-none"
-        />
+      <ProductHero
+        product={product}
+        suitability={suitability}
+        cartItem={cartItem}
+        addToCart={addToCart}
+        removeFromCart={removeFromCart}
+        updateQuantity={updateQuantity}
+        onBack={() => router.history.back()}
+      />
 
-        <motion.div
-          animate={{ opacity: collapsed ? 1 : 0 }}
-          transition={{ duration: 0.2 }}
-          className="absolute inset-0 z-10 flex items-end pb-4 px-4 pointer-events-none"
-        >
-          <span className="text-xl font-bold text-white capitalize drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)] truncate">
-            {product.productName || 'Unknown Product'}
-          </span>
-        </motion.div>
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 pt-4 space-y-6 pb-20">
+        <ProductServingNote serving={suitability?.serving} />
+
+        {suitability &&
+          (suitability.checks.length > 0 ||
+            isAgentLoading ||
+            agentError ||
+            agentUsed ||
+            triggerMode === 'manual') && (
+            <section>
+              <SectionHeader>Suitability</SectionHeader>
+              <SuitabilityBreakdown
+                checks={suitability.checks}
+                isAgentLoading={isAgentLoading}
+                stepper={stepper}
+                agentError={agentError}
+                agentUsed={agentUsed}
+                triggerMode={triggerMode}
+                startAgentEval={startAgentEval}
+              />
+            </section>
+          )}
 
         <ProductHero
           product={product}

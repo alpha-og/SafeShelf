@@ -11,6 +11,44 @@ def _clean_tags(tags):
 
 
 async def get_product_by_barcode(barcode: str) -> dict:
+    if barcode.startswith('PROD-'):
+        from sqlmodel import select
+        from app.shared.db import async_session
+        from app.products.models import Product
+
+        async with async_session() as session:
+            prod = (await session.exec(select(Product).where(Product.barcode == barcode))).first()
+            if prod:
+                import json
+                import os
+                
+                nutrients = {}
+                data_path = os.path.join('data', 'fresh_produce.json')
+                if os.path.exists(data_path):
+                    try:
+                        with open(data_path, 'r', encoding='utf-8') as f:
+                            produce_data = json.load(f)
+                        for item in produce_data:
+                            if item['barcode'] == barcode:
+                                nutrients = item.get('nutrients', {})
+                                break
+                    except Exception:
+                        pass
+                
+                return {
+                    'barcode': prod.barcode,
+                    'product_name': prod.product_name,
+                    'brand': prod.brand,
+                    'categories': ['Fresh Produce'],
+                    'ingredients': [],
+                    'nutrients': nutrients,
+                    'allergens': [],
+                    'image_url': prod.product_image,
+                    'quantity': prod.quantity,
+                    'serving_size': None,
+                }
+            raise HTTPException(status_code=404, detail='Product not found in database')
+
     async with httpx.AsyncClient() as client:
         response = await client.get(
             f'https://world.openfoodfacts.org/api/v2/product/{barcode}.json'

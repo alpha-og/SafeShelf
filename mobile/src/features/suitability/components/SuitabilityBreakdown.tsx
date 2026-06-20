@@ -1,11 +1,27 @@
-import { ChevronDown, ChevronUp, CircleAlert, CircleX } from 'lucide-react'
+import {
+  AlertTriangle,
+  CheckCircle2,
+  ChevronDown,
+  ChevronUp,
+  Circle,
+  CircleAlert,
+  CircleX,
+  Loader2,
+  Sparkles,
+} from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { StatusDot } from '@/components/StatusDot'
 import { Button } from '@/components/ui/button'
-import type { SuitabilityCheck, SuitabilityStatus } from '../types'
+import type { StepperPhase, StepperState, SuitabilityCheck, SuitabilityStatus } from '../types'
 
 interface SuitabilityBreakdownProps {
   checks: SuitabilityCheck[]
+  isAgentLoading?: boolean
+  stepper?: StepperState | null
+  agentError?: (Error & { status?: number }) | null
+  agentUsed?: boolean
+  triggerMode?: 'auto' | 'manual'
+  startAgentEval?: () => Promise<void>
 }
 
 interface GroupInfo {
@@ -25,7 +41,7 @@ function groupSort(a: GroupInfo, b: GroupInfo): number {
   return a.name.localeCompare(b.name)
 }
 
-export function SuitabilityBreakdown({ checks }: SuitabilityBreakdownProps) {
+function ChecksList({ checks }: { checks: SuitabilityCheck[] }) {
   const groups = useMemo(() => {
     const map = new Map<string, SuitabilityCheck[]>()
     for (const check of checks) {
@@ -140,6 +156,176 @@ export function SuitabilityBreakdown({ checks }: SuitabilityBreakdownProps) {
           </div>
         )
       })}
+    </div>
+  )
+}
+
+export function SuitabilityBreakdown({
+  checks,
+  isAgentLoading = false,
+  stepper = null,
+  agentError = null,
+  agentUsed = false,
+  triggerMode = 'auto',
+  startAgentEval,
+}: SuitabilityBreakdownProps) {
+  const localChecks = useMemo(() => checks.filter((c) => c.type !== 'agent_insight'), [checks])
+  const agentChecks = useMemo(() => checks.filter((c) => c.type === 'agent_insight'), [checks])
+
+  const renderStepIcon = (phase: StepperPhase) => {
+    if (phase === 'pass') {
+      return <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
+    }
+    if (phase === 'fail') {
+      return <CircleX className="h-4 w-4 text-rose-500 shrink-0 mt-0.5" />
+    }
+    if (phase === 'warn') {
+      return <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
+    }
+    if (phase === 'running') {
+      return <Loader2 className="h-4 w-4 text-primary animate-spin shrink-0 mt-0.5" />
+    }
+    return <Circle className="h-4 w-4 text-muted-foreground/40 shrink-0 mt-0.5" />
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* 1. Local Rules Verification Card */}
+      {localChecks.length > 0 && (
+        <div className="border border-border rounded-xl p-4 bg-card shadow-xs space-y-3">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            On-Device Analysis
+          </h3>
+          <ChecksList checks={localChecks} />
+        </div>
+      )}
+
+      {/* 2. AI Deep Analysis Card / Manual Trigger Option */}
+      {isAgentLoading || agentError || agentChecks.length > 0 || agentUsed ? (
+        <div className="border border-border rounded-xl p-4 bg-card shadow-xs space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              AI Clinical Nutrition Insights
+            </h3>
+            {isAgentLoading && (
+              <span className="text-[10px] bg-primary/10 text-primary font-medium px-2 py-0.5 rounded-full animate-pulse">
+                AI Agent Active
+              </span>
+            )}
+          </div>
+
+          {/* Stepper with descriptive summaries */}
+          {stepper && (
+            <div className="bg-muted/40 rounded-lg p-3 space-y-3 border border-border/50">
+              <div className="flex items-start gap-3 text-xs">
+                {renderStepIcon(stepper.basic_metrics)}
+                <div className="min-w-0">
+                  <p
+                    className={`font-semibold ${stepper.basic_metrics === 'pass' ? 'text-foreground' : 'text-muted-foreground'}`}
+                  >
+                    Nutrient Verification
+                  </p>
+                  <p className="text-muted-foreground text-[11px] mt-0.5 leading-normal">
+                    {stepper.basic_metrics_summary ||
+                      'Verifying personalized rules (sodium, sugars, fats)...'}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 text-xs">
+                {renderStepIcon(stepper.ingredient_analysis)}
+                <div className="min-w-0">
+                  <p
+                    className={`font-semibold ${stepper.ingredient_analysis === 'pass' ? 'text-foreground' : 'text-muted-foreground'}`}
+                  >
+                    Raw Ingredient Evaluation
+                  </p>
+                  <p className="text-muted-foreground text-[11px] mt-0.5 leading-normal">
+                    {stepper.ingredient_analysis_summary ||
+                      'Analyzing raw ingredient text for derivatives...'}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 text-xs">
+                {renderStepIcon(stepper.medication_check)}
+                <div className="min-w-0">
+                  <p
+                    className={`font-semibold ${stepper.medication_check === 'pass' ? 'text-foreground' : 'text-muted-foreground'}`}
+                  >
+                    Medication Interaction Check
+                  </p>
+                  <p className="text-muted-foreground text-[11px] mt-0.5 leading-normal">
+                    {stepper.medication_check_summary || 'Checking medication-food interactions...'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Error Fallback Box */}
+          {agentError && (
+            <div className="bg-amber-500/10 border border-amber-500/25 rounded-lg p-3.5 space-y-3">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
+                <div className="space-y-1">
+                  <h4 className="text-sm font-semibold text-amber-500 leading-none">
+                    AI Insights Temporarily Unavailable
+                  </h4>
+                  <p className="text-xs text-muted-foreground leading-normal">
+                    Local mathematical safety checks remain fully active.
+                  </p>
+                </div>
+              </div>
+              {startAgentEval && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={startAgentEval}
+                  className="w-full text-xs font-semibold border-amber-500/30 text-amber-600 hover:bg-amber-500/10"
+                >
+                  Retry AI Verification
+                </Button>
+              )}
+            </div>
+          )}
+
+          {/* Agent checks results */}
+          {!isAgentLoading && !agentError && agentChecks.length > 0 && (
+            <ChecksList checks={agentChecks} />
+          )}
+
+          {/* Agent finished but no warnings (passed all deep checks) */}
+          {!isAgentLoading && !agentError && agentUsed && agentChecks.length === 0 && (
+            <div className="flex items-center gap-2 px-2 py-1">
+              <StatusDot status="pass" />
+              <span className="text-sm font-medium text-foreground">
+                All deep clinical nutrition guidelines met
+              </span>
+            </div>
+          )}
+        </div>
+      ) : (
+        triggerMode === 'manual' &&
+        !isAgentLoading &&
+        startAgentEval && (
+          <button
+            type="button"
+            onClick={startAgentEval}
+            className="w-full text-center flex flex-col items-center justify-center border border-primary/20 rounded-xl p-5 bg-gradient-to-br from-card via-card to-primary/[0.02] shadow-sm hover:shadow-md transition-all hover:scale-[1.005] active:scale-[0.995] space-y-4 group"
+          >
+            <div className="flex items-center justify-center gap-2 text-primary w-full">
+              <Sparkles className="h-5 w-5 animate-pulse shrink-0" />
+              <h4 className="text-sm font-bold tracking-tight">AI Clinical Review Available</h4>
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed max-w-sm text-center mx-auto">
+              Get ingredient interactions and personalized nutrition insights based on your profile
+            </p>
+            <div className="w-full h-11 rounded-xl bg-primary/10 text-primary border border-primary/20 font-semibold text-sm flex items-center justify-center shadow-xs transition-colors group-hover:bg-primary/20">
+              Run Analysis
+            </div>
+          </button>
+        )
+      )}
     </div>
   )
 }

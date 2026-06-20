@@ -6,14 +6,16 @@ import { PageHeader } from '@/components/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useProfiles } from '@/providers/ProfilesProvider'
-import type { ConstraintItem } from '../services/constraints'
+import type { HealthData } from '@/features/health-report/types'
+import { type ConstraintItem, mergeConstraints } from '../services/constraints'
 import { createProfile, deleteProfile, getProfile, updateProfile } from '../services/profileStorage'
-import { DEFAULT_SERVING_SETTINGS, type PrescriptionFile } from '../types'
+import { DEFAULT_SERVING_SETTINGS } from '../types'
+import { AdditionalInfoSection } from './AdditionalInfoSection'
 import { BudgetAndServingFields } from './BudgetAndServingFields'
 import { ConditionsAndAllergensFields } from './ConditionsAndAllergensFields'
 import { DietaryChoicesScreen } from './DietaryChoicesScreen'
 import { DietarySummaryButton } from './DietarySummaryButton'
-import { PrescriptionUpload } from './PrescriptionUpload'
+import { HealthReportImport } from './HealthReportImport'
 import { ProfileWizard, type ProfileWizardValues } from './ProfileWizard'
 
 interface ManageProfilePageProps {
@@ -55,7 +57,8 @@ function EditProfileForm({ profileId }: { profileId: string }) {
   const [servingSettings, setServingSettings] = useState(DEFAULT_SERVING_SETTINGS)
   const [conditions, setConditions] = useState<ConstraintItem[]>([])
   const [allergens, setAllergens] = useState<ConstraintItem[]>([])
-  const [prescriptions, setPrescriptions] = useState<PrescriptionFile[]>([])
+  const [healthData, setHealthData] = useState<HealthData | null>(null)
+  const [healthReportFileName, setHealthReportFileName] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
@@ -69,7 +72,8 @@ function EditProfileForm({ profileId }: { profileId: string }) {
         setServingSettings(profile.servingSettings)
         setConditions(profile.conditions)
         setAllergens(profile.allergens)
-        setPrescriptions(profile.prescriptions ?? [])
+        setHealthData(profile.healthData)
+        setHealthReportFileName(profile.healthReportFileName ?? null)
       }
       setLoaded(true)
     })
@@ -90,7 +94,8 @@ function EditProfileForm({ profileId }: { profileId: string }) {
         servingSettings,
         conditions,
         allergens,
-        prescriptions,
+        healthData,
+        healthReportFileName,
       })
       // The edited profile may be driving suitability directly, or as a
       // member of the currently active Group Buy group — either way the
@@ -191,7 +196,28 @@ function EditProfileForm({ profileId }: { profileId: string }) {
           onAllergensChange={setAllergens}
         />
 
-        <PrescriptionUpload prescriptions={prescriptions} onChange={setPrescriptions} />
+        <HealthReportImport
+          onImported={(fields) => {
+            if (fields.age != null) setAge(String(fields.age))
+            setDietaryPreferences((prev) => [
+              ...prev,
+              ...fields.dietaryPreferences.filter((d) => !prev.includes(d)),
+            ])
+            setConditions((prev) => mergeConstraints(prev, fields.conditions))
+            setAllergens((prev) => mergeConstraints(prev, fields.allergens))
+            setHealthData(fields.healthData)
+            setHealthReportFileName(fields.sourceFileName)
+          }}
+        />
+
+        <AdditionalInfoSection
+          healthData={healthData}
+          fileName={healthReportFileName}
+          onDelete={() => {
+            setHealthData(null)
+            setHealthReportFileName(null)
+          }}
+        />
       </main>
 
       <footer className="border-t border-border shrink-0 px-4 py-3 space-y-2">

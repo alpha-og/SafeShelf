@@ -11,19 +11,6 @@ export const DEFAULT_SERVING_SETTINGS: ServingSettings = {
   minLiquidMl: 100,
 }
 
-/** A prescription document the user uploaded. The actual file is handed to the
- * backend connector for processing (OCR / extraction); we keep only metadata
- * and a processing status locally. See services/prescriptions.ts. */
-export interface PrescriptionFile {
-  id: string
-  name: string
-  mimeType: string
-  size: number
-  uploadedAt: string
-  /** Set by the backend once it has processed the document. */
-  status: 'pending' | 'processed' | 'failed'
-}
-
 export interface Profile {
   id: string
   name: string
@@ -33,14 +20,14 @@ export interface Profile {
   servingSettings: ServingSettings
   conditions: ConstraintItem[]
   allergens: ConstraintItem[]
-  /** Uploaded prescription documents (metadata only). Optional for profiles
-   * created before this field existed. */
-  prescriptions?: PrescriptionFile[]
   /** True for the profile created during onboarding. Informational only —
    * deletion of the last remaining profile is blocked regardless of this flag. */
   isMain: boolean
   /** Health data extracted from uploaded medical reports via AI. */
   healthData: HealthData | null
+  /** File name of the health report the `healthData` was extracted from, shown
+   * in the profile's Additional Information section. */
+  healthReportFileName?: string | null
   createdAt: string
   updatedAt: string
 }

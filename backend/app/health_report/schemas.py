@@ -26,6 +26,7 @@ class MedicalConditions(BaseModel):
     thyroidDisorder: bool | None = None
     heartDisease: bool | None = None
     kidneyDisease: bool | None = None
+    otherConditions: list[str] | None = None
 
 
 class Allergies(BaseModel):
