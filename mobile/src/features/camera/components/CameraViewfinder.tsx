@@ -13,8 +13,8 @@ import { TopBar } from './TopBar'
 interface CameraViewfinderProps {
   /** Active scan mode, owned by the bottom bar so it and the viewfinder stay in sync. */
   mode: ScanMode
-  /** Notifies the parent when a capture/scan result is on screen, so it can hide
-   *  the bottom bar (which would otherwise block the result). */
+  /** Notifies the parent when a scan result is on screen, so it can bump the
+   *  camera tab's z-index above the bottom bar. */
   onCaptureActiveChange?: (active: boolean) => void
 }
 

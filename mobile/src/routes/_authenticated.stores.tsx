@@ -1,5 +1,5 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { Clock, MapPin } from 'lucide-react'
+import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
+import { ArrowLeft, Clock, MapPin } from 'lucide-react'
 import { useEffect } from 'react'
 import { useNearestStore } from '@/features/stores/hooks/useNearestStore'
 import { useStore } from '@/providers/StoreProvider'
@@ -17,6 +17,7 @@ function StoresPage() {
 
   const { setSelectedStoreId, selectedStoreId } = useStore()
   const navigate = useNavigate()
+  const router = useRouter()
 
   const handleSelectStore = async (id: string) => {
     await setSelectedStoreId(id)
@@ -25,10 +26,16 @@ function StoresPage() {
 
   return (
     <div className="flex flex-col h-full w-full bg-background">
-      <header className="px-6 py-8">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">Select a Store</h1>
-        <p className="text-muted-foreground mt-2">
-          Choose a SafeShelf location near you to view available inventory.
+      <header className="px-6 py-4">
+        <button
+          onClick={() => router.history.back()}
+          className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 border border-primary/20 hover:bg-primary/20 hover:scale-[1.02] transition-all mb-2"
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </button>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">Select a Store</h1>
+        <p className="text-muted-foreground text-sm mt-1">
+          Choose a SafeShelf location near you.
         </p>
       </header>
 

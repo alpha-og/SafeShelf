@@ -87,6 +87,32 @@ async def _seed_inventory():
         await asyncio.sleep(1)
     success('API fetch complete')
 
+    import json
+    import os
+    
+    CUSTOM_PRODUCE = []
+    data_path = os.path.join('data', 'fresh_produce.json')
+    if os.path.exists(data_path):
+        try:
+            with open(data_path, 'r', encoding='utf-8') as f:
+                CUSTOM_PRODUCE = json.load(f)
+        except Exception as e:
+            warn(f"Failed to load custom produce dataset: {e}")
+            
+    for item in CUSTOM_PRODUCE:
+        cat_name = item.get('category', 'Vegetables')
+        if cat_name not in category_product_map:
+            category_product_map[cat_name] = []
+        category_product_map[cat_name].append({
+            'code': item.get('barcode', item.get('code')),
+            'product_name': item.get('product_name'),
+            'image_url': item.get('image_url'),
+            'brands': 'Fresh Farm Produce',
+            'quantity': item.get('quantity')
+        })
+
+
+
     info('Seeding products and inventory...')
     async with async_session() as session:
         stores = (await session.exec(select(Store))).all()
@@ -139,15 +165,29 @@ async def _seed_inventory():
                     continue
                 seen_barcodes.add(barcode)
 
+                is_custom = barcode.startswith('PROD-')
+                is_produce = cat_name in ('Fruits', 'Vegetables')
+
                 for store in stores:
-                    if random.random() <= 0.30:
+                    prob = 0.30
+                    if is_custom:
+                        prob = 0.95
+                    elif is_produce:
+                        prob = 0.70
+
+                    if random.random() <= prob:
                         if cat_type == 'Staples':
                             stock_qty = random.randint(50, 150)
                         elif cat_type == 'Perishables':
-                            stock_qty = random.randint(5, 30)
+                            stock_qty = random.randint(20, 80)
                         else:
                             stock_qty = random.randint(10, 50)
-                        price = round(random.uniform(20.0, 1500.0), 2)
+                        
+                        if is_custom:
+                            price = round(random.uniform(30.0, 150.0), 2)
+                        else:
+                            price = round(random.uniform(20.0, 1500.0), 2)
+                            
                         await session.merge(StoreInventory(
                             store_id=store.id,
                             product_id=prod.id,
