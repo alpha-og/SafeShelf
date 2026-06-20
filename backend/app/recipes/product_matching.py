@@ -27,6 +27,52 @@ _STOPWORDS: set[str] = {
     'pure',
 }
 
+_PREPARED_FOOD_TOKENS: set[str] = {
+    'chocolate',
+    'candy',
+    'cookies',
+    'cookie',
+    'chips',
+    'chip',
+    'ale',
+    'beer',
+    'wine',
+    'sauce',
+    'syrup',
+    'cake',
+    'pie',
+    'cereal',
+    'granola',
+    'crackers',
+    'cracker',
+    'soda',
+    'candy',
+    'biscuit',
+    'biscuits',
+    'pastry',
+    'pastries',
+    'pudding',
+    'pasta',
+    'noodles',
+    'noodle',
+    'bread',
+    'loaf',
+    'oil',
+    'vinegar',
+    'butter',
+    'margarine',
+    'shortening',
+    'lard',
+    'broth',
+    'stock',
+    'soup',
+    'juice',
+    'drink',
+    'beverage',
+    'smoothie',
+    'shake',
+}
+
 _TOKEN_RE = re.compile(r'[a-z]+')
 
 
@@ -69,6 +115,35 @@ def _has_word(name: str, word: str) -> bool:
     return bool(re.search(rf'(?<![a-z]){re.escape(word)}(?![a-z])', name))
 
 
+def _relevance_score(product_name: str, ingredient_tokens: set[str]) -> float:
+    tokens = [t for t in _TOKEN_RE.findall(product_name.lower())
+              if t not in _STOPWORDS and len(t) > 1]
+    if not tokens:
+        return 0.0
+
+    matched = sum(1 for t in tokens if t in ingredient_tokens)
+    total = len(tokens)
+
+    if matched == 0:
+        return 0.0
+
+    first_match_idx = next(i for i, t in enumerate(tokens) if t in ingredient_tokens)
+    pos_bonus = 1.0 - (first_match_idx / max(total - 1, 1)) * 0.25
+
+    ratio = matched / total
+
+    extra = total - matched
+    prepared_penalty = 1.0
+    if extra > 0:
+        for t in tokens:
+            if t not in ingredient_tokens and t in _PREPARED_FOOD_TOKENS:
+                prepared_penalty = 0.3
+                break
+    extra_penalty = 1.0 if extra <= 1 else max(0.0, 1.0 - (extra - 1) * 0.35)
+
+    return ratio * 0.35 + pos_bonus * 0.25 + extra_penalty * 0.20 + prepared_penalty * 0.20
+
+
 async def match_ingredient(
     session,
     ingredient: str,
@@ -105,6 +180,7 @@ async def match_ingredient(
         result = await session.execute(stmt)
     rows = result.all()
 
+    ing_tokens = set(tokens)
     seen: set[str] = set()
     results: list[dict] = []
     for inv, prod in rows:
@@ -123,8 +199,13 @@ async def match_ingredient(
                 'quantity': prod.quantity,
                 'price': inv.price,
                 'in_stock': inv.stock_quantity > 0,
+                '_score': _relevance_score(prod.product_name, ing_tokens),
             }
         )
+
+    results.sort(key=lambda r: r['_score'], reverse=True)
+    for r in results:
+        del r['_score']
 
     return results
 
