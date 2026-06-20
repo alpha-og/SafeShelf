@@ -12,6 +12,7 @@ import { useCart } from '@/providers/CartProvider'
 import type { ProductInfo } from '../services/product'
 import { ProductHero } from './ProductHero'
 import { ProductServingNote } from './ProductServingNote'
+import { ProductSuggestions } from './ProductSuggestions'
 
 interface ProductSheetProps {
   isProcessing: boolean
@@ -103,6 +104,10 @@ export function ProductSheet({
                 View full details
                 <ArrowRight className="h-4 w-4" />
               </Button>
+            )}
+
+            {result.barcode && (
+              <ProductSuggestions barcode={result.barcode} />
             )}
 
             {result.barcode && (

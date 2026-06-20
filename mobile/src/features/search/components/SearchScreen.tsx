@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query'
-import { useNavigate } from '@tanstack/react-router'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { lookupByBarcode } from '@/features/products/services/product'
 import { ProductSheet } from '@/features/products/components/ProductSheet'
@@ -24,7 +23,6 @@ export function SearchScreen({ onSheetOpenChange }: SearchScreenProps = {}) {
   const debouncedQuery = useDebounce(query, 300)
   const [page, setPage] = useState(1)
   const [selectedBarcode, setSelectedBarcode] = useState<string | null>(null)
-  const navigate = useNavigate()
 
   useEffect(() => {
     onSheetOpenChange?.(!!selectedBarcode)
