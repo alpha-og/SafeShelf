@@ -104,6 +104,9 @@ function mapProfile(profile: Profile): UserProfile {
     dietaryPreferences: profile.dietaryPreferences,
     budget: profile.budget,
     servingSettings: profile.servingSettings,
+    age: profile.age ?? profile.healthData?.personalDetails?.age ?? null,
+    medications: (profile.healthData?.personalDetails as any)?.medications ?? [],
+    healthData: profile.healthData,
   }
 
   const merged = mergeUserProfile(
@@ -130,9 +133,11 @@ function mergeProfiles(members: Profile[]): UserProfile {
   const conditions = new Set<string>()
   const conditionCodes = new Set<string>()
   const dietaryPreferences = new Set<string>()
+  const medications = new Set<string>()
   let minBudget: number | null = null
   let minSolidG = 0
   let minLiquidMl = 0
+  let minAge: number | null = null
 
   for (const member of members) {
     const base = {
@@ -156,6 +161,16 @@ function mergeProfiles(members: Profile[]): UserProfile {
       dietaryPreferences.add(d)
     })
 
+    const memberMeds = (member.healthData?.personalDetails as any)?.medications
+    if (Array.isArray(memberMeds)) {
+      memberMeds.forEach((m) => medications.add(m))
+    }
+
+    const age = member.age ?? member.healthData?.personalDetails?.age
+    if (age !== null && age !== undefined) {
+      minAge = minAge === null ? age : Math.min(minAge, age)
+    }
+
     const budget = parseInt(member.budget, 10)
     if (!Number.isNaN(budget)) {
       minBudget = minBudget === null ? budget : Math.min(minBudget, budget)
@@ -175,6 +190,9 @@ function mergeProfiles(members: Profile[]): UserProfile {
       minSolidG: minSolidG || DEFAULT_SERVING_SETTINGS.minSolidG,
       minLiquidMl: minLiquidMl || DEFAULT_SERVING_SETTINGS.minLiquidMl,
     },
+    age: minAge,
+    medications: [...medications],
+    healthData: members[0]?.healthData ?? null,
   }
 }
 

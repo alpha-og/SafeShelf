@@ -31,11 +31,17 @@ class ResponseEnvelopeMiddleware:
                 response_headers = message.get('headers', [])
                 for k, v in response_headers:
                     if k.lower() == b'content-type':
-                        content_type = v.decode()
+                        content_type = v.decode().lower()
                         break
+                if 'text/event-stream' in content_type:
+                    await send(message)
                 return
 
             if message['type'] == 'http.response.body':
+                if 'text/event-stream' in content_type:
+                    await send(message)
+                    return
+
                 chunk = message.get('body', b'')
                 more_body = message.get('more_body', False)
 
