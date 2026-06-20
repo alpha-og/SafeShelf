@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends
+from starlette.requests import ClientDisconnect
 
 from app.analysis.schemas import (
     CompareRequest,
     CompareResponse,
     DeepEvaluateRequest,
-    DeepEvaluateResponse,
     EvaluateRequest,
     EvaluateResponse,
     SuggestRequest,
@@ -48,6 +48,18 @@ async def suggest(
     return await suggest_alternatives(req, session)
 
 
-@router.post('/deep-evaluate', response_model=DeepEvaluateResponse)
-async def deep_evaluate_endpoint(req: DeepEvaluateRequest):
-    return await deep_evaluate(req)
+
+@router.post('/deep-evaluate')
+async def deep_evaluate_stream_endpoint(
+    req: DeepEvaluateRequest,
+    _current_user=Depends(get_current_user),  
+):
+    """
+    Spins up the agentic evaluation pipeline and streams state updates
+    and final check payloads via Server-Sent Events (SSE).
+    """
+    try:
+        return await deep_evaluate(req)
+        
+    except ClientDisconnect:
+        pass

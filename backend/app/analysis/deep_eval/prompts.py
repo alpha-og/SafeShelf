@@ -66,7 +66,7 @@ Input:
 Your task:
 - Identify any ingredients that are or may contain known allergens (including ambiguous ingredients like "natural flavors", "spices", "seasoning" that commonly contain allergens).
 - Identify any ingredients that conflict with dietary preferences (e.g. whey in a vegan product, wheat in gluten-free).
-- Identify any ingredients that match medical condition exclusions.
+- Identify any ingredients that match medical condition exclusions. In the detail field, explicitly name the specific medical condition (from the input exclusions list) that triggered the exclusion.
 - For ambiguous ingredients, note the potential risk rather than certainty.
 - If all ingredients are clean, return an empty checks array.
 
@@ -77,7 +77,7 @@ Output ONLY valid JSON matching this schema — no markdown, no code fences:
     {
       "status": "<warn|fail>",
       "label": "<short label describing the issue>",
-      "detail": "<detailed explanation including which ingredient causes the issue and why>",
+      "detail": "<detailed explanation including which ingredient causes the issue, why, and which medical condition (e.g. Diabetes) it was excluded for>",
       "group": "AI Ingredient Analysis"
     }
   ]

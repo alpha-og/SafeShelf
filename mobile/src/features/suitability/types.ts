@@ -1,3 +1,5 @@
+import type { HealthData } from '@/features/health-report/types'
+
 export interface UserProfile {
   allergens: string[]
   conditions: string[]
@@ -6,8 +8,19 @@ export interface UserProfile {
   budget: string
   servingSettings?: ServingSettings
   age?: number | null
-  diseaseSeverities?: Record<string, 'low' | 'moderate' | 'high'>
   medications?: string[]
+  healthData?: HealthData | null
+}
+
+export type StepperPhase = 'pending' | 'running' | 'pass' | 'fail' | 'warn'
+
+export interface StepperState {
+  basic_metrics: StepperPhase
+  basic_metrics_summary?: string
+  ingredient_analysis: StepperPhase
+  ingredient_analysis_summary?: string
+  medication_check: StepperPhase
+  medication_check_summary?: string
 }
 
 export interface ServingSettings {
