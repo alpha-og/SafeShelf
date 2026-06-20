@@ -114,6 +114,7 @@ export function SearchScreen({ onSheetOpenChange }: SearchScreenProps = {}) {
         error={detailsError ? "Failed to load product details" : null}
         onDismiss={() => setSelectedBarcode(null)}
         portal={true}
+        sheetKey={selectedBarcode}
       />
     </div>
   )

@@ -22,6 +22,7 @@ interface ProductSheetProps {
   dismissRef?: React.MutableRefObject<(() => void) | null>
   topOffset?: number
   portal?: boolean
+  sheetKey?: string | null
 }
 
 export function ProductSheet({
@@ -32,6 +33,7 @@ export function ProductSheet({
   dismissRef,
   topOffset = 0,
   portal = false,
+  sheetKey,
 }: ProductSheetProps) {
   const navigate = useNavigate()
   const { result: suitability } = useSuitability(result)
@@ -45,6 +47,7 @@ export function ProductSheet({
 
   return (
     <BottomSheet
+      key={sheetKey ?? undefined}
       open={open}
       onDismiss={onDismiss}
       snapPoints={{ peek: 50, full: 0 }}

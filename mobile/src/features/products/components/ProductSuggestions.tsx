@@ -33,23 +33,20 @@ export function ProductSuggestions({ barcode }: ProductSuggestionsProps) {
     enabled: !!barcode,
   })
 
-  //full product nfo
+  //full product info
   const { data: evaluatedSuggestions = [], isLoading: isEvaluating } = useQuery({
-    queryKey: ['evaluatedSuggestions', barcode, rawSuggestions.map((s) => s.barcode)],
+    queryKey: ['evaluatedSuggestions', barcode, rawSuggestions.map((s) => s.barcode).join(',')],
     queryFn: async () => {
-      if (rawSuggestions.length === 0 || !context || !rules || !aliases) return []
-
+      const safeProducts: ProductInfo[] = []
       const fullProducts = await Promise.all(
         rawSuggestions.map((s) => lookupByBarcode(s.barcode))
       )
-
-      const safeProducts: ProductInfo[] = []
 
       for (const p of fullProducts) {
         if (!p) continue
 
         //evaluate against user
-        const suitability = evaluateContext(p, context, rules, aliases)
+        const suitability = evaluateContext(p, context!, rules!, aliases!)
 
         // Only include products with no failures or warnings
         const isUnsuitable = suitability.checks.some(
@@ -66,7 +63,8 @@ export function ProductSuggestions({ barcode }: ProductSuggestionsProps) {
 
       return safeProducts
     },
-    enabled: rawSuggestions.length > 0,
+    // Wait for all dependencies before running evaluation
+    enabled: rawSuggestions.length > 0 && !!context && !!rules && !!aliases,
   })
 
   if (isLoadingSuggestions || (rawSuggestions.length > 0 && isEvaluating)) {

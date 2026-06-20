@@ -129,6 +129,7 @@ async def get_all_store_inventory(store_id: str, session: AsyncSession) -> list[
         .join(Store, StoreInventory.store_id == Store.id)
         .join(Product, StoreInventory.product_id == Product.id)
         .where(Store.uuid == store_id)
+        .where(StoreInventory.stock_quantity > 0)
     )
     result = await session.execute(stmt)
     rows = result.all()
