@@ -1,6 +1,6 @@
 import { useNavigate } from '@tanstack/react-router'
 import { History, PackageX, Trash2 } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { EmptyState } from '@/components/EmptyState'
 import { PageHeader } from '@/components/PageHeader'
 import { StatusDot } from '@/components/StatusDot'
@@ -108,6 +108,7 @@ export function RecentScansPage() {
         onBack={() => navigate({ to: '/' })}
         actions={
           <button
+            type="button"
             onClick={handleClear}
             className="flex items-center justify-center w-10 h-10 rounded-full backdrop-blur-md border border-destructive/20 bg-destructive/10 hover:bg-destructive/20 hover:scale-[1.02] text-destructive transition-colors"
           >

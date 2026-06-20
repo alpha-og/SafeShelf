@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { ChevronDown, History, MapPin, Settings, ShoppingCart, User, Users } from 'lucide-react'
+import { ChevronDown, History, MapPin, ShoppingCart, User, Users } from 'lucide-react'
 import { forwardRef } from 'react'
 import { Avatar } from '@/components/Avatar'
 import { useProfiles } from '@/providers/ProfilesProvider'
