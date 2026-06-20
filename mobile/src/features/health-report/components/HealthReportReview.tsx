@@ -187,6 +187,18 @@ export function HealthReportReview({ data, onSave, onCancel, onCreateProfile, sa
             <span className="text-sm text-muted-foreground">Kidney Disease</span>
             <BoolBadge value={mc?.kidneyDisease as boolean | undefined} onChange={() => toggleBool('medicalConditions', 'kidneyDisease')} />
           </div>
+          {Array.isArray(mc?.otherConditions) && (mc.otherConditions as string[]).length > 0 && (
+            <div className="pt-1">
+              <span className="text-sm text-muted-foreground">Other Conditions</span>
+              <ul className="mt-1 space-y-1">
+                {(mc.otherConditions as string[]).map((c) => (
+                  <li key={c} className="text-sm text-foreground">
+                    {c}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </CollapsibleSection>
 
         <CollapsibleSection title="Allergies">
@@ -287,9 +299,11 @@ export function HealthReportReview({ data, onSave, onCancel, onCreateProfile, sa
       </div>
 
       <footer className="shrink-0 border-t border-border px-4 py-3 space-y-2">
-        <Button className="w-full" size="lg" onClick={() => onCreateProfile?.(edited)} disabled={saving}>
-          {saving ? 'Creating...' : 'Create Profile with Details'}
-        </Button>
+        {onCreateProfile && (
+          <Button className="w-full" size="lg" onClick={() => onCreateProfile(edited)} disabled={saving}>
+            {saving ? 'Creating...' : 'Create Profile with Details'}
+          </Button>
+        )}
         <Button className="w-full" size="lg" variant="secondary" onClick={handleSave} disabled={saving}>
           {saving ? 'Saving...' : 'Save to Current Profile'}
         </Button>
