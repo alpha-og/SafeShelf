@@ -9,47 +9,17 @@ import { SectionHeader } from '@/components/SectionHeader'
 import { Skeleton } from '@/components/ui/skeleton'
 import { BANNER_COMPACT, BANNER_FULL, useCollapsibleBanner } from '@/hooks/useCollapsibleBanner'
 import { useStore } from '@/providers/StoreProvider'
+import { ProductMiniCard } from '@/features/products/components/ProductMiniCard'
 import { getRecipeById, getRecipeProducts } from '../services/recipe'
 import type { ProductVariant } from '../services/recipe'
 
-function ProductMiniCard({ product }: { product: ProductVariant }) {
-  const navigate = useNavigate()
-  const [imgError, setImgError] = useState(false)
-  const [imgLoaded, setImgLoaded] = useState(false)
-
-  return (
-    <div
-      onClick={() =>
-        navigate({ to: '/product/$barcode', params: { barcode: product.barcode } })
-      }
-      className="w-28 shrink-0 rounded-2xl border bg-card active:scale-[0.98] transition-transform cursor-pointer overflow-hidden hover:scale-[1.02]"
-    >
-      <div className="aspect-square bg-muted relative overflow-hidden rounded-[inherit]">
-        <ImageOff className="absolute inset-0 m-auto w-5 h-5 text-muted-foreground/30" />
-        {product.product_image && !imgError && (
-          <img
-            src={product.product_image}
-            alt={product.product_name}
-            referrerPolicy="no-referrer"
-            className={`absolute inset-0 w-full h-full object-cover ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
-            onLoad={() => setImgLoaded(true)}
-            onError={() => setImgError(true)}
-          />
-        )}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent pt-6 px-1.5 pb-1.5 space-y-0.5">
-          <p className="text-[11px] text-white leading-tight line-clamp-2">
-{product.product_name.replace(/\b\w/g, c => c.toUpperCase())}
-          </p>
-          <p className="text-[11px] font-semibold text-white tabular-nums">
-            ${product.price.toFixed(2)}
-          </p>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function IngredientProducts({ options }: { options: ProductVariant[] }) {
+function IngredientProducts({
+  options,
+  onProductClick,
+}: {
+  options: ProductVariant[]
+  onProductClick: (barcode: string) => void
+}) {
   if (options.length === 0) {
     return (
       <div className="px-8 pb-3">
@@ -64,7 +34,13 @@ function IngredientProducts({ options }: { options: ProductVariant[] }) {
     <div className="pl-7 pb-3 overflow-x-auto scrollbar-none">
       <div className="flex gap-2">
         {options.map((opt) => (
-          <ProductMiniCard key={opt.barcode} product={opt} />
+          <ProductMiniCard
+            key={opt.barcode}
+            productName={opt.product_name}
+            productImage={opt.product_image}
+            price={opt.price}
+            onClick={() => onProductClick(opt.barcode)}
+          />
         ))}
       </div>
     </div>
@@ -97,6 +73,7 @@ function InstructionsSection({ steps }: { steps: string[] }) {
 export function RecipeDetailPage() {
   const { id } = useParams({ from: '/_authenticated/recipe/$id' })
   const router = useRouter()
+  const navigate = useNavigate()
   const [imageError, setImageError] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const { selectedStoreId } = useStore()
@@ -308,6 +285,9 @@ export function RecipeDetailPage() {
                         {openIngredients.has(i) && selectedStoreId && !productsQuery.isLoading && (
                           <IngredientProducts
                             options={optionsMap.get(ingredient) ?? []}
+                            onProductClick={(barcode) =>
+                              navigate({ to: '/product/$barcode', params: { barcode } })
+                            }
                           />
                         )}
                       </div>
