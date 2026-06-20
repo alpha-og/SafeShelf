@@ -5,13 +5,26 @@ from sqlalchemy import and_, or_
 from sqlmodel import select
 
 from app.products.models import Product
+from app.shared.timing import log_duration
 from app.stores.models import Store, StoreInventory
 
 logger = logging.getLogger(__name__)
 
 _STOPWORDS: set[str] = {
-    'and', 'or', 'with', 'for', 'the', 'a', 'an', 'in', 'of', 'to',
-    'fresh', 'organic', 'natural', 'pure',
+    'and',
+    'or',
+    'with',
+    'for',
+    'the',
+    'a',
+    'an',
+    'in',
+    'of',
+    'to',
+    'fresh',
+    'organic',
+    'natural',
+    'pure',
 }
 
 _TOKEN_RE = re.compile(r'[a-z]+')
@@ -88,7 +101,8 @@ async def match_ingredient(
 
     stmt = stmt.order_by(StoreInventory.price).limit(20)
 
-    result = await session.execute(stmt)
+    async with log_duration(f'db.match_ingredient.{ingredient[:30]}'):
+        result = await session.execute(stmt)
     rows = result.all()
 
     seen: set[str] = set()
@@ -100,15 +114,17 @@ async def match_ingredient(
         seen.add(name_lower)
         if not all(_has_word(name_lower, t) for t in tokens):
             continue
-        results.append({
-            'barcode': prod.barcode,
-            'product_name': prod.product_name,
-            'product_image': prod.product_image,
-            'brand': prod.brand,
-            'quantity': prod.quantity,
-            'price': inv.price,
-            'in_stock': inv.stock_quantity > 0,
-        })
+        results.append(
+            {
+                'barcode': prod.barcode,
+                'product_name': prod.product_name,
+                'product_image': prod.product_image,
+                'brand': prod.brand,
+                'quantity': prod.quantity,
+                'price': inv.price,
+                'in_stock': inv.stock_quantity > 0,
+            }
+        )
 
     return results
 
