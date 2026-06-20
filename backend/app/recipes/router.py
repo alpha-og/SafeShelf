@@ -28,17 +28,19 @@ router = APIRouter(prefix='/recipes', tags=['recipes'])
 async def feed(
     page: int = 1,
     page_size: int = 10,
+    session: AsyncSession = Depends(get_session),
     _current_user=Depends(get_current_user),
 ):
-    return await feed_handler(page, page_size)
+    return await feed_handler(page, page_size, session)
 
 
 @router.get('/{id}', response_model=RecipeItem)
 async def get_recipe(
     id: str,
+    session: AsyncSession = Depends(get_session),
     _current_user=Depends(get_current_user),
 ):
-    return await get_recipe_handler(id)
+    return await get_recipe_handler(id, session)
 
 
 @router.get('/{id}/products', response_model=RecipeProductsResponse)
@@ -63,14 +65,16 @@ async def suggest(
 @router.post('/search', response_model=SearchResponse)
 async def search(
     req: SearchRequest,
+    session: AsyncSession = Depends(get_session),
     _current_user=Depends(get_current_user),
 ):
-    return await search_recipes_handler(req)
+    return await search_recipes_handler(req, session)
 
 
 @router.post('/clarify', response_model=ClarifyResponse)
 async def clarify(
     req: ClarifyRequest,
+    session: AsyncSession = Depends(get_session),
     _current_user=Depends(get_current_user),
 ):
-    return await clarify_handler(req)
+    return await clarify_handler(req, session)

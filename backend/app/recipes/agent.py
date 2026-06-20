@@ -7,14 +7,21 @@ from langchain_core.messages import SystemMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, ConfigDict, Field
+from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 
+from app.recipes.models import Recipe
 from app.recipes.tools import (
     RecipeItem,
+    _build_ingredient_filter,
     _search_recipes_internal,
+    recipe_to_item,
 )
 from app.shared.config import settings
+from app.shared.timing import log_duration
 
 logger = logging.getLogger(__name__)
+
 
 class ClarificationField(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
@@ -367,6 +374,7 @@ _DISORDERED_KEYWORDS: set[str] = {
     'fasting for',
 }
 
+
 def _check_direct_contradiction(q: RecipeQuery) -> str | None:
     overlap = set(q.ingredients) & set(q.exclude_ingredients)
     if overlap:
@@ -433,9 +441,7 @@ def validate_query(query: str, q: RecipeQuery) -> ValidationResult:
 
     essential_reason = _check_essential_ingredients(query, q)
     if essential_reason is not None:
-        return ValidationResult(
-            is_valid=False, reason=essential_reason, code='contradiction'
-        )
+        return ValidationResult(is_valid=False, reason=essential_reason, code='contradiction')
 
     return ValidationResult(is_valid=True)
 
@@ -473,16 +479,12 @@ def _match_ingredient(recipe_ingredient: str, search_term: str) -> bool:
 
 def _has_all_ingredients(recipe: RecipeItem, needed: list[str]) -> bool:
     recipe_names = recipe.ingredients
-    return all(
-        any(_match_ingredient(rn, need) for rn in recipe_names) for need in needed
-    )
+    return all(any(_match_ingredient(rn, need) for rn in recipe_names) for need in needed)
 
 
 def _has_any_excluded(recipe: RecipeItem, excluded: list[str]) -> bool:
     recipe_names = recipe.ingredients
-    return any(
-        any(_match_ingredient(rn, excl) for rn in recipe_names) for excl in excluded
-    )
+    return any(any(_match_ingredient(rn, excl) for rn in recipe_names) for excl in excluded)
 
 
 async def _execute_search(client: AsyncClient, q: RecipeQuery) -> list[RecipeItem]:
@@ -497,14 +499,13 @@ async def _execute_search(client: AsyncClient, q: RecipeQuery) -> list[RecipeIte
     for cat in cats:
         for area in areas:
             if cat is not None or area is not None or primary is not None:
-                tasks.append(
-                    _search_recipes_internal(client, cat, primary, area)
-                )
+                tasks.append(_search_recipes_internal(client, cat, primary, area))
 
     if not tasks:
         return []
 
-    results = await asyncio.gather(*tasks)
+    async with log_duration('themealdb.gather'):
+        results = await asyncio.gather(*tasks)
 
     seen: set[str] = set()
     deduped: list[RecipeItem] = []
@@ -518,9 +519,7 @@ async def _execute_search(client: AsyncClient, q: RecipeQuery) -> list[RecipeIte
         deduped = [r for r in deduped if _has_all_ingredients(r, q.ingredients)]
 
     if q.exclude_ingredients:
-        deduped = [
-            r for r in deduped if not _has_any_excluded(r, q.exclude_ingredients)
-        ]
+        deduped = [r for r in deduped if not _has_any_excluded(r, q.exclude_ingredients)]
 
     return deduped
 
@@ -529,11 +528,9 @@ _FALLBACK_CATEGORIES = ['Chicken', 'Seafood', 'Pasta', 'Beef', 'Vegetarian', 'De
 
 
 async def _fallback_search(client: AsyncClient) -> list[RecipeItem]:
-    tasks = [
-        _search_recipes_internal(client, cat, None, None)
-        for cat in _FALLBACK_CATEGORIES
-    ]
-    results = await asyncio.gather(*tasks)
+    tasks = [_search_recipes_internal(client, cat, None, None) for cat in _FALLBACK_CATEGORIES]
+    async with log_duration('themealdb.fallback_gather'):
+        results = await asyncio.gather(*tasks)
     seen: set[str] = set()
     deduped: list[RecipeItem] = []
     for batch in results:
@@ -546,24 +543,31 @@ async def _fallback_search(client: AsyncClient) -> list[RecipeItem]:
 
 async def run_search(client: AsyncClient, q: RecipeQuery) -> list[RecipeItem]:
     # Exact search with all constraints
-    results = await _execute_search(client, q)
+    async with log_duration('search.initial'):
+        results = await _execute_search(client, q)
     if results:
         return results
 
     # Relaxation 1: drop ingredient constraint if there was one
     if q.ingredients:
-        results = await _execute_search(client, q.model_copy(update={'ingredients': []}))
+        async with log_duration('search.relax_ingredients'):
+            results = await _execute_search(client, q.model_copy(update={'ingredients': []}))
         if results:
             return results
 
     # Relaxation 2: drop area constraint too
     if q.areas:
-        results = await _execute_search(client, q.model_copy(update={'areas': [], 'ingredients': []}))
+        async with log_duration('search.relax_areas'):
+            results = await _execute_search(
+                client,
+                q.model_copy(update={'areas': [], 'ingredients': []}),
+            )
         if results:
             return results
 
     # Ultimate fallback: popular categories
-    return await _fallback_search(client)
+    async with log_duration('search.fallback'):
+        return await _fallback_search(client)
 
 
 _llm: ChatOpenAI | None = None
@@ -588,7 +592,8 @@ async def extract_query(query: str, system_extra: str | None = None) -> RecipeQu
     messages.append(('human', '{query}'))
     prompt = ChatPromptTemplate.from_messages(messages)
     chain = prompt | _get_llm().with_structured_output(RecipeQuery, method='json_mode')
-    return await chain.ainvoke({'query': query})
+    async with log_duration('llm.ainvoke'):
+        return await chain.ainvoke({'query': query})
 
 
 async def recipe_search(query: str) -> RecipeSearchResult:
@@ -622,3 +627,68 @@ async def recipe_search(query: str) -> RecipeSearchResult:
 
     except Exception as exc:
         return RecipeSearchResult(success=False, error=str(exc))
+
+
+# ── Database-backed search (primary source, MealDB fallback disabled) ─────
+
+_DB_SEARCH_LIMIT = 500
+
+
+async def _db_execute_search(session: AsyncSession, q: RecipeQuery) -> list[RecipeItem]:
+    """Query the Recipe table with the given criteria, post-filter in Python."""
+    if not q.categories and not q.areas and not q.ingredients:
+        return []
+
+    conditions: list = []
+
+    if q.categories:
+        conditions.append(Recipe.category.in_(q.categories))
+
+    if q.areas:
+        conditions.append(Recipe.cuisine.in_(q.areas))
+
+    if q.ingredients:
+        ing_filter = _build_ingredient_filter(q.ingredients)
+        if ing_filter is not None:
+            conditions.append(ing_filter)
+
+    stmt = select(Recipe)
+    if conditions:
+        stmt = stmt.where(*conditions)
+    stmt = stmt.limit(_DB_SEARCH_LIMIT)
+    rows = (await session.exec(stmt)).all()
+
+    items = [recipe_to_item(r) for r in rows]
+
+    if q.ingredients:
+        items = [r for r in items if _has_all_ingredients(r, q.ingredients)]
+
+    if q.exclude_ingredients:
+        items = [r for r in items if not _has_any_excluded(r, q.exclude_ingredients)]
+
+    return items
+
+
+async def db_run_search(session: AsyncSession, q: RecipeQuery) -> list[RecipeItem]:
+    # Tier 1: Food.com DB with full constraints
+    results = await _db_execute_search(session, q)
+    if results:
+        return results
+
+    # Tier 2: Relax ingredients, still try DB
+    if q.ingredients:
+        relaxed = q.model_copy(update={'ingredients': []})
+        results = await _db_execute_search(session, relaxed)
+        if results:
+            return results
+
+    # Tier 3: Relax areas too, still try DB
+    if q.areas:
+        relaxed = q.model_copy(update={'areas': [], 'ingredients': []})
+        results = await _db_execute_search(session, relaxed)
+        if results:
+            return results
+
+    # Tier 4: Fallback to MealDB
+    async with AsyncClient() as client:
+        return await run_search(client, q)

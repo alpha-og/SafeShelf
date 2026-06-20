@@ -1,9 +1,9 @@
-import asyncio
 import random
 
 from httpx import AsyncClient
+from sqlmodel.ext.asyncio.session import AsyncSession
 
-from app.recipes.agent import RecipeQuery, extract_query, run_search, validate_query
+from app.recipes.agent import RecipeQuery, db_run_search, extract_query, validate_query
 from app.recipes.product_matching import match_ingredients
 from app.recipes.schemas import (
     ClarifyRequest,
@@ -13,37 +13,81 @@ from app.recipes.schemas import (
     SearchResponse,
     SuggestRequest,
 )
-from app.recipes.tools import RecipeItem, _search_recipes_internal, lookup_recipe_by_id
+from app.recipes.tools import (
+    RecipeItem,
+    db_fetch_random,
+    db_lookup_recipe_by_id,
+    lookup_recipe_by_id,
+)
+from app.shared.timing import log_duration
 
 from .session import advance_round, create_session
 
 CATEGORIES = [
-    'Beef', 'Chicken', 'Dessert', 'Lamb', 'Miscellaneous', 'Pasta', 'Pork',
-    'Seafood', 'Side', 'Starter', 'Vegan', 'Vegetarian', 'Breakfast', 'Goat',
+    'Beef',
+    'Chicken',
+    'Dessert',
+    'Lamb',
+    'Miscellaneous',
+    'Pasta',
+    'Pork',
+    'Seafood',
+    'Side',
+    'Starter',
+    'Vegan',
+    'Vegetarian',
+    'Breakfast',
+    'Goat',
 ]
 
 AREAS = [
-    'American', 'British', 'Canadian', 'Chinese', 'French', 'Greek', 'Indian',
-    'Irish', 'Italian', 'Japanese', 'Mexican', 'Moroccan', 'Polish', 'Spanish',
-    'Thai', 'Vietnamese',
+    'American',
+    'British',
+    'Canadian',
+    'Chinese',
+    'French',
+    'Greek',
+    'Indian',
+    'Irish',
+    'Italian',
+    'Japanese',
+    'Mexican',
+    'Moroccan',
+    'Polish',
+    'Spanish',
+    'Thai',
+    'Vietnamese',
 ]
 
 
-async def get_recipe_handler(id: str) -> RecipeItem:
+async def get_recipe_handler(id: str, session: AsyncSession) -> RecipeItem:
     from fastapi import HTTPException, status
 
-    async with AsyncClient() as client:
-        recipe = await lookup_recipe_by_id(client, id)
-    if recipe is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Recipe not found')
-    return recipe
+    async with log_duration('recipe.lookup'):
+        try:
+            recipe = await db_lookup_recipe_by_id(session, int(id))
+        except ValueError:
+            recipe = None
+    if recipe is not None:
+        return recipe
+
+    async with log_duration('recipe.lookup_mealdb'):
+        async with AsyncClient() as client:
+            recipe = await lookup_recipe_by_id(client, id)
+    if recipe is not None:
+        return recipe
+
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Recipe not found')
 
 
 async def get_recipe_products_handler(
-    id: str, store_id: str, session,
+    id: str,
+    store_id: str,
+    session: AsyncSession,
 ) -> RecipeProductsResponse:
 
-    recipe = await get_recipe_handler(id)
+    async with log_duration('recipe.fetch'):
+        recipe = await get_recipe_handler(id, session)
     if not recipe.ingredients:
         return RecipeProductsResponse(
             recipe_id=recipe.id,
@@ -51,7 +95,8 @@ async def get_recipe_products_handler(
             mappings=[],
         )
 
-    mappings = await match_ingredients(session, recipe.ingredients, store_id)
+    async with log_duration('db.match_ingredients'):
+        mappings = await match_ingredients(session, recipe.ingredients, store_id)
 
     return RecipeProductsResponse(
         recipe_id=recipe.id,
@@ -66,7 +111,7 @@ async def suggest_recipes(req: SuggestRequest, session) -> dict:
     raise HTTPException(status_code=status.HTTP_501_NOT_IMPLEMENTED, detail='Not implemented')
 
 
-async def search_recipes_handler(req: SearchRequest) -> SearchResponse:
+async def search_recipes_handler(req: SearchRequest, session: AsyncSession) -> SearchResponse:
     if not req.query and not req.categories and not req.areas:
         return SearchResponse(
             success=True,
@@ -77,7 +122,8 @@ async def search_recipes_handler(req: SearchRequest) -> SearchResponse:
         )
 
     if req.query and req.query.strip():
-        extracted = await extract_query(req.query)
+        async with log_duration('llm.extract_query'):
+            extracted = await extract_query(req.query)
         if not extracted.is_recipe_query:
             return SearchResponse(
                 success=False,
@@ -87,11 +133,11 @@ async def search_recipes_handler(req: SearchRequest) -> SearchResponse:
             )
 
         if extracted.needs_clarification and extracted.clarifications:
-            session = create_session(req.query, req.categories, req.areas)
+            clar_session = create_session(req.query, req.categories, req.areas)
             return SearchResponse(
                 success=True,
                 status='clarification_needed',
-                session_id=session.session_id,
+                session_id=clar_session.session_id,
                 clarifications=[
                     {
                         'id': c.id,
@@ -128,8 +174,8 @@ async def search_recipes_handler(req: SearchRequest) -> SearchResponse:
             rejection_reason=validation.reason,
         )
 
-    async with AsyncClient() as client:
-        all_recipes = await run_search(client, extracted)
+    async with log_duration('db.search_recipes'):
+        all_recipes = await db_run_search(session, extracted)
 
     total = len(all_recipes)
     start = (req.page - 1) * req.page_size
@@ -144,38 +190,38 @@ async def search_recipes_handler(req: SearchRequest) -> SearchResponse:
     )
 
 
-async def clarify_handler(req: ClarifyRequest) -> ClarifyResponse:
-    session = advance_round(req.session_id, req.answers)
-    if session is None:
+async def clarify_handler(req: ClarifyRequest, session: AsyncSession) -> ClarifyResponse:
+    clar_session = advance_round(req.session_id, req.answers)
+    if clar_session is None:
         return ClarifyResponse(
             success=False,
             status='rejected',
             error='Session expired or not found. Please start a new search.',
         )
 
-    if session.round > 3:
+    if clar_session.round > 3:
         return ClarifyResponse(
             success=False,
             status='rejected',
             error='Too many clarification rounds. Please start a new search.',
         )
 
-    # Enrich the query with answers as natural context
-    answer_parts = [f'{k}: {v}' for k, v in session.collected_answers.items()]
-    enriched_query = session.query
+    answer_parts = [f'{k}: {v}' for k, v in clar_session.collected_answers.items()]
+    enriched_query = clar_session.query
     if answer_parts:
-        enriched_query = f'{session.query}\n\nAdditional context: {". ".join(answer_parts)}.'
+        enriched_query = f'{clar_session.query}\n\nAdditional context: {". ".join(answer_parts)}.'
 
-    extracted = await extract_query(
-        enriched_query,
-        system_extra=(
-            'This is a follow-up extraction. The user already answered previous '
-            'clarification questions — their answers are appended as additional '
-            'context. Use all available information. If the query is still '
-            'ambiguous about what they want to eat, it is fine to ask more '
-            'clarifying questions. Do NOT re-ask already answered topics.'
-        ),
-    )
+    async with log_duration('llm.extract_query.clarify'):
+        extracted = await extract_query(
+            enriched_query,
+            system_extra=(
+                'This is a follow-up extraction. The user already answered previous '
+                'clarification questions — their answers are appended as additional '
+                'context. Use all available information. If the query is still '
+                'ambiguous about what they want to eat, it is fine to ask more '
+                'clarifying questions. Do NOT re-ask already answered topics.'
+            ),
+        )
 
     if not extracted.is_recipe_query:
         return ClarifyResponse(
@@ -188,7 +234,7 @@ async def clarify_handler(req: ClarifyRequest) -> ClarifyResponse:
         return ClarifyResponse(
             success=True,
             status='clarification_needed',
-            session_id=session.session_id,
+            session_id=clar_session.session_id,
             clarifications=[
                 {
                     'id': c.id,
@@ -200,15 +246,12 @@ async def clarify_handler(req: ClarifyRequest) -> ClarifyResponse:
             ],
         )
 
-    # Post-extraction guard: if the LLM produced no searchable fields despite
-    # having answers, fall back to direct category/area selection rather than
-    # silently returning empty results
     if not extracted.categories and not extracted.areas and not extracted.ingredients:
-        if session.collected_answers:
+        if clar_session.collected_answers:
             return ClarifyResponse(
                 success=True,
                 status='clarification_needed',
-                session_id=session.session_id,
+                session_id=clar_session.session_id,
                 clarifications=[
                     {
                         'id': 'category',
@@ -223,10 +266,10 @@ async def clarify_handler(req: ClarifyRequest) -> ClarifyResponse:
                 ],
             )
 
-    if session.raw_categories:
-        extracted.categories = list(set(extracted.categories + session.raw_categories))
-    if session.raw_areas:
-        extracted.areas = list(set(extracted.areas + session.raw_areas))
+    if clar_session.raw_categories:
+        extracted.categories = list(set(extracted.categories + clar_session.raw_categories))
+    if clar_session.raw_areas:
+        extracted.areas = list(set(extracted.areas + clar_session.raw_areas))
 
     validation = validate_query(enriched_query, extracted)
     if not validation.is_valid:
@@ -236,49 +279,41 @@ async def clarify_handler(req: ClarifyRequest) -> ClarifyResponse:
             rejection_reason=validation.reason,
         )
 
-    async with AsyncClient() as client:
-        all_recipes = await run_search(client, extracted)
+    async with log_duration('db.search_recipes.clarify'):
+        all_recipes = await db_run_search(session, extracted)
 
     return ClarifyResponse(
         success=True,
         status='results',
         recipes=[r.model_dump() for r in all_recipes],
         total=len(all_recipes),
-        session_id=session.session_id,
+        session_id=clar_session.session_id,
     )
 
 
-async def feed_handler(page: int = 1, page_size: int = 10) -> SearchResponse:
-    popular_categories = random.sample(CATEGORIES, min(3, len(CATEGORIES)))
-    random_categories = random.sample(
-        [c for c in CATEGORIES if c not in popular_categories],
-        min(2, len(CATEGORIES) - 3),
-    )
-    all_cats = popular_categories + random_categories
+async def feed_handler(
+    page: int = 1,
+    page_size: int = 10,
+    session: AsyncSession | None = None,
+) -> SearchResponse:
+    if session is None:
+        return SearchResponse(
+            success=False,
+            recipes=[],
+            total=0,
+            page=page,
+            page_size=page_size,
+            error='Database session required',
+        )
 
-    async with AsyncClient() as client:
-        tasks = []
-        for cat in all_cats:
-            tasks.append(_search_recipes_internal(client, cat, None, None))
-        results = await asyncio.gather(*tasks)
+    async with log_duration('db.feed_random'):
+        items, total = await db_fetch_random(session, limit=100, page=page, page_size=page_size)
 
-    seen: set[str] = set()
-    deduped: list[RecipeItem] = []
-    for batch in results:
-        for r in batch:
-            if r.id not in seen:
-                seen.add(r.id)
-                deduped.append(r)
-
-    random.shuffle(deduped)
-
-    total = len(deduped)
-    start = (page - 1) * page_size
-    sliced = deduped[start : start + page_size]
+    random.shuffle(items)
 
     return SearchResponse(
         success=True,
-        recipes=[r.model_dump() for r in sliced],
+        recipes=[r.model_dump() for r in items],
         total=total,
         page=page,
         page_size=page_size,
