@@ -333,7 +333,7 @@ export function RecipeDetailPage() {
                 )}
                 {recipe.source && (
                   <p className="text-xs text-muted-foreground">
-                    Source: {recipe.source === 'foodcom' ? 'Food.com' : recipe.source}
+                    Source: {recipe.source === 'foodcom' ? 'Food.com' : recipe.source === 'mealdb' ? 'MealDB' : recipe.source}
                   </p>
                 )}
               </div>

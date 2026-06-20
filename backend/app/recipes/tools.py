@@ -140,6 +140,7 @@ def _meal_to_item(meal: dict) -> RecipeItem:
         tags=tags,
         youtube_url=meal.get('strYoutube') or None,
         source_url=meal.get('strSource') or None,
+        source='mealdb',
     )
 
 
