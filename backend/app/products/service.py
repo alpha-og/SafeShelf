@@ -19,13 +19,29 @@ async def get_product_by_barcode(barcode: str) -> dict:
         async with async_session() as session:
             prod = (await session.exec(select(Product).where(Product.barcode == barcode))).first()
             if prod:
+                import json
+                import os
+                
+                nutrients = {}
+                data_path = os.path.join('data', 'fresh_produce.json')
+                if os.path.exists(data_path):
+                    try:
+                        with open(data_path, 'r', encoding='utf-8') as f:
+                            produce_data = json.load(f)
+                        for item in produce_data:
+                            if item['barcode'] == barcode:
+                                nutrients = item.get('nutrients', {})
+                                break
+                    except Exception:
+                        pass
+                
                 return {
                     'barcode': prod.barcode,
                     'product_name': prod.product_name,
                     'brand': prod.brand,
                     'categories': ['Fresh Produce'],
                     'ingredients': [],
-                    'nutrients': {},
+                    'nutrients': nutrients,
                     'allergens': [],
                     'image_url': prod.product_image,
                     'quantity': prod.quantity,

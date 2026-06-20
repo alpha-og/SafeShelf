@@ -87,69 +87,31 @@ async def _seed_inventory():
         await asyncio.sleep(1)
     success('API fetch complete')
 
-    CUSTOM_PRODUCE = [
-        {
-            'code': 'PROD-APPLE-01',
-            'product_name': 'Fresh Apples (Fuji)',
-            'category': 'Fruits',
-            'image_url': 'https://images.unsplash.com/photo-1560806887-1e4cd0b6fd6c?w=500&q=80',
-            'quantity': '1 kg'
-        },
-        {
-            'code': 'PROD-BANANA-01',
-            'product_name': 'Fresh Cavendish Bananas',
-            'category': 'Fruits',
-            'image_url': 'https://images.unsplash.com/photo-1571501478200-2f3b79ce1c2a?w=500&q=80',
-            'quantity': '1 dozen'
-        },
-        {
-            'code': 'PROD-SPINACH-01',
-            'product_name': 'Fresh Spinach Bunch',
-            'category': 'Vegetables',
-            'image_url': 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=500&q=80',
-            'quantity': '250 g'
-        },
-        {
-            'code': 'PROD-TOMATO-01',
-            'product_name': 'Fresh Red Tomatoes',
-            'category': 'Vegetables',
-            'image_url': 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=500&q=80',
-            'quantity': '1 kg'
-        },
-        {
-            'code': 'PROD-CARROT-01',
-            'product_name': 'Fresh Carrots',
-            'category': 'Vegetables',
-            'image_url': 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=500&q=80',
-            'quantity': '500 g'
-        },
-        {
-            'code': 'PROD-POTATO-01',
-            'product_name': 'Fresh Potatoes',
-            'category': 'Vegetables',
-            'image_url': 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=500&q=80',
-            'quantity': '1 kg'
-        },
-        {
-            'code': 'PROD-ONION-01',
-            'product_name': 'Red Onions',
-            'category': 'Vegetables',
-            'image_url': 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=500&q=80',
-            'quantity': '1 kg'
-        },
-    ]
-
+    import json
+    import os
+    
+    CUSTOM_PRODUCE = []
+    data_path = os.path.join('data', 'fresh_produce.json')
+    if os.path.exists(data_path):
+        try:
+            with open(data_path, 'r', encoding='utf-8') as f:
+                CUSTOM_PRODUCE = json.load(f)
+        except Exception as e:
+            warn(f"Failed to load custom produce dataset: {e}")
+            
     for item in CUSTOM_PRODUCE:
-        cat_name = item['category']
+        cat_name = item.get('category', 'Vegetables')
         if cat_name not in category_product_map:
             category_product_map[cat_name] = []
         category_product_map[cat_name].append({
-            'code': item['code'],
-            'product_name': item['product_name'],
-            'image_url': item['image_url'],
+            'code': item.get('barcode', item.get('code')),
+            'product_name': item.get('product_name'),
+            'image_url': item.get('image_url'),
             'brands': 'Fresh Farm Produce',
-            'quantity': item['quantity']
+            'quantity': item.get('quantity')
         })
+
+
 
     info('Seeding products and inventory...')
     async with async_session() as session:
