@@ -1,8 +1,8 @@
-import asyncio
 import json
 import logging
 
 from langchain_core.messages import HumanMessage, SystemMessage
+
 from app.analysis.deep_eval.prompts import (
     INGREDIENT_EVALUATOR_PROMPT,
     MEDICATION_INTERACTION_PROMPT,
@@ -39,15 +39,37 @@ def _normalize_nutrient(name: str) -> str:
 
 
 async def profile_builder(state: AgentState) -> dict:
-    profile = state["user_profile"]
+    profile = dict(state["user_profile"])
     conditions = profile.get("conditions", [])
     condition_codes = profile.get("conditionCodes", [])
     age = profile.get("age")
     severities = profile.get("diseaseSeverities", {})
-    medications = profile.get("medications", [])
+    medications = list(profile.get("medications", []) or [])
+
+    health_data = state.get("health_data")
+    hd_medications = []
+    if isinstance(health_data, dict):
+        pd = health_data.get("personalDetails")
+        if isinstance(pd, dict) and "medications" in pd:
+            hd_meds = pd["medications"]
+            if isinstance(hd_meds, list):
+                hd_medications.extend(hd_meds)
+        if "medications" in health_data:
+            hd_meds = health_data["medications"]
+            if isinstance(hd_meds, list):
+                hd_medications.extend(hd_meds)
+
+    # Merge unique medications
+    seen_meds = set()
+    merged_meds = []
+    for med in medications + hd_medications:
+        if med and med.strip() and med.lower() not in seen_meds:
+            seen_meds.add(med.lower())
+            merged_meds.append(med)
+    profile["medications"] = merged_meds
 
     if not conditions:
-        return {"disease_contexts": {}, "personalized_rules": []}
+        return {"disease_contexts": {}, "personalized_rules": [], "user_profile": profile}
 
     disease_contexts: dict[str, str] = {}
     disease_info: list[dict] = []
@@ -79,8 +101,10 @@ async def profile_builder(state: AgentState) -> dict:
         user_info_parts.append(f"Age: {age}")
     severity_parts = [f"{d['disease']} ({d['code']}): {d['severity']}" for d in disease_info]
     user_info_parts.append(f"Disease severities: {', '.join(severity_parts)}")
-    if medications:
-        user_info_parts.append(f"Medications: {', '.join(medications)}")
+    if merged_meds:
+        user_info_parts.append(f"Medications: {', '.join(merged_meds)}")
+    if health_data:
+        user_info_parts.append(f"Health Report Data:\n{json.dumps(health_data, indent=2)}")
     user_info_str = "\n".join(user_info_parts)
 
     human_content = (
@@ -102,13 +126,13 @@ async def profile_builder(state: AgentState) -> dict:
         parsed = json.loads(content)
     except json.JSONDecodeError:
         logger.error("LLM returned invalid JSON: %s", content)
-        return {"disease_contexts": disease_contexts, "personalized_rules": []}
+        return {"disease_contexts": disease_contexts, "personalized_rules": [], "user_profile": profile}
 
     rules = parsed.get("conditions", [])
     for condition in rules:
         for rule in condition.get("rules", []):
             rule["nutrient"] = _normalize_nutrient(rule.get("nutrient", ""))
-    return {"disease_contexts": disease_contexts, "personalized_rules": rules}
+    return {"disease_contexts": disease_contexts, "personalized_rules": rules, "user_profile": profile}
 
 
 def _convert_unit(value: float, from_unit: str, to_unit: str) -> float:
@@ -177,13 +201,13 @@ def nutrient_check(state: AgentState) -> dict:
             if not meets:
                 if op in ("le", "lt"):
                     violation = "exceeds"
-                    phrase = f"exceeds the limit of"
+                    phrase = "exceeds the limit of"
                 elif op in ("ge", "gt"):
                     violation = "below minimum"
-                    phrase = f"is below the minimum of"
+                    phrase = "is below the minimum of"
                 else:
                     violation = "does not match"
-                    phrase = f"does not match the target of"
+                    phrase = "does not match the target of"
                 label = f"{nutrient.capitalize().replace('_', ' ')} {violation}"
                 detail = (
                     f"{pv_value:.1f}{unit}/serving {phrase} "
@@ -209,9 +233,26 @@ async def _run_ingredient_eval(state: AgentState) -> dict:
     allergens = profile.get("allergens", [])
     dietary_preferences = profile.get("dietaryPreferences", [])
 
-    all_exclusions = set()
+    exclusions_by_condition = []
     for condition in rules_list:
-        all_exclusions.update(e.lower() for e in condition.get("exclusions", []))
+        disease = condition.get("disease", "Unknown Condition")
+        exclusions = condition.get("exclusions", [])
+        if exclusions:
+            exclusions_by_condition.append(f"- {disease}: {', '.join(e.lower() for e in exclusions)}")
+    exclusions_str = "\n".join(exclusions_by_condition) if exclusions_by_condition else "(none)"
+
+    local_eval = state.get("local_evaluation_result")
+    local_eval_str = "(none)"
+    if local_eval and isinstance(local_eval, dict):
+        checks = local_eval.get("checks", [])
+        if checks:
+            formatted_checks = []
+            for c in checks:
+                status = c.get("status", "unknown")
+                label = c.get("label", "unknown")
+                detail = c.get("detail", "")
+                formatted_checks.append(f"- [{status.upper()}] {label}: {detail}")
+            local_eval_str = "\n".join(formatted_checks)
 
     if not ingredients:
         return {"ingredient_checks": [], "ingredient_has_fails": False}
@@ -220,7 +261,8 @@ async def _run_ingredient_eval(state: AgentState) -> dict:
         f"INGREDIENTS:\n{', '.join(ingredients) if ingredients else '(none)'}\n\n"
         f"ALLERGENS:\n{', '.join(allergens) if allergens else '(none)'}\n\n"
         f"DIETARY PREFERENCES:\n{', '.join(dietary_preferences) if dietary_preferences else '(none)'}\n\n"
-        f"MEDICAL EXCLUSIONS:\n{', '.join(sorted(all_exclusions)) if all_exclusions else '(none)'}"
+        f"MEDICAL EXCLUSIONS:\n{exclusions_str}\n\n"
+        f"ON-DEVICE EVALUATION RESULT:\n{local_eval_str}"
     )
 
     response = await llm.ainvoke([
@@ -292,30 +334,26 @@ async def _run_medication_interaction(state: AgentState) -> dict:
     return {"med_interaction_checks": checks}
 
 
-async def parallel_evaluation(state: AgentState) -> dict:
-    tasks = [_run_ingredient_eval(state)]
+async def ingredient_evaluation(state: AgentState) -> dict:
+    return await _run_ingredient_eval(state)
 
-    medications = state.get("user_profile", {}).get("medications", [])
-    if medications:
-        tasks.append(_run_medication_interaction(state))
 
-    results = await asyncio.gather(*tasks)
-
-    state_update = dict(results[0])
-
-    if len(results) > 1:
-        med_result = results[1]
-        state_update["med_interaction_checks"] = med_result.get("med_interaction_checks", [])
-
-    return state_update
+async def medication_interaction_node(state: AgentState) -> dict:
+    return await _run_medication_interaction(state)
 
 
 def output_aggregator(state: AgentState) -> dict:
     all_checks: list[dict] = []
 
-    all_checks.extend(state.get("nutrient_checks", []))
-    all_checks.extend(state.get("ingredient_checks", []))
-    all_checks.extend(state.get("med_interaction_checks", []))
+    for c in state.get("nutrient_checks", []) or []:
+        c["type"] = "agent_insight"
+        all_checks.append(c)
+    for c in state.get("ingredient_checks", []) or []:
+        c["type"] = "agent_insight"
+        all_checks.append(c)
+    for c in state.get("med_interaction_checks", []) or []:
+        c["type"] = "agent_insight"
+        all_checks.append(c)
 
     seen = set()
     deduped = []

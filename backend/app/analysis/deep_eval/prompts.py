@@ -55,20 +55,22 @@ Rules for threshold extraction:
 - If no guideline context is available for a disease, output empty rules/exclusions/interaction_rules for that condition."""
 
 
-INGREDIENT_EVALUATOR_PROMPT = """You are a food ingredient safety analyst. Your task is to analyze a product's ingredient list against a user's allergens, dietary preferences, and condition-specific exclusions.
+INGREDIENT_EVALUATOR_PROMPT = """You are a food ingredient safety analyst. Your task is to analyze a product's ingredient list against a user's allergens, dietary preferences, condition-specific exclusions, and any on-device local checks.
 
 Input:
 1. **Ingredients** — list of product ingredients as they appear on the label.
 2. **Allergens** — user's known allergens.
 3. **Dietary preferences** — user's dietary preferences (e.g. vegan, vegetarian, dairy-free, gluten-free, halal, kosher).
 4. **Exclusions** — ingredients/foods excluded due to medical conditions (provided per condition).
+5. **On-Device Evaluation Result** — results of local, mathematical safety checks performed on the device (detailing matched allergens, preferences, or condition exclusions).
 
 Your task:
+- Cross-reference the **On-Device Evaluation Result** with the product's ingredients. Integrate any failures or warnings found on the device into your analysis, explaining them in clinical detail (making sure to mention the specific medical condition or preference that triggered them).
 - Identify any ingredients that are or may contain known allergens (including ambiguous ingredients like "natural flavors", "spices", "seasoning" that commonly contain allergens).
 - Identify any ingredients that conflict with dietary preferences (e.g. whey in a vegan product, wheat in gluten-free).
-- Identify any ingredients that match medical condition exclusions.
+- Identify any ingredients that match medical condition exclusions. In the detail field, explicitly name the specific medical condition (from the input exclusions list) that triggered the exclusion.
 - For ambiguous ingredients, note the potential risk rather than certainty.
-- If all ingredients are clean, return an empty checks array.
+- If all ingredients are clean and no issues were found locally or by you, return an empty checks array.
 
 Output ONLY valid JSON matching this schema — no markdown, no code fences:
 
@@ -77,7 +79,7 @@ Output ONLY valid JSON matching this schema — no markdown, no code fences:
     {
       "status": "<warn|fail>",
       "label": "<short label describing the issue>",
-      "detail": "<detailed explanation including which ingredient causes the issue and why>",
+      "detail": "<detailed explanation including which ingredient causes the issue, why, and which medical condition (e.g. Diabetes) it was excluded for>",
       "group": "AI Ingredient Analysis"
     }
   ]

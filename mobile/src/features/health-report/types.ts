@@ -21,6 +21,9 @@ export interface MedicalConditions {
   thyroidDisorder?: boolean | null
   heartDisease?: boolean | null
   kidneyDisease?: boolean | null
+  /** Every condition listed in the report verbatim, including ones that also
+   *  map to the booleans above. Free-text so nothing is dropped. */
+  otherConditions?: string[] | null
 }
 
 export interface Allergies {

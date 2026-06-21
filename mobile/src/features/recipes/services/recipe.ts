@@ -12,10 +12,20 @@ export interface RecipeItem {
   tags: string[]
   youtube_url: string | null
   source_url: string | null
+  author_name: string | null
+  source: string | null
+}
+
+export interface ClarificationField {
+  id: string
+  label: string
+  description?: string | null
+  schema?: Record<string, unknown> | null
 }
 
 export interface SearchResponse {
   success: boolean
+  status?: 'results' | 'clarification_needed' | 'rejected'
   recipes: RecipeItem[]
   total: number
   page: number
@@ -23,11 +33,55 @@ export interface SearchResponse {
   error?: string | null
   rejected?: boolean
   rejection_reason?: string | null
+  session_id?: string | null
+  clarifications?: ClarificationField[] | null
+}
+
+export interface ClarifyResponse {
+  success: boolean
+  status: 'results' | 'clarification_needed' | 'rejected'
+  recipes: RecipeItem[]
+  total: number
+  session_id?: string | null
+  clarifications?: ClarificationField[] | null
+  error?: string | null
+  rejection_reason?: string | null
+}
+
+export interface ProductVariant {
+  barcode: string
+  product_name: string
+  product_image: string | null
+  brand: string | null
+  quantity: string | null
+  price: number
+  in_stock: boolean
+}
+
+export interface IngredientMapping {
+  ingredient: string
+  options: ProductVariant[]
+}
+
+export interface RecipeProductsResponse {
+  recipe_id: string
+  recipe_name: string
+  mappings: IngredientMapping[]
 }
 
 export async function getRecipeById(id: string): Promise<RecipeItem> {
   const { data } = await api.get(`/v1/recipes/${id}`)
   return data as RecipeItem
+}
+
+export async function getRecipeProducts(
+  id: string,
+  storeId: string,
+): Promise<RecipeProductsResponse> {
+  const { data } = await api.get(`/v1/recipes/${id}/products`, {
+    params: { store_id: storeId },
+  })
+  return data as RecipeProductsResponse
 }
 
 export async function searchRecipes(
@@ -42,6 +96,27 @@ export async function searchRecipes(
     areas,
     page,
     page_size: 10,
+  })
+  return data as SearchResponse
+}
+
+export async function clarifyRecipes(
+  sessionId: string,
+  answers: Record<string, unknown>,
+): Promise<ClarifyResponse> {
+  const { data } = await api.post('/v1/recipes/clarify', {
+    session_id: sessionId,
+    answers,
+  })
+  return data as ClarifyResponse
+}
+
+export async function getRecipeFeed(
+  page: number,
+  pageSize: number = 10,
+): Promise<SearchResponse> {
+  const { data } = await api.get('/v1/recipes/feed', {
+    params: { page, page_size: pageSize },
   })
   return data as SearchResponse
 }

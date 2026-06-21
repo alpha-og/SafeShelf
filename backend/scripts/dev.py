@@ -1,28 +1,62 @@
 import argparse
 import asyncio
+import sys
 
 from scripts.lib.logger import header
 from scripts.lib.seed import run_seed
+from scripts.lib.seed_recipes import run_seed_recipes
 
 
-def cmd_seed(stores_only: bool, inventory_only: bool) -> None:
-    header('Seeding Database')
-    asyncio.run(run_seed(stores_only=stores_only, inventory_only=inventory_only))
+def cmd_seed(
+    stores: bool,
+    inventory: bool,
+    recipes: bool,
+    csv_path: str | None,
+    limit: int,
+) -> None:
+    do_stores = stores
+    do_inventory = inventory
+    do_recipes = recipes
+
+    if not any([stores, inventory, recipes]):
+        do_stores = True
+        do_inventory = True
+        do_recipes = True
+
+    if do_stores or do_inventory:
+        header('Seeding Database')
+        asyncio.run(run_seed(stores_only=not do_inventory, inventory_only=not do_stores))
+
+    if do_recipes:
+        header('Seeding Recipes from Food.com Dataset')
+        asyncio.run(run_seed_recipes(csv_path=csv_path, limit=limit))
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description='SafeShelf Backend Dev Script')
     sub = parser.add_subparsers(dest='command', required=True)
 
-    seed = sub.add_parser('seed', help='Seed database with stores and inventory')
-    seed.add_argument('--stores-only', action='store_true', help='Only seed stores')
-    seed.add_argument('--inventory-only', action='store_true', help='Only seed inventory')
+    seed = sub.add_parser('seed', help='Seed database with stores, inventory, and recipes')
+    seed.add_argument('--stores', action='store_true', help='Seed stores')
+    seed.add_argument('--inventory', action='store_true', help='Seed inventory')
+    seed.add_argument('--recipes', action='store_true', help='Seed recipes from Food.com')
+    seed.add_argument('--csv-path', type=str, default=None,
+                      help='Path to recipes.csv (downloads via kagglehub if omitted)')
+    seed.add_argument('--limit', type=int, default=50_000,
+                      help='Max recipes to seed (default: 50,000)')
 
     args = parser.parse_args()
 
     if args.command == 'seed':
-        cmd_seed(args.stores_only, args.inventory_only)
+        cmd_seed(
+            stores=args.stores,
+            inventory=args.inventory,
+            recipes=args.recipes,
+            csv_path=args.csv_path,
+            limit=args.limit,
+        )
 
 
 if __name__ == '__main__':
+    sys.argv = [a for a in sys.argv if a != '--']
     main()

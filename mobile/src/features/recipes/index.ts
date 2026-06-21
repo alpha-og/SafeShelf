@@ -1,4 +1,7 @@
+export { ClarificationSheet } from './components/ClarificationSheet'
+export { DiscoverPage } from './components/DiscoverPage'
 export { RecipeCard } from './components/RecipeCard'
-export { RecipeSearchBar } from './components/RecipeSearchBar'
+export { RecipeHub } from './components/RecipeHub'
 export { RecipesPage } from './components/RecipesPage'
+export { RecipeSearchBar } from './components/RecipeSearchBar'
 export type { RecipeItem } from './services/recipe'

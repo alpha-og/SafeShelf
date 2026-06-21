@@ -654,3 +654,59 @@ export function evaluateContext(
 
   return { ...result, checks }
 }
+
+export function getPerServingNutrients(
+  product: ProductInfo,
+  profile: UserProfile,
+): Record<string, { value: number; unit: string }> {
+  const settings = profile.servingSettings ?? DEFAULT_SERVING_SETTINGS
+  const servingInfo = buildServingInfo(product.servingSize, product.categories, settings)
+  const scaleFactor = servingInfo?.adjusted
+    ? servingInfo.racc / 100
+    : servingInfo
+      ? servingInfo.declaredQuantity / 100
+      : 1
+
+  const result: Record<string, { value: number; unit: string }> = {}
+
+  if (product.nutrients) {
+    for (const nutrientKey of Object.keys(product.nutrients)) {
+      if (nutrientKey.endsWith('_100g')) {
+        const baseName = nutrientKey.slice(0, -5)
+        const per100g = getNutrientValuePer100g(product.nutrients, baseName)
+        if (per100g) {
+          const scaled = per100g.value * scaleFactor
+          result[baseName] = { value: scaled, unit: per100g.unit }
+        }
+      }
+    }
+  }
+  return result
+}
+
+export function mergeLocalAndAgentResults(
+  localResult: SuitabilityResult,
+  agentChecks: SuitabilityCheck[],
+): SuitabilityResult {
+  const mergedChecks = [...localResult.checks]
+
+  for (const check of agentChecks) {
+    mergedChecks.push(check)
+  }
+
+  const hasFail = mergedChecks.some((c) => c.status === 'fail')
+  const hasWarn = mergedChecks.some((c) => c.status === 'warn')
+  const overall = hasFail ? 'unsuitable' : hasWarn ? 'caution' : 'suitable'
+
+  const insights = mergedChecks.filter((c) => c.status !== 'pass').map((c) => c.detail)
+  if (localResult.serving?.note) {
+    insights.push(localResult.serving.note)
+  }
+
+  return {
+    ...localResult,
+    overall,
+    checks: mergedChecks,
+    insights,
+  }
+}

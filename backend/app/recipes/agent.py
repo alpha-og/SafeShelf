@@ -3,17 +3,33 @@ import logging
 import re
 
 from httpx import AsyncClient
+from langchain_core.messages import SystemMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
+from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 
+from app.recipes.models import Recipe
 from app.recipes.tools import (
     RecipeItem,
+    _build_ingredient_filter,
     _search_recipes_internal,
+    recipe_to_item,
 )
 from app.shared.config import settings
+from app.shared.timing import log_duration
 
 logger = logging.getLogger(__name__)
+
+
+class ClarificationField(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+    id: str
+    label: str
+    description: str | None = None
+    schema_: dict = Field(default={}, validation_alias='schema', serialization_alias='schema')
+
 
 class RecipeQuery(BaseModel):
     is_recipe_query: bool = True
@@ -21,6 +37,9 @@ class RecipeQuery(BaseModel):
     ingredients: list[str] = []
     areas: list[str] = []
     exclude_ingredients: list[str] = []
+    search_text: str = ''
+    needs_clarification: bool = False
+    clarifications: list[ClarificationField] = []
 
 
 class ValidationResult(BaseModel):
@@ -44,8 +63,11 @@ query into structured fields.
 --- FIELDS ---
 
 is_recipe_query (bool, default true):
-  Whether the query is about food, cooking, or recipes. Set to false when the \
-query is clearly unrelated (e.g., "what's the weather", "tell me a joke").
+  Whether the query is about food, cooking, or recipes. Default to true for \
+ANY query that could plausibly relate to food, cooking, eating, meals, or \
+recipes — err on the side of inclusion. Only set to false when the query is \
+definitively about something else (e.g., "what's the weather", "tell me a \
+joke", "how do I fix my car").
 
 categories (list[str]):
   TheMealDB meal categories mentioned.
@@ -88,6 +110,23 @@ exclude_ingredients (list[str]):
   user says "without", "no", "excluding", "except", or similar negative
   qualifiers.
 
+search_text (str, default ""):
+  The user's own free-text food terms from their original query — especially
+  terms that describe a type of dish, cooking method, or food category that
+  does NOT fit neatly into categories, ingredients, or areas above. This
+  field is used as a fuzzy name/description match in the recipe database.
+  Rules:
+  - Always include the user's original food-related search terms here,
+    even when they also appear in other fields.
+  - Examples of terms to put here: "pastry", "casserole", "one pot",
+    "sheet pan", "crockpot", "salad", "soup", "stew", "cookies",
+    "muffins", "bread", "pie", "pudding", "dip", "skillet".
+  - For queries that are already fully captured by categories,
+    ingredients, or areas (e.g. "chicken" → category + ingredient),
+    leave this empty — the other fields suffice.
+  - Do NOT copy the entire Additional context block into this field.
+    Only include the user's ORIGINAL query terms.
+
 --- CONCEPTUAL INFERENCE ---
 
 When the query describes a cooking scenario, mood, climate, season,
@@ -118,7 +157,41 @@ Common associations:
   bacon, pancake, toast)
 - "party", "appetizer", "snack" → categories (Starter, Side,
   Miscellaneous); areas []
+- "dinner", "supper", "evening meal" → hearty categories (Beef, Chicken,
+  Pasta, Pork, Seafood); broad areas
+- "lunch", "midday" → lighter categories (Chicken, Seafood, Side)
+- single ingredient query like just "chicken", "beef", "pasta" → include
+  the ingredient AND its matching category; broad areas for variety
 
+needs_clarification (bool, default false):
+  Set to true when the query is ambiguous about what the user actually \
+wants to eat. If the query mentions specific ingredients, dish names, or \
+cuisines you can infer from (e.g., "chicken", "pasta", "Italian", "taco"), \
+set to false and extract those. If the query is vague about the actual \
+food (e.g., "something healthy", "comfort food", "dinner", "surprise me", \
+"quick meal", "feed me"), set to true and ask clarifying questions about \
+what they're looking for. Err on the side of asking — users would rather \
+answer a quick question than scroll through irrelevant results.
+
+clarifications (list[object]):
+  When needs_clarification is true, provide 1-3 questions to clarify the \
+user's intent. Each question must have:
+  - id: short unique identifier
+  - label: the question text shown to the user
+  - description: optional helper text
+  - schema: a JSON Schema fragment describing the expected answer format
+
+  Supported schema patterns:
+  - Single choice: { "type": "string", "enum": ["A", "B", "C"] }
+  - Multi choice: { "type": "array", "items": { "type": "string", \
+"enum": ["A", "B", "C"] }, "uniqueItems": true }
+  - Free text: { "type": "string" }
+  - Number: { "type": "integer" }
+  - Yes/No: { "type": "boolean" }
+
+  Prefer enum choices when possible. Use free text only as fallback.
+  Keep questions independent — the user should be able to answer them all \
+in one go.
 --- EXAMPLES ---
 
 Query: "warm climate dishes"
@@ -164,6 +237,8 @@ Query: "find me Italian chicken recipes with garlic and tomatoes"
   ingredients: ["chicken", "garlic", "tomato"]
   areas: ["Italian"]
   exclude_ingredients: []
+  needs_clarification: false
+  clarifications: []
 
 Query: "chicken or beef recipes"
   is_recipe_query: true
@@ -171,24 +246,79 @@ Query: "chicken or beef recipes"
   ingredients: []
   areas: []
   exclude_ingredients: []
+  needs_clarification: false
+  clarifications: []
 
-Query: "desserts without chocolate"
+Query: "something healthy for dinner"
   is_recipe_query: true
-  categories: ["Dessert"]
-  ingredients: []
-  areas: []
-  exclude_ingredients: ["chocolate"]
-
-Query: "vegan pasta with mushrooms no cheese"
-  is_recipe_query: true
-  categories: ["Pasta", "Vegan"]
-  ingredients: ["mushrooms"]
-  areas: []
-  exclude_ingredients: ["cheese"]
+  needs_clarification: true
+  clarifications:
+    - id: cuisine
+      label: What type of cuisine are you in the mood for?
+      schema: { "type": "string", "enum": ["Italian", "Japanese", \
+"Mexican", "Indian", "American", "Mediterranean", "No preference"] }
+    - id: diet
+      label: Any dietary preference?
+      schema: { "type": "string", "enum": ["No preference", \
+"Vegetarian", "Vegan", "Low-calorie", "High-protein", "Gluten-free"] }
 
 Query: "what's the weather in Tokyo"
   is_recipe_query: false
-  (all other fields empty)
+
+Query: "comfort food with chicken"
+  is_recipe_query: true
+  categories: ["Chicken"]
+  ingredients: ["chicken"]
+  areas: ["American", "Italian", "British", "Irish"]
+  needs_clarification: false
+  clarifications: []
+
+Query: "chicken"
+  is_recipe_query: true
+  categories: ["Chicken"]
+  ingredients: ["chicken"]
+  areas: []
+  needs_clarification: false
+  clarifications: []
+
+Query: "dinner ideas"
+  is_recipe_query: true
+  needs_clarification: true
+  clarifications:
+    - id: preference
+      label: What kind of food are you craving?
+      schema: { "type": "string", "enum": ["Something light & healthy", \
+"Hearty comfort food", "Quick & easy", "Surprise me"] }
+    - id: cuisine
+      label: Any cuisine preference?
+      schema: { "type": "string", "enum": ["No preference", \
+"Italian", "Mexican", "Japanese", "Indian", "American", "Mediterranean"] }
+
+Query: "surprise me"
+  is_recipe_query: true
+  needs_clarification: true
+  clarifications:
+    - id: preference
+      label: What sounds good to you right now?
+      schema: { "type": "string", "enum": ["Something healthy", \
+"Hearty comfort food", "Quick & easy", "I'll pick"] }
+    - id: cuisine
+      label: Any cuisine preference?
+      schema: { "type": "string", "enum": ["No preference", \
+"Italian", "Mexican", "Japanese", "Indian", "American", "Mediterranean"] }
+
+Query: "feed me"
+  is_recipe_query: true
+  needs_clarification: true
+  clarifications:
+    - id: preference
+      label: What sounds good to you right now?
+      schema: { "type": "string", "enum": ["Something healthy", \
+"Hearty comfort food", "Quick & easy", "Surprise me", "I'll pick"] }
+    - id: cuisine
+      label: Any cuisine preference?
+      schema: { "type": "string", "enum": ["No preference", \
+"Italian", "Mexican", "Japanese", "Indian", "American", "Mediterranean"] }
 
 --- OUTPUT ---
 
@@ -262,6 +392,7 @@ _DISORDERED_KEYWORDS: set[str] = {
     'fasting for',
 }
 
+
 def _check_direct_contradiction(q: RecipeQuery) -> str | None:
     overlap = set(q.ingredients) & set(q.exclude_ingredients)
     if overlap:
@@ -328,9 +459,7 @@ def validate_query(query: str, q: RecipeQuery) -> ValidationResult:
 
     essential_reason = _check_essential_ingredients(query, q)
     if essential_reason is not None:
-        return ValidationResult(
-            is_valid=False, reason=essential_reason, code='contradiction'
-        )
+        return ValidationResult(is_valid=False, reason=essential_reason, code='contradiction')
 
     return ValidationResult(is_valid=True)
 
@@ -368,19 +497,15 @@ def _match_ingredient(recipe_ingredient: str, search_term: str) -> bool:
 
 def _has_all_ingredients(recipe: RecipeItem, needed: list[str]) -> bool:
     recipe_names = recipe.ingredients
-    return all(
-        any(_match_ingredient(rn, need) for rn in recipe_names) for need in needed
-    )
+    return all(any(_match_ingredient(rn, need) for rn in recipe_names) for need in needed)
 
 
 def _has_any_excluded(recipe: RecipeItem, excluded: list[str]) -> bool:
     recipe_names = recipe.ingredients
-    return any(
-        any(_match_ingredient(rn, excl) for rn in recipe_names) for excl in excluded
-    )
+    return any(any(_match_ingredient(rn, excl) for rn in recipe_names) for excl in excluded)
 
 
-async def run_search(client: AsyncClient, q: RecipeQuery) -> list[RecipeItem]:
+async def _execute_search(client: AsyncClient, q: RecipeQuery) -> list[RecipeItem]:
     if not q.categories and not q.areas and not q.ingredients:
         return []
 
@@ -392,14 +517,13 @@ async def run_search(client: AsyncClient, q: RecipeQuery) -> list[RecipeItem]:
     for cat in cats:
         for area in areas:
             if cat is not None or area is not None or primary is not None:
-                tasks.append(
-                    _search_recipes_internal(client, cat, primary, area)
-                )
+                tasks.append(_search_recipes_internal(client, cat, primary, area))
 
     if not tasks:
         return []
 
-    results = await asyncio.gather(*tasks)
+    async with log_duration('themealdb.gather'):
+        results = await asyncio.gather(*tasks)
 
     seen: set[str] = set()
     deduped: list[RecipeItem] = []
@@ -413,11 +537,55 @@ async def run_search(client: AsyncClient, q: RecipeQuery) -> list[RecipeItem]:
         deduped = [r for r in deduped if _has_all_ingredients(r, q.ingredients)]
 
     if q.exclude_ingredients:
-        deduped = [
-            r for r in deduped if not _has_any_excluded(r, q.exclude_ingredients)
-        ]
+        deduped = [r for r in deduped if not _has_any_excluded(r, q.exclude_ingredients)]
 
     return deduped
+
+
+_FALLBACK_CATEGORIES = ['Chicken', 'Seafood', 'Pasta', 'Beef', 'Vegetarian', 'Dessert']
+
+
+async def _fallback_search(client: AsyncClient) -> list[RecipeItem]:
+    tasks = [_search_recipes_internal(client, cat, None, None) for cat in _FALLBACK_CATEGORIES]
+    async with log_duration('themealdb.fallback_gather'):
+        results = await asyncio.gather(*tasks)
+    seen: set[str] = set()
+    deduped: list[RecipeItem] = []
+    for batch in results:
+        for r in batch:
+            if r.id not in seen:
+                seen.add(r.id)
+                deduped.append(r)
+    return deduped
+
+
+async def run_search(client: AsyncClient, q: RecipeQuery) -> list[RecipeItem]:
+    # Exact search with all constraints
+    async with log_duration('search.initial'):
+        results = await _execute_search(client, q)
+    if results:
+        return results
+
+    # Relaxation 1: drop ingredient constraint if there was one
+    if q.ingredients:
+        async with log_duration('search.relax_ingredients'):
+            results = await _execute_search(client, q.model_copy(update={'ingredients': []}))
+        if results:
+            return results
+
+    # Relaxation 2: drop area constraint too
+    if q.areas:
+        async with log_duration('search.relax_areas'):
+            results = await _execute_search(
+                client,
+                q.model_copy(update={'areas': [], 'ingredients': []}),
+            )
+        if results:
+            return results
+
+    # Ultimate fallback: popular categories
+    async with log_duration('search.fallback'):
+        return await _fallback_search(client)
 
 
 _llm: ChatOpenAI | None = None
@@ -435,13 +603,15 @@ def _get_llm() -> ChatOpenAI:
     return _llm
 
 
-async def extract_query(query: str) -> RecipeQuery:
-    prompt = ChatPromptTemplate.from_messages([
-        ('system', EXTRACTION_PROMPT),
-        ('human', '{query}'),
-    ])
+async def extract_query(query: str, system_extra: str | None = None) -> RecipeQuery:
+    messages = [SystemMessage(content=EXTRACTION_PROMPT)]
+    if system_extra:
+        messages.append(SystemMessage(content=system_extra))
+    messages.append(('human', '{query}'))
+    prompt = ChatPromptTemplate.from_messages(messages)
     chain = prompt | _get_llm().with_structured_output(RecipeQuery, method='json_mode')
-    return await chain.ainvoke({'query': query})
+    async with log_duration('llm.ainvoke'):
+        return await chain.ainvoke({'query': query})
 
 
 async def recipe_search(query: str) -> RecipeSearchResult:
@@ -475,3 +645,74 @@ async def recipe_search(query: str) -> RecipeSearchResult:
 
     except Exception as exc:
         return RecipeSearchResult(success=False, error=str(exc))
+
+
+# ── Database-backed search (primary source, MealDB fallback disabled) ─────
+
+_DB_SEARCH_LIMIT = 500
+
+
+async def _db_execute_search(session: AsyncSession, q: RecipeQuery) -> list[RecipeItem]:
+    """Query the Recipe table with the given criteria, post-filter in Python."""
+    if not q.categories and not q.areas and not q.ingredients and not q.search_text:
+        return []
+
+    conditions: list = []
+
+    if q.categories:
+        conditions.append(Recipe.category.in_(q.categories))
+
+    if q.areas:
+        conditions.append(Recipe.cuisine.in_(q.areas))
+
+    if q.ingredients:
+        ing_filter = _build_ingredient_filter(q.ingredients)
+        if ing_filter is not None:
+            conditions.append(ing_filter)
+
+    if q.search_text:
+        words = set(re.findall(r'[a-z]+', q.search_text.lower()))
+        for w in sorted(words, key=len, reverse=True):
+            if len(w) > 2:
+                conditions.append(Recipe.name.ilike(f'%{w}%'))
+
+    stmt = select(Recipe)
+    if conditions:
+        stmt = stmt.where(*conditions)
+    stmt = stmt.limit(_DB_SEARCH_LIMIT)
+    rows = (await session.exec(stmt)).all()
+
+    items = [recipe_to_item(r) for r in rows]
+
+    if q.ingredients:
+        items = [r for r in items if _has_all_ingredients(r, q.ingredients)]
+
+    if q.exclude_ingredients:
+        items = [r for r in items if not _has_any_excluded(r, q.exclude_ingredients)]
+
+    return items
+
+
+async def db_run_search(session: AsyncSession, q: RecipeQuery) -> list[RecipeItem]:
+    # Tier 1: Food.com DB with full constraints
+    results = await _db_execute_search(session, q)
+    if results:
+        return results
+
+    # Tier 2: Relax ingredients, still try DB
+    if q.ingredients:
+        relaxed = q.model_copy(update={'ingredients': []})
+        results = await _db_execute_search(session, relaxed)
+        if results:
+            return results
+
+    # Tier 3: Relax areas too, still try DB
+    if q.areas:
+        relaxed = q.model_copy(update={'areas': [], 'ingredients': []})
+        results = await _db_execute_search(session, relaxed)
+        if results:
+            return results
+
+    # Tier 4: Fallback to MealDB
+    async with AsyncClient() as client:
+        return await run_search(client, q)

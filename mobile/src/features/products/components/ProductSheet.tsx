@@ -36,7 +36,15 @@ export function ProductSheet({
   sheetKey,
 }: ProductSheetProps) {
   const navigate = useNavigate()
-  const { result: suitability } = useSuitability(result)
+  const {
+    result: suitability,
+    isAgentLoading,
+    stepper,
+    agentError,
+    agentUsed,
+    triggerMode,
+    startAgentEval,
+  } = useSuitability(result)
   const { items, addToCart, removeFromCart, updateQuantity } = useCart()
   const cartItem = result?.barcode
     ? items.find((i) => i.product.barcode === result.barcode)
@@ -92,9 +100,22 @@ export function ProductSheet({
           <div className="flex flex-col flex-1 min-h-0 overflow-y-auto px-4 pt-6 space-y-6 relative z-20 no-scrollbar">
             <ProductServingNote serving={suitability?.serving} />
 
-            {suitability && suitability.checks.length > 0 && (
-              <SuitabilityBreakdown checks={suitability.checks} />
-            )}
+            {suitability &&
+              (suitability.checks.length > 0 ||
+                isAgentLoading ||
+                agentError ||
+                agentUsed ||
+                triggerMode === 'manual') && (
+                <SuitabilityBreakdown
+                  checks={suitability.checks}
+                  isAgentLoading={isAgentLoading}
+                  stepper={stepper}
+                  agentError={agentError}
+                  agentUsed={agentUsed}
+                  triggerMode={triggerMode}
+                  startAgentEval={startAgentEval}
+                />
+              )}
 
             {result.barcode && (
               <Button

@@ -1,12 +1,13 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { FileText, Pencil, Plus, Trash2, Users } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Avatar } from '@/components/Avatar'
 import { FormError } from '@/components/FormError'
 import { PageHeader } from '@/components/PageHeader'
 import { SectionHeader } from '@/components/SectionHeader'
 import { ThemeToggle } from '@/features/appearance/components/ThemeToggle'
+import { getItem, setItem } from '@/lib/storage'
 import { cn } from '@/lib/utils'
 import { useProfiles } from '@/providers/ProfilesProvider'
 import { deleteProfile } from '../services/profileStorage'
@@ -34,6 +35,23 @@ export function ProfileHubPage() {
     setActiveGroup,
   } = useProfiles()
   const [error, setError] = useState<Error | null>(null)
+
+  const [triggerMode, setTriggerMode] = useState<'auto' | 'manual'>('auto')
+
+  useEffect(() => {
+    async function loadSetting() {
+      const mode = await getItem<'auto' | 'manual'>('agent_trigger_mode')
+      if (mode) {
+        setTriggerMode(mode)
+      }
+    }
+    loadSetting()
+  }, [])
+
+  async function handleToggleTriggerMode(newMode: 'auto' | 'manual') {
+    setTriggerMode(newMode)
+    await setItem('agent_trigger_mode', newMode)
+  }
 
   async function handleDeleteProfile(id: string) {
     setError(null)
@@ -202,6 +220,72 @@ export function ProfileHubPage() {
             >
               <FileText className="h-5 w-5 text-muted-foreground shrink-0" />
               <span className="flex-1 text-left">Upload & manage health reports</span>
+            </button>
+          </div>
+        </section>
+
+        <section className="border-t border-border pt-6 pb-4">
+          <SectionHeader variant="default" className="px-4">
+            AI Assistant Preferences
+          </SectionHeader>
+          <div>
+            {/* Automatic Mode Row */}
+            <button
+              type="button"
+              onClick={() => handleToggleTriggerMode('auto')}
+              className={cn(
+                'w-full flex items-center justify-between px-4 py-3.5 border-b border-border transition-colors text-left',
+                triggerMode === 'auto' && ACTIVE_ROW_CLASSES
+              )}
+            >
+              <div className="flex-1 min-w-0 pr-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold text-foreground">Automatic Review</span>
+                  <span className="text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 px-2 py-0.5 rounded-full">
+                    Recommended
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-1 leading-normal">
+                  Runs deep AI analysis instantly on every scan.
+                </p>
+              </div>
+              <div
+                className={cn(
+                  'h-5 w-5 rounded-full border flex items-center justify-center shrink-0 transition-colors',
+                  triggerMode === 'auto'
+                    ? 'border-emerald-500 bg-emerald-500/15'
+                    : 'border-muted-foreground/30',
+                )}
+              >
+                {triggerMode === 'auto' && <div className="h-2.5 w-2.5 rounded-full bg-emerald-600" />}
+              </div>
+            </button>
+
+            {/* Manual Mode Row */}
+            <button
+              type="button"
+              onClick={() => handleToggleTriggerMode('manual')}
+              className={cn(
+                'w-full flex items-center justify-between px-4 py-3.5 transition-colors text-left',
+                triggerMode === 'manual' && ACTIVE_ROW_CLASSES
+              )}
+            >
+              <div className="flex-1 min-w-0 pr-4">
+                <span className="text-sm font-semibold text-foreground">On-Demand Review</span>
+                <p className="text-xs text-muted-foreground mt-1 leading-normal">
+                  Manually trigger deep AI analysis when needed.
+                </p>
+              </div>
+              <div
+                className={cn(
+                  'h-5 w-5 rounded-full border flex items-center justify-center shrink-0 transition-colors',
+                  triggerMode === 'manual'
+                    ? 'border-emerald-500 bg-emerald-500/15'
+                    : 'border-muted-foreground/30',
+                )}
+              >
+                {triggerMode === 'manual' && <div className="h-2.5 w-2.5 rounded-full bg-emerald-600" />}
+              </div>
             </button>
           </div>
         </section>
