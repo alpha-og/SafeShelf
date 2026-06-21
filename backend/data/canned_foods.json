@@ -1,0 +1,74 @@
+[
+  {
+    "barcode": "PROD-CANNED-FOODS-TOMATO-PASTE-00",
+    "product_name": "Tomato Paste",
+    "category": "Canned Foods",
+    "image_url": "https://images.unsplash.com/photo-1584269600464-37b1b58e9e91?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-CANNED-FOODS-TOMATO-PASTE-01",
+    "product_name": "Heinz Tomato Paste",
+    "category": "Canned Foods",
+    "image_url": "https://images.unsplash.com/photo-1584269600464-37b1b58e9e91?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "Heinz",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-CANNED-FOODS-TOMATO-SAUCE-00",
+    "product_name": "Tomato Sauce",
+    "category": "Canned Foods",
+    "image_url": "https://images.unsplash.com/photo-1584269600464-37b1b58e9e91?w=500&q=80",
+    "quantity": "400 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-CANNED-FOODS-TOMATO-SAUCE-01",
+    "product_name": "Heinz Tomato Sauce",
+    "category": "Canned Foods",
+    "image_url": "https://images.unsplash.com/photo-1584269600464-37b1b58e9e91?w=500&q=80",
+    "quantity": "400 g",
+    "brand": "Heinz",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-CANNED-FOODS-DICED-TOMATOES-00",
+    "product_name": "Diced Tomatoes",
+    "category": "Canned Foods",
+    "image_url": "https://images.unsplash.com/photo-1584269600464-37b1b58e9e91?w=500&q=80",
+    "quantity": "400 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-CANNED-FOODS-DICED-TOMATOES-01",
+    "product_name": "Heinz Diced Tomatoes",
+    "category": "Canned Foods",
+    "image_url": "https://images.unsplash.com/photo-1584269600464-37b1b58e9e91?w=500&q=80",
+    "quantity": "400 g",
+    "brand": "Heinz",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-CANNED-FOODS-BLACK-BEANS-00",
+    "product_name": "Black Beans",
+    "category": "Canned Foods",
+    "image_url": "https://images.unsplash.com/photo-1584269600464-37b1b58e9e91?w=500&q=80",
+    "quantity": "400 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-CANNED-FOODS-BLACK-BEANS-01",
+    "product_name": "Heinz Black Beans",
+    "category": "Canned Foods",
+    "image_url": "https://images.unsplash.com/photo-1584269600464-37b1b58e9e91?w=500&q=80",
+    "quantity": "400 g",
+    "brand": "Heinz",
+    "nutrients": {}
+  }
+]

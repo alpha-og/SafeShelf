@@ -78,6 +78,7 @@ def generate_json():
             "category": cat,
             "image_url": img_url,
             "quantity": "500 g" if cat != "Seafood" else "250 g",
+            "brand": "Fresh Farm Produce",
             "nutrients": {
                 "energy-kcal_100g": item["cal"],
                 "carbohydrates_100g": item["carb"],

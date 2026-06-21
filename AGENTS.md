@@ -50,6 +50,9 @@ safeshelf/
 | Deploy to iOS device | `pnpm dev:ios` or `node mobile/scripts/dev.mjs ios` |
 | Backend dev server (port 8926) | `pnpm backend:dev` or `pnpm backend:serve` |
 | Backend sync deps | `pnpm backend:sync` (uv sync) |
+| Generate ingredient seed JSON | `uv run python -m scripts.lib.generate_ingredient_seed` or `uv run python -m scripts.dev seed-ingredients` |
+| Dry-run ingredient generation | `uv run python -m scripts.dev seed-ingredients --dry-run` |
+| Seed DB (stores + inventory + recipes) | `uv run python -m scripts.dev seed` |
 
 ## Configuration
 

@@ -1,0 +1,389 @@
+[
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-OLIVE-OIL-00",
+    "product_name": "Fortune Olive Oil",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "1 L",
+    "brand": "Fortune",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-OLIVE-OIL-01",
+    "product_name": "Organic Olive Oil",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "1 L",
+    "brand": "Organic Farms",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-MAYONNAISE-00",
+    "product_name": "Fortune Mayonnaise",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fortune",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-MAYONNAISE-01",
+    "product_name": "Saffola Mayonnaise",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Saffola",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-MAYONNAISE-02",
+    "product_name": "Dhara Mayonnaise",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Dhara",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-SOY-SAUCE-00",
+    "product_name": "Fortune Soy Sauce",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 ml",
+    "brand": "Fortune",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-SOY-SAUCE-01",
+    "product_name": "Saffola Soy Sauce",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 ml",
+    "brand": "Saffola",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-SOY-SAUCE-02",
+    "product_name": "Dhara Soy Sauce",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 ml",
+    "brand": "Dhara",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-WORCESTERSHIRE-SAUCE-00",
+    "product_name": "Fortune Worcestershire Sauce",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "300 ml",
+    "brand": "Fortune",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-WORCESTERSHIRE-SAUCE-01",
+    "product_name": "Saffola Worcestershire Sauce",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "300 ml",
+    "brand": "Saffola",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-WORCESTERSHIRE-SAUCE-02",
+    "product_name": "Dhara Worcestershire Sauce",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "300 ml",
+    "brand": "Dhara",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-DIJON-MUSTARD-00",
+    "product_name": "Fortune Dijon Mustard",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "Fortune",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-DIJON-MUSTARD-01",
+    "product_name": "Saffola Dijon Mustard",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "Saffola",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-KETCHUP-00",
+    "product_name": "Fortune Ketchup",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fortune",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-KETCHUP-01",
+    "product_name": "Saffola Ketchup",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Saffola",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-KETCHUP-02",
+    "product_name": "Dhara Ketchup",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Dhara",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-CANOLA-OIL-00",
+    "product_name": "Fortune Canola Oil",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "1 L",
+    "brand": "Fortune",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-CANOLA-OIL-01",
+    "product_name": "Saffola Canola Oil",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "1 L",
+    "brand": "Saffola",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-CANOLA-OIL-02",
+    "product_name": "Dhara Canola Oil",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "1 L",
+    "brand": "Dhara",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-CANOLA-OIL-03",
+    "product_name": "Canola Oil",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "1 L",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-RED-WINE-VINEGAR-00",
+    "product_name": "Fortune Red Wine Vinegar",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 ml",
+    "brand": "Fortune",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-RED-WINE-VINEGAR-01",
+    "product_name": "Saffola Red Wine Vinegar",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 ml",
+    "brand": "Saffola",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-RED-WINE-VINEGAR-02",
+    "product_name": "Dhara Red Wine Vinegar",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 ml",
+    "brand": "Dhara",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-RED-WINE-VINEGAR-03",
+    "product_name": "Red Wine Vinegar",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 ml",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-WHITE-VINEGAR-00",
+    "product_name": "Fortune White Vinegar",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 ml",
+    "brand": "Fortune",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-WHITE-VINEGAR-01",
+    "product_name": "Saffola White Vinegar",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 ml",
+    "brand": "Saffola",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-WHITE-VINEGAR-02",
+    "product_name": "Dhara White Vinegar",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 ml",
+    "brand": "Dhara",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-WHITE-VINEGAR-03",
+    "product_name": "White Vinegar",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 ml",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-DRY-MUSTARD-00",
+    "product_name": "Fortune Dry Mustard",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fortune",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-DRY-MUSTARD-01",
+    "product_name": "Saffola Dry Mustard",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Saffola",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-SALSA-00",
+    "product_name": "Fortune Salsa",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "400 g",
+    "brand": "Fortune",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-SALSA-01",
+    "product_name": "Saffola Salsa",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "400 g",
+    "brand": "Saffola",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-SALSA-02",
+    "product_name": "Dhara Salsa",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "400 g",
+    "brand": "Dhara",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-APPLE-CIDER-VINEGAR-00",
+    "product_name": "Fortune Apple Cider Vinegar",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 ml",
+    "brand": "Fortune",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-APPLE-CIDER-VINEGAR-01",
+    "product_name": "Saffola Apple Cider Vinegar",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 ml",
+    "brand": "Saffola",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-HOT-SAUCE-00",
+    "product_name": "Fortune Hot Sauce",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "150 ml",
+    "brand": "Fortune",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-HOT-SAUCE-01",
+    "product_name": "Saffola Hot Sauce",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "150 ml",
+    "brand": "Saffola",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-HOT-SAUCE-02",
+    "product_name": "Dhara Hot Sauce",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "150 ml",
+    "brand": "Dhara",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-PREPARED-MUSTARD-00",
+    "product_name": "Fortune Prepared Mustard",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fortune",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-PREPARED-MUSTARD-01",
+    "product_name": "Saffola Prepared Mustard",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Saffola",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-RICE-VINEGAR-00",
+    "product_name": "Fortune Rice Vinegar",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fortune",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-RICE-VINEGAR-01",
+    "product_name": "Saffola Rice Vinegar",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Saffola",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-OILS-CONDIMENTS-RICE-VINEGAR-02",
+    "product_name": "Dhara Rice Vinegar",
+    "category": "Oils & Condiments",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Dhara",
+    "nutrients": {}
+  }
+]

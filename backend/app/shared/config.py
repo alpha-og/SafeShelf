@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     GROQ_MODEL: str = 'llama-3.1-8b-instant'
     WHO_CLIENT_ID: str = ''
     WHO_CLIENT_SECRET: str = ''
+    USDA_FDC_API_KEY: str = ''
 
     REQUIRED_ENV_VARS: list[str] = [
         'WHO_CLIENT_ID',

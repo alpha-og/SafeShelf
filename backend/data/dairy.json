@@ -1,0 +1,479 @@
+[
+  {
+    "barcode": "PROD-DAIRY-BUTTER-00",
+    "product_name": "Amul Butter",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Amul",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-BUTTER-01",
+    "product_name": "Organic Butter",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Organic Farms",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-EGGS-00",
+    "product_name": "Amul Eggs",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "6 pcs",
+    "brand": "Amul",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-EGGS-01",
+    "product_name": "Organic Eggs",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "6 pcs",
+    "brand": "Organic Farms",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-MILK-00",
+    "product_name": "Amul Milk",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "1 L",
+    "brand": "Amul",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-MILK-01",
+    "product_name": "Mother Dairy Milk",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "1 L",
+    "brand": "Mother Dairy",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-MILK-02",
+    "product_name": "Milma Milk",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "1 L",
+    "brand": "Milma",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-MILK-03",
+    "product_name": "Organic Milk",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "1 L",
+    "brand": "Organic Farms",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-PARMESAN-CHEESE-00",
+    "product_name": "Amul Parmesan Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Amul",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-PARMESAN-CHEESE-01",
+    "product_name": "Mother Dairy Parmesan Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Mother Dairy",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-PARMESAN-CHEESE-02",
+    "product_name": "Milma Parmesan Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Milma",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-MARGARINE-00",
+    "product_name": "Amul Margarine",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Amul",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-MARGARINE-01",
+    "product_name": "Mother Dairy Margarine",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Mother Dairy",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-MARGARINE-02",
+    "product_name": "Milma Margarine",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Milma",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-SOUR-CREAM-00",
+    "product_name": "Amul Sour Cream",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Amul",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-SOUR-CREAM-01",
+    "product_name": "Mother Dairy Sour Cream",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Mother Dairy",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-CREAM-CHEESE-00",
+    "product_name": "Amul Cream Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Amul",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-CREAM-CHEESE-01",
+    "product_name": "Mother Dairy Cream Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Mother Dairy",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-CREAM-CHEESE-02",
+    "product_name": "Milma Cream Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Milma",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-CHEDDAR-CHEESE-00",
+    "product_name": "Amul Cheddar Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Amul",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-CHEDDAR-CHEESE-01",
+    "product_name": "Mother Dairy Cheddar Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Mother Dairy",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-CHEDDAR-CHEESE-02",
+    "product_name": "Milma Cheddar Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Milma",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-MOZZARELLA-CHEESE-00",
+    "product_name": "Amul Mozzarella Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Amul",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-MOZZARELLA-CHEESE-01",
+    "product_name": "Mother Dairy Mozzarella Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Mother Dairy",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-HEAVY-CREAM-00",
+    "product_name": "Amul Heavy Cream",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Amul",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-HEAVY-CREAM-01",
+    "product_name": "Mother Dairy Heavy Cream",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Mother Dairy",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-BUTTERMILK-00",
+    "product_name": "Amul Buttermilk",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Amul",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-BUTTERMILK-01",
+    "product_name": "Mother Dairy Buttermilk",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Mother Dairy",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-HALF-AND-HALF-00",
+    "product_name": "Amul Half and Half",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Amul",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-HALF-AND-HALF-01",
+    "product_name": "Mother Dairy Half and Half",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Mother Dairy",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-HALF-AND-HALF-02",
+    "product_name": "Milma Half and Half",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Milma",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-HALF-AND-HALF-03",
+    "product_name": "Nandini Half and Half",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Nandini",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-MONTEREY-JACK-CHEESE-00",
+    "product_name": "Amul Monterey Jack Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Amul",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-MONTEREY-JACK-CHEESE-01",
+    "product_name": "Mother Dairy Monterey Jack Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Mother Dairy",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-MONTEREY-JACK-CHEESE-02",
+    "product_name": "Milma Monterey Jack Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Milma",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-MONTEREY-JACK-CHEESE-03",
+    "product_name": "Nandini Monterey Jack Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Nandini",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-SWISS-CHEESE-00",
+    "product_name": "Amul Swiss Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Amul",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-SWISS-CHEESE-01",
+    "product_name": "Mother Dairy Swiss Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Mother Dairy",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-SWISS-CHEESE-02",
+    "product_name": "Milma Swiss Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Milma",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-SWISS-CHEESE-03",
+    "product_name": "Nandini Swiss Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Nandini",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-YOGURT-00",
+    "product_name": "Amul Yogurt",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Amul",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-YOGURT-01",
+    "product_name": "Mother Dairy Yogurt",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Mother Dairy",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-FETA-CHEESE-00",
+    "product_name": "Amul Feta Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Amul",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-FETA-CHEESE-01",
+    "product_name": "Mother Dairy Feta Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Mother Dairy",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-SKIM-MILK-00",
+    "product_name": "Amul Skim Milk",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Amul",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-SKIM-MILK-01",
+    "product_name": "Mother Dairy Skim Milk",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Mother Dairy",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-SKIM-MILK-02",
+    "product_name": "Milma Skim Milk",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Milma",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-SWEETENED-CONDENSED-MILK-00",
+    "product_name": "Amul Sweetened Condensed Milk",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Amul",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-SWEETENED-CONDENSED-MILK-01",
+    "product_name": "Mother Dairy Sweetened Condensed Milk",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Mother Dairy",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-RICOTTA-CHEESE-00",
+    "product_name": "Amul Ricotta Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Amul",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-RICOTTA-CHEESE-01",
+    "product_name": "Mother Dairy Ricotta Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Mother Dairy",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-RICOTTA-CHEESE-02",
+    "product_name": "Milma Ricotta Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Milma",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-DAIRY-RICOTTA-CHEESE-03",
+    "product_name": "Nandini Ricotta Cheese",
+    "category": "Dairy",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Nandini",
+    "nutrients": {}
+  }
+]

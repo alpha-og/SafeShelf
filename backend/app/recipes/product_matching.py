@@ -149,6 +149,7 @@ async def match_ingredient(
     session,
     ingredient: str,
     store_id: str,
+    _suggestions: list[str] | None = None,
 ) -> list[dict]:
     tokens = _tokenize(ingredient)
     if not tokens:
@@ -207,48 +208,52 @@ async def match_ingredient(
         )
         barcode_to_product[prod.barcode] = prod
 
-    try:
-        from app.suggestion.embeddings import query_similar_to_text
+    if _suggestions is None:
+        try:
+            from app.suggestion.embeddings import query_similar_to_text
 
-        suggested_barcodes = await query_similar_to_text(ingredient, n_results=20)
+            suggested_barcodes = await query_similar_to_text(ingredient, n_results=20)
+        except Exception:
+            logger.debug('Embedding suggestions unavailable', exc_info=True)
+            suggested_barcodes = []
+    else:
+        suggested_barcodes = _suggestions
 
-        matched_barcodes = set(barcode_to_product.keys())
-        new_barcodes = [b for b in suggested_barcodes if b not in matched_barcodes]
+    matched_barcodes = set(barcode_to_product.keys())
+    new_barcodes = [b for b in suggested_barcodes if b not in matched_barcodes]
 
-        if new_barcodes:
-            suggestion_stmt = (
-                select(StoreInventory, Product)
-                .join(Product, StoreInventory.product_id == Product.id)
-                .join(Store, StoreInventory.store_id == Store.id)
-                .where(Store.uuid == store_id)
-                .where(StoreInventory.stock_quantity > 0)
-                .where(Product.barcode.in_(new_barcodes))
+    if new_barcodes:
+        suggestion_stmt = (
+            select(StoreInventory, Product)
+            .join(Product, StoreInventory.product_id == Product.id)
+            .join(Store, StoreInventory.store_id == Store.id)
+            .where(Store.uuid == store_id)
+            .where(StoreInventory.stock_quantity > 0)
+            .where(Product.barcode.in_(new_barcodes))
+        )
+        async with log_duration(f'db.suggest_{ingredient[:30]}'):
+            suggestion_result = await session.execute(suggestion_stmt)
+
+        for inv, prod in suggestion_result.all():
+            name_lower = prod.product_name.lower()
+            if name_lower in seen:
+                continue
+            seen.add(name_lower)
+            score = _relevance_score(prod.product_name, ing_tokens)
+            if score == 0.0:
+                continue
+            results.append(
+                {
+                    'barcode': prod.barcode,
+                    'product_name': prod.product_name,
+                    'product_image': prod.product_image,
+                    'brand': prod.brand,
+                    'quantity': prod.quantity,
+                    'price': inv.price,
+                    'in_stock': inv.stock_quantity > 0,
+                    '_score': score,
+                }
             )
-            async with log_duration(f'db.suggest_{ingredient[:30]}'):
-                suggestion_result = await session.execute(suggestion_stmt)
-
-            for inv, prod in suggestion_result.all():
-                name_lower = prod.product_name.lower()
-                if name_lower in seen:
-                    continue
-                seen.add(name_lower)
-                score = _relevance_score(prod.product_name, ing_tokens)
-                if score == 0.0:
-                    continue
-                results.append(
-                    {
-                        'barcode': prod.barcode,
-                        'product_name': prod.product_name,
-                        'product_image': prod.product_image,
-                        'brand': prod.brand,
-                        'quantity': prod.quantity,
-                        'price': inv.price,
-                        'in_stock': inv.stock_quantity > 0,
-                        '_score': score,
-                    }
-                )
-    except Exception:
-        logger.debug('Embedding suggestions unavailable', exc_info=True)
 
     results.sort(key=lambda r: r['_score'], reverse=True)
     for r in results:
@@ -262,10 +267,19 @@ async def match_ingredients(
     ingredients: list[str],
     store_id: str,
 ) -> list[dict]:
+    # Batch-encode all ingredients in a single model call
+    try:
+        from app.suggestion.embeddings import batch_query_similar_to_text
+
+        all_suggestions = await batch_query_similar_to_text(ingredients, n_results=20)
+    except Exception:
+        logger.debug('Batch embedding unavailable', exc_info=True)
+        all_suggestions = [[] for _ in ingredients]
+
     return [
         {
             'ingredient': ing,
-            'options': await match_ingredient(session, ing, store_id),
+            'options': await match_ingredient(session, ing, store_id, _suggestions=sug),
         }
-        for ing in ingredients
+        for ing, sug in zip(ingredients, all_suggestions)
     ]

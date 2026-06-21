@@ -1,0 +1,242 @@
+[
+  {
+    "barcode": "PROD-KERALA-COCONUT-MILK-00",
+    "product_name": "Coconut Milk (Regular)",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=500&q=80",
+    "quantity": "400 ml",
+    "brand": "Fresh Farm Produce"
+  },
+  {
+    "barcode": "PROD-KERALA-COCONUT-MILK-01",
+    "product_name": "Coconut Milk (Thick)",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=500&q=80",
+    "quantity": "400 ml",
+    "brand": "SafeShelf Kerala"
+  },
+  {
+    "barcode": "PROD-KERALA-COCONUT-OIL-00",
+    "product_name": "Coconut Oil (Cold Pressed)",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "500 ml",
+    "brand": "Kerala Spices"
+  },
+  {
+    "barcode": "PROD-KERALA-COCONUT-OIL-01",
+    "product_name": "Coconut Oil (Virgin)",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80",
+    "quantity": "1 L",
+    "brand": "SafeShelf Kerala"
+  },
+  {
+    "barcode": "PROD-KERALA-CURRY-LEAVES-00",
+    "product_name": "Fresh Curry Leaves",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Fresh Farm Produce"
+  },
+  {
+    "barcode": "PROD-KERALA-TAMARIND-00",
+    "product_name": "Tamarind Paste",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "SafeShelf"
+  },
+  {
+    "barcode": "PROD-KERALA-TAMARIND-01",
+    "product_name": "Tamarind Concentrate",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=500&q=80",
+    "quantity": "500 ml",
+    "brand": "Kerala Spices"
+  },
+  {
+    "barcode": "PROD-KERALA-ASAFOETIDA-00",
+    "product_name": "Asafoetida (Hing)",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Everest"
+  },
+  {
+    "barcode": "PROD-KERALA-ASAFOETIDA-01",
+    "product_name": "Asafoetida (Hing) Premium",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "50 g",
+    "brand": "SafeShelf"
+  },
+  {
+    "barcode": "PROD-KERALA-GHEE-00",
+    "product_name": "Pure Ghee",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 ml",
+    "brand": "Amul"
+  },
+  {
+    "barcode": "PROD-KERALA-GHEE-01",
+    "product_name": "Pure Ghee (Cow Ghee)",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "1 L",
+    "brand": "Milma"
+  },
+  {
+    "barcode": "PROD-KERALA-GHEE-02",
+    "product_name": "Organic Ghee",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80",
+    "quantity": "500 ml",
+    "brand": "Organic Farms"
+  },
+  {
+    "barcode": "PROD-KERALA-DRIED-CHILIES-00",
+    "product_name": "Dried Red Chilies",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Kerala Spices"
+  },
+  {
+    "barcode": "PROD-KERALA-DRIED-CHILIES-01",
+    "product_name": "Dried Red Chilies (Kashmiri)",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Everest"
+  },
+  {
+    "barcode": "PROD-KERALA-MUSTARD-SEEDS-00",
+    "product_name": "Black Mustard Seeds",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "MDH"
+  },
+  {
+    "barcode": "PROD-KERALA-MUSTARD-SEEDS-01",
+    "product_name": "Black Mustard Seeds",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "SafeShelf"
+  },
+  {
+    "barcode": "PROD-KERALA-DAL-CHANA-00",
+    "product_name": "Bengal Gram (Chana Dal)",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata"
+  },
+  {
+    "barcode": "PROD-KERALA-DAL-TOOR-00",
+    "product_name": "Toor Dal (Pigeon Peas)",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep"
+  },
+  {
+    "barcode": "PROD-KERALA-DAL-URAD-00",
+    "product_name": "Urad Dal (Black Gram)",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep"
+  },
+  {
+    "barcode": "PROD-KERALA-RICE-FLOUR-00",
+    "product_name": "Rice Flour",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=80",
+    "quantity": "1 kg",
+    "brand": "SafeShelf"
+  },
+  {
+    "barcode": "PROD-KERALA-BESAN-00",
+    "product_name": "Chickpea Flour (Besan)",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf"
+  },
+  {
+    "barcode": "PROD-KERALA-COCONUT-DESSICCATED-00",
+    "product_name": "Desiccated Coconut",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "SafeShelf"
+  },
+  {
+    "barcode": "PROD-KERALA-JAGGERY-00",
+    "product_name": "Coconut Jaggery (Sharkara)",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Kerala Spices"
+  },
+  {
+    "barcode": "PROD-KERALA-PAPPADAM-00",
+    "product_name": "Pappadam (Plain)",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "SafeShelf Kerala"
+  },
+  {
+    "barcode": "PROD-KERALA-KANJI-00",
+    "product_name": "Parboiled Rice (Ponni)",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=80",
+    "quantity": "5 kg",
+    "brand": "SafeShelf"
+  },
+  {
+    "barcode": "PROD-KERALA-KANJI-01",
+    "product_name": "Rose Matta Rice (Kerala Red Rice)",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=80",
+    "quantity": "5 kg",
+    "brand": "Kerala Spices"
+  },
+  {
+    "barcode": "PROD-KERALA-SAMBAR-POWDER-00",
+    "product_name": "Sambar Powder",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "MDH"
+  },
+  {
+    "barcode": "PROD-KERALA-MANGO-PICKLE-00",
+    "product_name": "Mango Pickle",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1584269600464-37b1b58e9e91?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf Kerala"
+  },
+  {
+    "barcode": "PROD-KERALA-LIME-PICKLE-00",
+    "product_name": "Lime Pickle",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1584269600464-37b1b58e9e91?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf Kerala"
+  },
+  {
+    "barcode": "PROD-KERALA-LEMON-RICE-MIX-00",
+    "product_name": "Lemon Rice Mix",
+    "category": "Regional Kerala",
+    "image_url": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "SafeShelf Kerala"
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "source": "recipe-frequency + USDA FoodData Central",
+  "total_products": 342,
+  "categories": {
+    "Canned Foods": 8,
+    "Dairy": 53,
+    "Fruits": 8,
+    "Grains & Baking": 3,
+    "Herbs & Spices": 52,
+    "Meats": 16,
+    "Oils & Condiments": 43,
+    "Pantry Staples": 139,
+    "Vegetables": 20
+  }
+}

@@ -1,0 +1,74 @@
+[
+  {
+    "barcode": "PROD-FRUITS-LEMON-JUICE-00",
+    "product_name": "Fresh Lemon Juice",
+    "category": "Fruits",
+    "image_url": "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-FRUITS-LIME-JUICE-00",
+    "product_name": "Fresh Lime Juice",
+    "category": "Fruits",
+    "image_url": "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-FRUITS-BANANAS-00",
+    "product_name": "Fresh Bananas",
+    "category": "Fruits",
+    "image_url": "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-FRUITS-BLUEBERRIES-00",
+    "product_name": "Fresh Blueberries",
+    "category": "Fruits",
+    "image_url": "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-FRUITS-LEMON-00",
+    "product_name": "Fresh Lemon",
+    "category": "Fruits",
+    "image_url": "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-FRUITS-LEMON-ZEST-00",
+    "product_name": "Fresh Lemon Zest",
+    "category": "Fruits",
+    "image_url": "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-FRUITS-AVOCADO-00",
+    "product_name": "Fresh Avocado",
+    "category": "Fruits",
+    "image_url": "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-FRUITS-CRUSHED-PINEAPPLE-00",
+    "product_name": "Fresh Crushed Pineapple",
+    "category": "Fruits",
+    "image_url": "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  }
+]

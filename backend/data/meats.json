@@ -1,0 +1,146 @@
+[
+  {
+    "barcode": "PROD-MEATS-CHICKEN-BROTH-00",
+    "product_name": "Chicken Broth",
+    "category": "Meats",
+    "image_url": "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=500&q=80",
+    "quantity": "1 L",
+    "brand": "SafeShelf Fresh",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-MEATS-CHICKEN-BROTH-01",
+    "product_name": "Fresh Chicken Broth",
+    "category": "Meats",
+    "image_url": "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=500&q=80",
+    "quantity": "1 L",
+    "brand": "Fresh Farm",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-MEATS-BACON-00",
+    "product_name": "Bacon",
+    "category": "Meats",
+    "image_url": "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf Fresh",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-MEATS-BACON-01",
+    "product_name": "Fresh Bacon",
+    "category": "Meats",
+    "image_url": "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-MEATS-GROUND-BEEF-00",
+    "product_name": "Ground Beef",
+    "category": "Meats",
+    "image_url": "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf Fresh",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-MEATS-GROUND-BEEF-01",
+    "product_name": "Fresh Ground Beef",
+    "category": "Meats",
+    "image_url": "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-MEATS-CHICKEN-BREAST-00",
+    "product_name": "Chicken Breast",
+    "category": "Meats",
+    "image_url": "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf Fresh",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-MEATS-CHICKEN-BREAST-01",
+    "product_name": "Organic Chicken Breast",
+    "category": "Meats",
+    "image_url": "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Organic Farms",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-MEATS-BEEF-BROTH-00",
+    "product_name": "Beef Broth",
+    "category": "Meats",
+    "image_url": "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=500&q=80",
+    "quantity": "1 L",
+    "brand": "SafeShelf Fresh",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-MEATS-BEEF-BROTH-01",
+    "product_name": "Fresh Beef Broth",
+    "category": "Meats",
+    "image_url": "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=500&q=80",
+    "quantity": "1 L",
+    "brand": "Fresh Farm",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-MEATS-LEAN-GROUND-BEEF-00",
+    "product_name": "Lean Ground Beef",
+    "category": "Meats",
+    "image_url": "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf Fresh",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-MEATS-LEAN-GROUND-BEEF-01",
+    "product_name": "Fresh Lean Ground Beef",
+    "category": "Meats",
+    "image_url": "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-MEATS-SHRIMP-00",
+    "product_name": "Shrimp",
+    "category": "Meats",
+    "image_url": "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf Fresh",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-MEATS-SHRIMP-01",
+    "product_name": "Fresh Shrimp",
+    "category": "Meats",
+    "image_url": "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-MEATS-LOW-SODIUM-CHICKEN-BROTH-00",
+    "product_name": "Low Sodium Chicken Broth",
+    "category": "Meats",
+    "image_url": "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf Fresh",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-MEATS-LOW-SODIUM-CHICKEN-BROTH-01",
+    "product_name": "Fresh Low Sodium Chicken Broth",
+    "category": "Meats",
+    "image_url": "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm",
+    "nutrients": {}
+  }
+]

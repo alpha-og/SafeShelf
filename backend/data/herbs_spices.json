@@ -1,0 +1,470 @@
+[
+  {
+    "barcode": "PROD-HERBS-SPICES-CINNAMON-00",
+    "product_name": "Everest Cinnamon",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Everest",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-CINNAMON-01",
+    "product_name": "MDH Cinnamon",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "MDH",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-CINNAMON-02",
+    "product_name": "Catch Cinnamon",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Catch",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-GARLIC-POWDER-00",
+    "product_name": "Everest Garlic Powder",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Everest",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-GARLIC-POWDER-01",
+    "product_name": "MDH Garlic Powder",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "MDH",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-GARLIC-POWDER-02",
+    "product_name": "Catch Garlic Powder",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Catch",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-GARLIC-POWDER-03",
+    "product_name": "Garlic Powder",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-CHILI-POWDER-00",
+    "product_name": "Everest Chili Powder",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Everest",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-CHILI-POWDER-01",
+    "product_name": "MDH Chili Powder",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "MDH",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-CHILI-POWDER-02",
+    "product_name": "Catch Chili Powder",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Catch",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-CHILI-POWDER-03",
+    "product_name": "Chili Powder",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-PARSLEY-00",
+    "product_name": "Everest Parsley",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "50 g",
+    "brand": "Everest",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-PARSLEY-01",
+    "product_name": "MDH Parsley",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "50 g",
+    "brand": "MDH",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-PAPRIKA-00",
+    "product_name": "Everest Paprika",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Everest",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-PAPRIKA-01",
+    "product_name": "MDH Paprika",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "MDH",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-PAPRIKA-02",
+    "product_name": "Catch Paprika",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Catch",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-PAPRIKA-03",
+    "product_name": "Paprika",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-CUMIN-00",
+    "product_name": "Everest Cumin",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Everest",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-CUMIN-01",
+    "product_name": "MDH Cumin",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "MDH",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-CUMIN-02",
+    "product_name": "Catch Cumin",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Catch",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-OREGANO-00",
+    "product_name": "Everest oregano",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "50 g",
+    "brand": "Everest",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-OREGANO-01",
+    "product_name": "MDH oregano",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "50 g",
+    "brand": "MDH",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-NUTMEG-00",
+    "product_name": "Everest Nutmeg",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "50 g",
+    "brand": "Everest",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-NUTMEG-01",
+    "product_name": "MDH Nutmeg",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "50 g",
+    "brand": "MDH",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-NUTMEG-02",
+    "product_name": "Catch Nutmeg",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "50 g",
+    "brand": "Catch",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-CILANTRO-00",
+    "product_name": "Everest Cilantro",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "50 g",
+    "brand": "Everest",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-CILANTRO-01",
+    "product_name": "MDH Cilantro",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "50 g",
+    "brand": "MDH",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-CILANTRO-02",
+    "product_name": "Catch Cilantro",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "50 g",
+    "brand": "Catch",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-CILANTRO-03",
+    "product_name": "Cilantro",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "50 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-BASIL-00",
+    "product_name": "Everest Basil",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "50 g",
+    "brand": "Everest",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-BASIL-01",
+    "product_name": "MDH Basil",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "50 g",
+    "brand": "MDH",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-BASIL-02",
+    "product_name": "Catch Basil",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "50 g",
+    "brand": "Catch",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-THYME-00",
+    "product_name": "Everest Thyme",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "50 g",
+    "brand": "Everest",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-THYME-01",
+    "product_name": "MDH Thyme",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "50 g",
+    "brand": "MDH",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-THYME-02",
+    "product_name": "Catch Thyme",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "50 g",
+    "brand": "Catch",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-GINGER-00",
+    "product_name": "Everest Ginger",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "Everest",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-GINGER-01",
+    "product_name": "MDH Ginger",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "MDH",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-CURRY-POWDER-00",
+    "product_name": "Everest Curry Powder",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Everest",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-CURRY-POWDER-01",
+    "product_name": "MDH Curry Powder",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "MDH",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-BAY-LEAVES-00",
+    "product_name": "Everest Bay Leaves",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "30 g",
+    "brand": "Everest",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-BAY-LEAVES-01",
+    "product_name": "MDH Bay Leaves",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "30 g",
+    "brand": "MDH",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-BAY-LEAVES-02",
+    "product_name": "Catch Bay Leaves",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "30 g",
+    "brand": "Catch",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-BAY-LEAVES-03",
+    "product_name": "Bay Leaves",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "30 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-ONION-POWDER-00",
+    "product_name": "Everest Onion Powder",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Everest",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-ONION-POWDER-01",
+    "product_name": "MDH Onion Powder",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "MDH",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-GROUND-CORIANDER-00",
+    "product_name": "Everest Ground Coriander",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Everest",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-GROUND-CORIANDER-01",
+    "product_name": "MDH Ground Coriander",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "MDH",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-GROUND-CORIANDER-02",
+    "product_name": "Catch Ground Coriander",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Catch",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-GROUND-CORIANDER-03",
+    "product_name": "Ground Coriander",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-TURMERIC-00",
+    "product_name": "Everest Turmeric",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Everest",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-TURMERIC-01",
+    "product_name": "MDH Turmeric",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "MDH",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-HERBS-SPICES-TURMERIC-02",
+    "product_name": "Catch Turmeric",
+    "category": "Herbs & Spices",
+    "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Catch",
+    "nutrients": {}
+  }
+]

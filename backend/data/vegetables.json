@@ -1,0 +1,182 @@
+[
+  {
+    "barcode": "PROD-VEGETABLES-ONIONS-00",
+    "product_name": "Fresh Onions",
+    "category": "Vegetables",
+    "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-VEGETABLES-GARLIC-00",
+    "product_name": "Fresh Garlic",
+    "category": "Vegetables",
+    "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-VEGETABLES-TOMATOES-00",
+    "product_name": "Fresh Tomatoes",
+    "category": "Vegetables",
+    "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-VEGETABLES-CELERY-00",
+    "product_name": "Fresh Celery",
+    "category": "Vegetables",
+    "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-VEGETABLES-GREEN-ONIONS-00",
+    "product_name": "Fresh Green Onions",
+    "category": "Vegetables",
+    "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-VEGETABLES-RED-ONION-00",
+    "product_name": "Fresh Red Onion",
+    "category": "Vegetables",
+    "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-VEGETABLES-CARROTS-00",
+    "product_name": "Fresh Carrots",
+    "category": "Vegetables",
+    "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-VEGETABLES-POTATOES-00",
+    "product_name": "Fresh Potatoes",
+    "category": "Vegetables",
+    "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-VEGETABLES-ZUCCHINI-00",
+    "product_name": "Fresh Zucchini",
+    "category": "Vegetables",
+    "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-VEGETABLES-MUSHROOMS-00",
+    "product_name": "Fresh Mushrooms",
+    "category": "Vegetables",
+    "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-VEGETABLES-CUCUMBER-00",
+    "product_name": "Fresh Cucumber",
+    "category": "Vegetables",
+    "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-VEGETABLES-SHALLOT-00",
+    "product_name": "Fresh Shallot",
+    "category": "Vegetables",
+    "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-VEGETABLES-CABBAGE-00",
+    "product_name": "Fresh Cabbage",
+    "category": "Vegetables",
+    "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-VEGETABLES-LETTUCE-00",
+    "product_name": "Fresh Lettuce",
+    "category": "Vegetables",
+    "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-VEGETABLES-CELERY-RIB-00",
+    "product_name": "Fresh Celery Rib",
+    "category": "Vegetables",
+    "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-VEGETABLES-SWEET-ONION-00",
+    "product_name": "Fresh Sweet Onion",
+    "category": "Vegetables",
+    "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-VEGETABLES-CORN-00",
+    "product_name": "Fresh Corn",
+    "category": "Vegetables",
+    "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-VEGETABLES-SPINACH-00",
+    "product_name": "Fresh Spinach",
+    "category": "Vegetables",
+    "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-VEGETABLES-BROCCOLI-00",
+    "product_name": "Fresh Broccoli",
+    "category": "Vegetables",
+    "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-VEGETABLES-GREEN-BEANS-00",
+    "product_name": "Fresh Green Beans",
+    "category": "Vegetables",
+    "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Fresh Farm Produce",
+    "nutrients": {}
+  }
+]

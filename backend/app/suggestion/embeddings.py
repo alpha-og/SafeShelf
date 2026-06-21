@@ -133,3 +133,29 @@ async def query_similar_to_text(text: str, n_results: int = 20) -> list[str]:
     )
 
     return results.get("ids", [[]])[0]
+
+
+async def batch_query_similar_to_text(texts: list[str], n_results: int = 20) -> list[list[str]]:
+    """Encode multiple texts in a single model call, query ChromaDB for each, return barcodes."""
+    collection = _get_collection()
+    count = collection.count()
+    actual_n_results = min(n_results, count)
+    if actual_n_results == 0 or not texts:
+        return [[] for _ in texts]
+
+    model = _get_embedding_model()
+    embeddings = model.encode(
+        texts,
+        normalize_embeddings=True,
+        show_progress_bar=False,
+    ).tolist()
+
+    results = []
+    for emb in embeddings:
+        res = collection.query(
+            query_embeddings=[emb],
+            n_results=actual_n_results,
+        )
+        results.append(res.get("ids", [[]])[0])
+
+    return results

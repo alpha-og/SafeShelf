@@ -13,7 +13,8 @@
       "proteins_100g": 0.3,
       "fat_100g": 0.2,
       "sodium_100g": 0.001
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-AVOCADO-01",
@@ -29,7 +30,8 @@
       "proteins_100g": 2,
       "fat_100g": 15,
       "sodium_100g": 0.007
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-BANANA-02",
@@ -45,7 +47,8 @@
       "proteins_100g": 1.1,
       "fat_100g": 0.3,
       "sodium_100g": 0.001
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-CANTALOUPE-03",
@@ -61,7 +64,8 @@
       "proteins_100g": 0.8,
       "fat_100g": 0.2,
       "sodium_100g": 0.016
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-GRAPEFRUIT-04",
@@ -77,7 +81,8 @@
       "proteins_100g": 0.8,
       "fat_100g": 0.1,
       "sodium_100g": 0.0
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-GRAPES-05",
@@ -93,7 +98,8 @@
       "proteins_100g": 0.7,
       "fat_100g": 0.2,
       "sodium_100g": 0.002
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-HONEYDEW-MELON-06",
@@ -109,7 +115,8 @@
       "proteins_100g": 0.5,
       "fat_100g": 0.1,
       "sodium_100g": 0.018
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-KIWIFRUIT-07",
@@ -125,7 +132,8 @@
       "proteins_100g": 1.1,
       "fat_100g": 0.5,
       "sodium_100g": 0.003
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-LEMON-08",
@@ -141,7 +149,8 @@
       "proteins_100g": 1.1,
       "fat_100g": 0.3,
       "sodium_100g": 0.002
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-LIME-09",
@@ -157,7 +166,8 @@
       "proteins_100g": 0.7,
       "fat_100g": 0.2,
       "sodium_100g": 0.002
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-NECTARINE-10",
@@ -173,7 +183,8 @@
       "proteins_100g": 1.1,
       "fat_100g": 0.3,
       "sodium_100g": 0.0
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-ORANGE-11",
@@ -189,7 +200,8 @@
       "proteins_100g": 0.9,
       "fat_100g": 0.1,
       "sodium_100g": 0.0
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-PEACH-12",
@@ -205,7 +217,8 @@
       "proteins_100g": 0.9,
       "fat_100g": 0.3,
       "sodium_100g": 0.0
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-PEAR-13",
@@ -221,7 +234,8 @@
       "proteins_100g": 0.4,
       "fat_100g": 0.1,
       "sodium_100g": 0.001
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-PINEAPPLE-14",
@@ -237,7 +251,8 @@
       "proteins_100g": 0.5,
       "fat_100g": 0.1,
       "sodium_100g": 0.001
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-PLUMS-15",
@@ -253,7 +268,8 @@
       "proteins_100g": 0.7,
       "fat_100g": 0.3,
       "sodium_100g": 0.0
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-STRAWBERRIES-16",
@@ -269,7 +285,8 @@
       "proteins_100g": 0.7,
       "fat_100g": 0.3,
       "sodium_100g": 0.001
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-SWEET-CHERRIES-17",
@@ -285,7 +302,8 @@
       "proteins_100g": 1.1,
       "fat_100g": 0.2,
       "sodium_100g": 0.0
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-TANGERINE-18",
@@ -301,7 +319,8 @@
       "proteins_100g": 0.8,
       "fat_100g": 0.3,
       "sodium_100g": 0.002
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-WATERMELON-19",
@@ -317,7 +336,8 @@
       "proteins_100g": 0.6,
       "fat_100g": 0.2,
       "sodium_100g": 0.001
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-ASPARAGUS-20",
@@ -333,7 +353,8 @@
       "proteins_100g": 2.2,
       "fat_100g": 0.1,
       "sodium_100g": 0.002
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-BELL-PEPPER-21",
@@ -349,7 +370,8 @@
       "proteins_100g": 0.9,
       "fat_100g": 0.2,
       "sodium_100g": 0.003
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-BROCCOLI-22",
@@ -365,7 +387,8 @@
       "proteins_100g": 2.8,
       "fat_100g": 0.4,
       "sodium_100g": 0.033
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-CARROT-23",
@@ -381,7 +404,8 @@
       "proteins_100g": 0.9,
       "fat_100g": 0.2,
       "sodium_100g": 0.069
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-CAULIFLOWER-24",
@@ -397,7 +421,8 @@
       "proteins_100g": 1.9,
       "fat_100g": 0.3,
       "sodium_100g": 0.03
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-CELERY-25",
@@ -413,7 +438,8 @@
       "proteins_100g": 0.7,
       "fat_100g": 0.2,
       "sodium_100g": 0.08
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-CUCUMBER-26",
@@ -429,7 +455,8 @@
       "proteins_100g": 0.7,
       "fat_100g": 0.1,
       "sodium_100g": 0.002
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-GREEN-BEANS-27",
@@ -445,7 +472,8 @@
       "proteins_100g": 1.8,
       "fat_100g": 0.2,
       "sodium_100g": 0.006
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-CABBAGE-28",
@@ -461,7 +489,8 @@
       "proteins_100g": 1.3,
       "fat_100g": 0.1,
       "sodium_100g": 0.018
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-ICEBERG-LETTUCE-29",
@@ -477,7 +506,8 @@
       "proteins_100g": 0.9,
       "fat_100g": 0.1,
       "sodium_100g": 0.01
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-MUSHROOMS-30",
@@ -493,7 +523,8 @@
       "proteins_100g": 3.1,
       "fat_100g": 0.3,
       "sodium_100g": 0.005
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-ONION-31",
@@ -509,7 +540,8 @@
       "proteins_100g": 1.1,
       "fat_100g": 0.1,
       "sodium_100g": 0.004
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-POTATO-32",
@@ -525,7 +557,8 @@
       "proteins_100g": 2.0,
       "fat_100g": 0.1,
       "sodium_100g": 0.006
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-RADISH-33",
@@ -541,7 +574,8 @@
       "proteins_100g": 0.7,
       "fat_100g": 0.1,
       "sodium_100g": 0.039
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-SPINACH-34",
@@ -557,7 +591,8 @@
       "proteins_100g": 2.9,
       "fat_100g": 0.4,
       "sodium_100g": 0.079
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-SWEET-POTATO-35",
@@ -573,7 +608,8 @@
       "proteins_100g": 1.6,
       "fat_100g": 0.1,
       "sodium_100g": 0.055
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-TOMATO-36",
@@ -589,7 +625,8 @@
       "proteins_100g": 0.9,
       "fat_100g": 0.2,
       "sodium_100g": 0.005
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-SALMON-(ATLANTIC)-37",
@@ -605,7 +642,8 @@
       "proteins_100g": 22,
       "fat_100g": 12,
       "sodium_100g": 0.061
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-SHRIMP-38",
@@ -621,7 +659,8 @@
       "proteins_100g": 24,
       "fat_100g": 0.3,
       "sodium_100g": 0.111
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-TUNA-(YELLOWFIN)-39",
@@ -637,7 +676,8 @@
       "proteins_100g": 24,
       "fat_100g": 0.5,
       "sodium_100g": 0.045
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-COD-40",
@@ -653,7 +693,8 @@
       "proteins_100g": 18,
       "fat_100g": 0.7,
       "sodium_100g": 0.054
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-TILAPIA-41",
@@ -669,7 +710,8 @@
       "proteins_100g": 20,
       "fat_100g": 1.7,
       "sodium_100g": 0.052
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-CRAB-(BLUE)-42",
@@ -685,7 +727,8 @@
       "proteins_100g": 18,
       "fat_100g": 1.0,
       "sodium_100g": 0.293
-    }
+    },
+    "brand": "Fresh Farm Produce"
   },
   {
     "barcode": "PROD-OYSTERS-43",
@@ -701,6 +744,7 @@
       "proteins_100g": 7,
       "fat_100g": 2.5,
       "sodium_100g": 0.211
-    }
+    },
+    "brand": "Fresh Farm Produce"
   }
 ]

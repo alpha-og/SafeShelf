@@ -1,0 +1,29 @@
+[
+  {
+    "barcode": "PROD-GRAINS-BAKING-COOKED-RICE-00",
+    "product_name": "Cooked Rice",
+    "category": "Grains & Baking",
+    "image_url": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-GRAINS-BAKING-COOKED-RICE-01",
+    "product_name": "Tata Cooked Rice",
+    "category": "Grains & Baking",
+    "image_url": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-GRAINS-BAKING-COOKED-RICE-02",
+    "product_name": "Pillsbury Cooked Rice",
+    "category": "Grains & Baking",
+    "image_url": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Pillsbury",
+    "nutrients": {}
+  }
+]

@@ -1,4 +1,6 @@
 import asyncio
+import json
+import os
 import random
 import uuid
 
@@ -10,6 +12,7 @@ from app.shared.db import async_session, engine
 from app.stores.models import Store, StoreInventory
 from scripts.lib.logger import info, success, warn
 
+# Categories that are fetched from OpenFoodFacts API
 CATEGORIES = {
     'Beverages': 'beverages',
     'Snacks': 'snacks',
@@ -26,7 +29,33 @@ CATEGORIES = {
     'Desserts': 'desserts',
     'Spices': 'spices',
     'Pasta': 'pastas',
+    # Synthetic categories — populated from local JSON files
+    'Pantry Staples': 'syn-pantry-staples',
+    'Herbs & Spices': 'syn-herbs-spices',
+    'Oils & Condiments': 'syn-oils-condiments',
+    'Regional Kerala': 'syn-regional-kerala',
+    'Grains & Baking': 'syn-grains-baking',
 }
+
+# Category → store-distribution type for inventory stock levels
+CAT_TYPE: dict[str, str] = {
+    'Bakery': 'Staples',
+    'Cereals': 'Staples',
+    'Pasta': 'Staples',
+    'Canned Foods': 'Staples',
+    'Pantry Staples': 'Staples',
+    'Grains & Baking': 'Staples',
+    'Dairy': 'Perishables',
+    'Meats': 'Perishables',
+    'Fruits': 'Perishables',
+    'Vegetables': 'Perishables',
+    'Frozen Foods': 'Perishables',
+    'Herbs & Spices': 'Perishables',
+    'Regional Kerala': 'Perishables',
+    'Oils & Condiments': 'Others',
+}
+
+DATA_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'data')
 
 STORES = [
     Store(uuid='main', name='SafeShelf Kochi Central', address='MG Road, Ernakulam',
@@ -80,39 +109,52 @@ async def _seed_inventory():
     seen_barcodes: set[str] = set()
     category_product_map: dict[str, list[dict]] = {}
 
+    # Phase 1: Fetch from OpenFoodFacts (only for categories with genuine OFF tags)
     info('Fetching products from OpenFoodFacts...')
     for cat_name, off_tag in CATEGORIES.items():
-        info(f'  Fetching {cat_name} ({off_tag})...')
-        category_product_map[cat_name] = await _fetch_off_products(off_tag)
-        await asyncio.sleep(1)
+        if off_tag and not off_tag.startswith('syn-'):
+            info(f'  Fetching {cat_name} ({off_tag})...')
+            category_product_map[cat_name] = await _fetch_off_products(off_tag)
+            await asyncio.sleep(1)
+        else:
+            category_product_map[cat_name] = []
     success('API fetch complete')
 
-    import json
-    import os
-    
-    CUSTOM_PRODUCE = []
-    data_path = os.path.join('data', 'fresh_produce.json')
-    if os.path.exists(data_path):
+    # Phase 2: Load all custom seed data from data/*.json
+    info('Loading custom seed data from data/...')
+    data_dir = DATA_DIR
+    loaded_files = 0
+    for fname in sorted(os.listdir(data_dir)):
+        if not fname.endswith('.json'):
+            continue
+        fpath = os.path.join(data_dir, fname)
         try:
-            with open(data_path, 'r', encoding='utf-8') as f:
-                CUSTOM_PRODUCE = json.load(f)
+            with open(fpath, 'r', encoding='utf-8') as f:
+                items = json.load(f)
         except Exception as e:
-            warn(f"Failed to load custom produce dataset: {e}")
-            
-    for item in CUSTOM_PRODUCE:
-        cat_name = item.get('category', 'Vegetables')
-        if cat_name not in category_product_map:
-            category_product_map[cat_name] = []
-        category_product_map[cat_name].append({
-            'code': item.get('barcode', item.get('code')),
-            'product_name': item.get('product_name'),
-            'image_url': item.get('image_url'),
-            'brands': 'Fresh Farm Produce',
-            'quantity': item.get('quantity')
-        })
+            warn(f"Failed to load {fname}: {e}")
+            continue
 
+        if not isinstance(items, list):
+            continue
 
+        for item in items:
+            cat_name = item.get('category', 'Pantry Staples')
+            if cat_name not in category_product_map:
+                category_product_map[cat_name] = []
 
+            brand = item.get('brands') or item.get('brand') or 'SafeShelf'
+            category_product_map[cat_name].append({
+                'code': item.get('barcode', item.get('code', '')),
+                'product_name': item.get('product_name', ''),
+                'image_url': item.get('image_url'),
+                'brands': brand,
+                'quantity': item.get('quantity'),
+            })
+        loaded_files += 1
+    success(f'Loaded {loaded_files} JSON files from data/')
+
+    # Phase 3: Seed products and inventory
     info('Seeding products and inventory...')
     async with async_session() as session:
         stores = (await session.exec(select(Store))).all()
@@ -121,17 +163,21 @@ async def _seed_inventory():
             return
 
         for cat_name, off_tag in CATEGORIES.items():
-            cat = (await session.exec(select(Category).where(Category.off_tag == off_tag))).first()
+            # Look up or create category
+            if off_tag and not off_tag.startswith('syn-'):
+                cat = (await session.exec(
+                    select(Category).where(Category.off_tag == off_tag)
+                )).first()
+            else:
+                cat = (await session.exec(
+                    select(Category).where(Category.name == cat_name)
+                )).first()
             if not cat:
                 cat = Category(uuid=str(uuid.uuid4()), name=cat_name, off_tag=off_tag)
                 session.add(cat)
                 await session.flush()
 
-            cat_type = 'Others'
-            if cat_name in {'Bakery', 'Cereals', 'Pasta', 'Canned Foods'}:
-                cat_type = 'Staples'
-            elif cat_name in {'Dairy', 'Meats', 'Fruits', 'Vegetables', 'Frozen Foods'}:
-                cat_type = 'Perishables'
+            cat_type = CAT_TYPE.get(cat_name, 'Others')
 
             for row in category_product_map.get(cat_name, []):
                 barcode = str(row.get('code', ''))
@@ -148,8 +194,8 @@ async def _seed_inventory():
                         barcode=barcode,
                         product_name=str(row.get('product_name', f'Unknown Product {barcode}')),
                         product_image=str(row['image_url']) if row.get('image_url') else None,
-                        brand=str(row['brands']) if row.get('brands') else None,
-                        quantity=str(row['quantity']) if row.get('quantity') else None,
+                        brand=str(row.get('brands')) if row.get('brands') else None,
+                        quantity=str(row.get('quantity')) if row.get('quantity') else None,
                     )
                     session.add(prod)
                     await session.flush()
@@ -178,16 +224,30 @@ async def _seed_inventory():
                     if random.random() <= prob:
                         if cat_type == 'Staples':
                             stock_qty = random.randint(50, 150)
-                        elif cat_type == 'Perishables':
+                        elif cat_type in ('Perishables',):
                             stock_qty = random.randint(20, 80)
                         else:
                             stock_qty = random.randint(10, 50)
-                        
+
                         if is_custom:
-                            price = round(random.uniform(30.0, 150.0), 2)
+                            # Per-category pricing for generated products
+                            custom_price_map = {
+                                'Dairy': (25, 400),
+                                'Meats': (80, 800),
+                                'Fruits': (20, 200),
+                                'Vegetables': (15, 120),
+                                'Herbs & Spices': (20, 150),
+                                'Oils & Condiments': (40, 350),
+                                'Pantry Staples': (20, 300),
+                                'Canned Foods': (25, 200),
+                                'Grains & Baking': (25, 300),
+                                'Regional Kerala': (20, 250),
+                            }
+                            prange = custom_price_map.get(cat_name, (30.0, 150.0))
+                            price = round(random.uniform(*prange), 2)
                         else:
                             price = round(random.uniform(20.0, 1500.0), 2)
-                            
+
                         await session.merge(StoreInventory(
                             store_id=store.id,
                             product_id=prod.id,

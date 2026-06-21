@@ -5,6 +5,7 @@ import sys
 from scripts.lib.logger import header
 from scripts.lib.seed import run_seed
 from scripts.lib.seed_recipes import run_seed_recipes
+from scripts.lib.generate_ingredient_seed import run_generate
 
 
 def cmd_seed(
@@ -32,6 +33,15 @@ def cmd_seed(
         asyncio.run(run_seed_recipes(csv_path=csv_path, limit=limit))
 
 
+def cmd_generate_ingredients(
+    top_n: int,
+    skip_usda: bool,
+    dry_run: bool,
+) -> None:
+    header('Generating Ingredient Seed Data')
+    asyncio.run(run_generate(top_n=top_n, skip_usda=skip_usda, dry_run=dry_run))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description='SafeShelf Backend Dev Script')
     sub = parser.add_subparsers(dest='command', required=True)
@@ -45,6 +55,15 @@ def main() -> None:
     seed.add_argument('--limit', type=int, default=50_000,
                       help='Max recipes to seed (default: 50,000)')
 
+    gen = sub.add_parser('seed-ingredients',
+                         help='Generate ingredient seed JSON files from recipe analysis + USDA')
+    gen.add_argument('--top-n', type=int, default=200,
+                     help='Number of top ingredients to process (default: 200)')
+    gen.add_argument('--skip-usda', action='store_true',
+                     help='Skip USDA API lookup (use empty nutrients)')
+    gen.add_argument('--dry-run', action='store_true',
+                     help='Extract + normalize only, do not write seed files')
+
     args = parser.parse_args()
 
     if args.command == 'seed':
@@ -54,6 +73,12 @@ def main() -> None:
             recipes=args.recipes,
             csv_path=args.csv_path,
             limit=args.limit,
+        )
+    elif args.command == 'seed-ingredients':
+        cmd_generate_ingredients(
+            top_n=args.top_n,
+            skip_usda=args.skip_usda,
+            dry_run=args.dry_run,
         )
 
 

@@ -1,0 +1,1253 @@
+[
+  {
+    "barcode": "PROD-PANTRY-STAPLES-SALT-00",
+    "product_name": "Salt",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-SALT-01",
+    "product_name": "Tata Salt",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-SALT-02",
+    "product_name": "Deep Salt",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-WHITE-SUGAR-00",
+    "product_name": "White Sugar",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "1 kg",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-WHITE-SUGAR-01",
+    "product_name": "Tata White Sugar",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "1 kg",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-WHITE-SUGAR-02",
+    "product_name": "Deep White Sugar",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "1 kg",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-WHITE-SUGAR-03",
+    "product_name": "Shakti Bhog White Sugar",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "1 kg",
+    "brand": "Shakti Bhog",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-ALL-PURPOSE-FLOUR-00",
+    "product_name": "All Purpose Flour",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "1 kg",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-ALL-PURPOSE-FLOUR-01",
+    "product_name": "Tata All Purpose Flour",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "1 kg",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-ALL-PURPOSE-FLOUR-02",
+    "product_name": "Deep All Purpose Flour",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "1 kg",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-BLACK-PEPPER-00",
+    "product_name": "Black Pepper",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-BLACK-PEPPER-01",
+    "product_name": "Tata Black Pepper",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-BROWN-SUGAR-00",
+    "product_name": "Brown Sugar",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-BROWN-SUGAR-01",
+    "product_name": "Tata Brown Sugar",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-BROWN-SUGAR-02",
+    "product_name": "Deep Brown Sugar",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-BROWN-SUGAR-03",
+    "product_name": "Shakti Bhog Brown Sugar",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Shakti Bhog",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-BAKING-POWDER-00",
+    "product_name": "Baking Powder",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-BAKING-POWDER-01",
+    "product_name": "Tata Baking Powder",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-BAKING-SODA-00",
+    "product_name": "Baking Soda",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-BAKING-SODA-01",
+    "product_name": "Tata Baking Soda",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-VANILLA-EXTRACT-00",
+    "product_name": "Vanilla Extract",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "100 ml",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-VANILLA-EXTRACT-01",
+    "product_name": "Tata Vanilla Extract",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "100 ml",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-HONEY-00",
+    "product_name": "Honey",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-HONEY-01",
+    "product_name": "Tata Honey",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-HONEY-02",
+    "product_name": "Deep Honey",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-HONEY-03",
+    "product_name": "Organic Honey",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Organic Farms",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-CORNSTARCH-00",
+    "product_name": "Cornstarch",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-CORNSTARCH-01",
+    "product_name": "Tata Cornstarch",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-CAYENNE-PEPPER-00",
+    "product_name": "Cayenne Pepper",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-CAYENNE-PEPPER-01",
+    "product_name": "Tata Cayenne Pepper",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-CAYENNE-PEPPER-02",
+    "product_name": "Deep Cayenne Pepper",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-PECANS-00",
+    "product_name": "Pecans",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-PECANS-01",
+    "product_name": "Tata Pecans",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-WALNUTS-00",
+    "product_name": "Walnuts",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-WALNUTS-01",
+    "product_name": "Tata Walnuts",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-WALNUTS-02",
+    "product_name": "Deep Walnuts",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-WALNUTS-03",
+    "product_name": "Shakti Bhog Walnuts",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "Shakti Bhog",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-RED-BELL-PEPPER-00",
+    "product_name": "Red Bell Pepper",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-RED-BELL-PEPPER-01",
+    "product_name": "Tata Red Bell Pepper",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-POWDERED-SUGAR-00",
+    "product_name": "Powdered Sugar",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-POWDERED-SUGAR-01",
+    "product_name": "Tata Powdered Sugar",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-POWDERED-SUGAR-02",
+    "product_name": "Deep Powdered Sugar",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-POWDERED-SUGAR-03",
+    "product_name": "Shakti Bhog Powdered Sugar",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Shakti Bhog",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-GREEN-PEPPER-00",
+    "product_name": "Green Pepper",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-GREEN-PEPPER-01",
+    "product_name": "Tata Green Pepper",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-GREEN-PEPPER-02",
+    "product_name": "Deep Green Pepper",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-RAISINS-00",
+    "product_name": "Raisins",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-RAISINS-01",
+    "product_name": "Tata Raisins",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-RAISINS-02",
+    "product_name": "Deep Raisins",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-RAISINS-03",
+    "product_name": "Shakti Bhog Raisins",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "Shakti Bhog",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-GREEN-BELL-PEPPER-00",
+    "product_name": "Green Bell Pepper",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-GREEN-BELL-PEPPER-01",
+    "product_name": "Tata Green Bell Pepper",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-CRUSHED-RED-PEPPER-FLAKE-00",
+    "product_name": "Crushed Red Pepper Flake",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-CRUSHED-RED-PEPPER-FLAKE-01",
+    "product_name": "Tata Crushed Red Pepper Flake",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-CRUSHED-RED-PEPPER-FLAKE-02",
+    "product_name": "Deep Crushed Red Pepper Flake",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-SHORTENING-00",
+    "product_name": "Shortening",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-SHORTENING-01",
+    "product_name": "Tata Shortening",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-DRY-WHITE-WINE-00",
+    "product_name": "Dry White Wine",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-DRY-WHITE-WINE-01",
+    "product_name": "Tata Dry White Wine",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-DRY-WHITE-WINE-02",
+    "product_name": "Deep Dry White Wine",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-DRY-WHITE-WINE-03",
+    "product_name": "Shakti Bhog Dry White Wine",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Shakti Bhog",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-WHITE-WINE-00",
+    "product_name": "White Wine",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-WHITE-WINE-01",
+    "product_name": "Tata White Wine",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-WHITE-WINE-02",
+    "product_name": "Deep White Wine",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-WHITE-PEPPER-00",
+    "product_name": "White Pepper",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-WHITE-PEPPER-01",
+    "product_name": "Tata White Pepper",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-SESAME-SEEDS-00",
+    "product_name": "Sesame Seeds",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-SESAME-SEEDS-01",
+    "product_name": "Tata Sesame Seeds",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-SESAME-SEEDS-02",
+    "product_name": "Deep Sesame Seeds",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "100 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-WHOLE-WHEAT-FLOUR-00",
+    "product_name": "Whole Wheat Flour",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "1 kg",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-WHOLE-WHEAT-FLOUR-01",
+    "product_name": "Tata Whole Wheat Flour",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "1 kg",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-WHOLE-WHEAT-FLOUR-02",
+    "product_name": "Deep Whole Wheat Flour",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "1 kg",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-WHOLE-WHEAT-FLOUR-03",
+    "product_name": "Shakti Bhog Whole Wheat Flour",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "1 kg",
+    "brand": "Shakti Bhog",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-RED-PEPPER-FLAKE-00",
+    "product_name": "Red Pepper Flake",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-RED-PEPPER-FLAKE-01",
+    "product_name": "Tata Red Pepper Flake",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-CAPER-00",
+    "product_name": "Caper",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-CAPER-01",
+    "product_name": "Tata Caper",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-BLACK-OLIVE-00",
+    "product_name": "Black Olive",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-BLACK-OLIVE-01",
+    "product_name": "Tata Black Olive",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-BLACK-OLIVE-02",
+    "product_name": "Deep Black Olive",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-MAPLE-SYRUP-00",
+    "product_name": "Maple Syrup",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-MAPLE-SYRUP-01",
+    "product_name": "Tata Maple Syrup",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-MAPLE-SYRUP-02",
+    "product_name": "Deep Maple Syrup",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-MAPLE-SYRUP-03",
+    "product_name": "Shakti Bhog Maple Syrup",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Shakti Bhog",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-BARBECUE-SAUCE-00",
+    "product_name": "Barbecue Sauce",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-BARBECUE-SAUCE-01",
+    "product_name": "Tata Barbecue Sauce",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-BARBECUE-SAUCE-02",
+    "product_name": "Deep Barbecue Sauce",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-BARBECUE-SAUCE-03",
+    "product_name": "Shakti Bhog Barbecue Sauce",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Shakti Bhog",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-CHOCOLATE-CHIPS-00",
+    "product_name": "Chocolate Chips",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-CHOCOLATE-CHIPS-01",
+    "product_name": "Tata Chocolate Chips",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-FLOUR-TORTILLA-00",
+    "product_name": "Flour Tortilla",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-FLOUR-TORTILLA-01",
+    "product_name": "Tata Flour Tortilla",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-CHERRY-TOMATO-00",
+    "product_name": "Cherry Tomato",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-CHERRY-TOMATO-01",
+    "product_name": "Tata Cherry Tomato",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-CHERRY-TOMATO-02",
+    "product_name": "Deep Cherry Tomato",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-CHERRY-TOMATO-03",
+    "product_name": "Shakti Bhog Cherry Tomato",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Shakti Bhog",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-GROUND-CLOVE-00",
+    "product_name": "Ground Clove",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-GROUND-CLOVE-01",
+    "product_name": "Tata Ground Clove",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-VEGETABLE-BROTH-00",
+    "product_name": "Vegetable Broth",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-VEGETABLE-BROTH-01",
+    "product_name": "Tata Vegetable Broth",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-VODKA-00",
+    "product_name": "Vodka",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-VODKA-01",
+    "product_name": "Tata Vodka",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-VODKA-02",
+    "product_name": "Deep Vodka",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-VODKA-03",
+    "product_name": "Shakti Bhog Vodka",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Shakti Bhog",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-SPAGHETTI-00",
+    "product_name": "Spaghetti",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-SPAGHETTI-01",
+    "product_name": "Tata Spaghetti",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-SPAGHETTI-02",
+    "product_name": "Deep Spaghetti",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-VANILLA-ICE-CREAM-00",
+    "product_name": "Vanilla Ice Cream",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-VANILLA-ICE-CREAM-01",
+    "product_name": "Tata Vanilla Ice Cream",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-SCALLIONS-00",
+    "product_name": "Scallions",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-SCALLIONS-01",
+    "product_name": "Tata Scallions",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-CHIVES-00",
+    "product_name": "Chives",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-CHIVES-01",
+    "product_name": "Tata Chives",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-CHIVES-02",
+    "product_name": "Deep Chives",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-PINE-NUT-00",
+    "product_name": "Pine Nut",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-PINE-NUT-01",
+    "product_name": "Tata Pine Nut",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-COCOA-POWDER-00",
+    "product_name": "Cocoa Powder",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-COCOA-POWDER-01",
+    "product_name": "Tata Cocoa Powder",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "200 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-APPLE-00",
+    "product_name": "Apple",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-APPLE-01",
+    "product_name": "Tata Apple",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-APPLE-02",
+    "product_name": "Deep Apple",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-ROSEMARY-00",
+    "product_name": "Rosemary",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-ROSEMARY-01",
+    "product_name": "Tata Rosemary",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-ROSEMARY-02",
+    "product_name": "Deep Rosemary",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-GREEN-CHILY-00",
+    "product_name": "Green Chily",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-GREEN-CHILY-01",
+    "product_name": "Tata Green Chily",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-RED-WINE-00",
+    "product_name": "Red Wine",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-RED-WINE-01",
+    "product_name": "Tata Red Wine",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-RED-WINE-02",
+    "product_name": "Deep Red Wine",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-RED-WINE-03",
+    "product_name": "Shakti Bhog Red Wine",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Shakti Bhog",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-STRAWBERRY-00",
+    "product_name": "Strawberry",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-STRAWBERRY-01",
+    "product_name": "Tata Strawberry",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-STRAWBERRY-02",
+    "product_name": "Deep Strawberry",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-STRAWBERRY-03",
+    "product_name": "Shakti Bhog Strawberry",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Shakti Bhog",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-BELL-PEPPER-00",
+    "product_name": "Bell Pepper",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-BELL-PEPPER-01",
+    "product_name": "Tata Bell Pepper",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-DILL-00",
+    "product_name": "Dill",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "SafeShelf",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-DILL-01",
+    "product_name": "Tata Dill",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Tata",
+    "nutrients": {}
+  },
+  {
+    "barcode": "PROD-PANTRY-STAPLES-DILL-02",
+    "product_name": "Deep Dill",
+    "category": "Pantry Staples",
+    "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+    "quantity": "500 g",
+    "brand": "Deep",
+    "nutrients": {}
+  }
+]
