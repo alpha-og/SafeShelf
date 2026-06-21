@@ -10,6 +10,7 @@ interface BottomSheetProps {
   children: React.ReactNode
   height?: string
   snapPoints?: { peek: number; full: number }
+  defaultSnap?: 'peek' | 'full'
   showDragHandle?: boolean
   topOffset?: number
   showOverlay?: boolean
@@ -30,6 +31,7 @@ export function BottomSheet({
   children,
   height = '70dvh',
   snapPoints,
+  defaultSnap = 'peek',
   showDragHandle = true,
   topOffset = 0,
   showOverlay = true,
@@ -47,6 +49,7 @@ export function BottomSheet({
       open={open}
       onDismiss={onDismiss}
       snapPoints={snapPoints!}
+      defaultSnap={defaultSnap}
       showDragHandle={showDragHandle}
       topOffset={topOffset}
       portal={portal}
@@ -168,6 +171,7 @@ function SnapSheet({
   onDismiss,
   children,
   snapPoints,
+  defaultSnap,
   showDragHandle,
   topOffset,
   portal,
@@ -179,10 +183,10 @@ function SnapSheet({
   snapPoints: NonNullable<BottomSheetProps['snapPoints']>
   topOffset: number
 }) {
-  const [isFull, setIsFull] = useState(false)
+  const [isFull, setIsFull] = useState(defaultSnap === 'full')
   const [rendered, setRendered] = useState(open)
   const [targetY, setTargetY] = useState(OFFRANGE)
-  const wasFullRef = useRef(false)
+  const wasFullRef = useRef(defaultSnap === 'full')
   const dismissingRef = useRef(false)
 
   const peekY = useMemo(
@@ -192,20 +196,6 @@ function SnapSheet({
         : 400,
     [snapPoints, topOffset],
   )
-
-  useEffect(() => {
-    if (open) {
-      dismissingRef.current = false
-      setRendered(true)
-      setTargetY(peekY)
-    } else if (rendered) {
-      snapDismiss()
-    }
-  }, [open, rendered])
-
-  useEffect(() => {
-    onSnapChange?.(isFull)
-  }, [isFull, onSnapChange])
 
   const snapDismiss = useCallback(() => {
     if (dismissingRef.current) return
@@ -218,6 +208,23 @@ function SnapSheet({
       externalDismissRef.current = snapDismiss
     }
   }, [externalDismissRef, snapDismiss])
+
+  useEffect(() => {
+    if (open) {
+      dismissingRef.current = false
+      setRendered(true)
+      const initialY = defaultSnap === 'full' ? 0 : peekY
+      setTargetY(initialY)
+      setIsFull(defaultSnap === 'full')
+      wasFullRef.current = defaultSnap === 'full'
+    } else if (rendered) {
+      snapDismiss()
+    }
+  }, [open, rendered, defaultSnap, peekY, snapDismiss])
+
+  useEffect(() => {
+    onSnapChange?.(isFull)
+  }, [isFull, onSnapChange])
 
   const handleAnimationComplete = useCallback(() => {
     if (dismissingRef.current) {

@@ -45,6 +45,7 @@ export function ProductSheet({
       open={open}
       onDismiss={onDismiss}
       snapPoints={{ peek: 50, full: 0 }}
+      defaultSnap="full"
       showDragHandle={false}
       topOffset={topOffset}
       portal={false}
