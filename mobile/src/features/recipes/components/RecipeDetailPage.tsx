@@ -321,7 +321,11 @@ export function RecipeDetailPage() {
 
           <div className="absolute inset-0 bg-linear-to-t from-overlay/80 via-overlay/30 to-transparent pointer-events-none" />
 
-          <div className="absolute bottom-0 left-0 right-0 p-5 space-y-1.5">
+          <motion.div
+            animate={{ opacity: collapsed ? 0 : 1 }}
+            transition={{ duration: 0.2 }}
+            className="absolute bottom-0 left-0 right-0 p-5 space-y-1.5"
+          >
             <h1 className="text-2xl font-bold text-overlay-foreground capitalize">{recipe.name}</h1>
             <div className="flex flex-wrap gap-1.5">
               {recipe.category && (
@@ -355,7 +359,7 @@ export function RecipeDetailPage() {
                 ))}
               </div>
             )}
-          </div>
+          </motion.div>
         </div>
       </motion.div>
 
