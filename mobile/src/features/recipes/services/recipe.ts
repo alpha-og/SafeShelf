@@ -14,6 +14,32 @@ export interface RecipeItem {
   source_url: string | null
   author_name: string | null
   source: string | null
+  servings: number | null
+}
+
+export interface AdjustedIngredient {
+  ingredient: string
+  original_measurement: string
+  adjusted_measurement: string
+  note: string | null
+}
+
+export interface RecipeQuantitiesRequest {
+  ingredients: string[]
+  measurements: string[]
+  original_servings: number | null
+  desired_servings: number
+  dietary_preferences: string[]
+  conditions: string[]
+  allergens: string[]
+  recipe_name?: string
+}
+
+export interface RecipeQuantitiesResponse {
+  recipe_id: string
+  recipe_name: string
+  desired_servings: number
+  ingredients: AdjustedIngredient[]
 }
 
 export interface ClarificationField {
@@ -119,4 +145,12 @@ export async function getRecipeFeed(
     params: { page, page_size: pageSize },
   })
   return data as SearchResponse
+}
+
+export async function getRecipeQuantities(
+  id: string,
+  req: RecipeQuantitiesRequest,
+): Promise<RecipeQuantitiesResponse> {
+  const { data } = await api.post(`/v1/recipes/${id}/quantities`, req)
+  return data as RecipeQuantitiesResponse
 }

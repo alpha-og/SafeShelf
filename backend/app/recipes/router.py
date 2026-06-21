@@ -5,6 +5,8 @@ from app.recipes.schemas import (
     ClarifyRequest,
     ClarifyResponse,
     RecipeProductsResponse,
+    RecipeQuantitiesRequest,
+    RecipeQuantitiesResponse,
     SearchRequest,
     SearchResponse,
     SuggestRequest,
@@ -15,6 +17,7 @@ from app.recipes.service import (
     feed_handler,
     get_recipe_handler,
     get_recipe_products_handler,
+    get_recipe_quantities_handler,
     search_recipes_handler,
     suggest_recipes,
 )
@@ -78,3 +81,13 @@ async def clarify(
     _current_user=Depends(get_current_user),
 ):
     return await clarify_handler(req, session)
+
+
+@router.post('/{id}/quantities', response_model=RecipeQuantitiesResponse)
+async def get_recipe_quantities(
+    id: str,
+    req: RecipeQuantitiesRequest,
+    session: AsyncSession = Depends(get_session),
+    _current_user=Depends(get_current_user),
+):
+    return await get_recipe_quantities_handler(id, req, session)

@@ -3,12 +3,20 @@ import random
 from httpx import AsyncClient
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from app.recipes.agent import RecipeQuery, db_run_search, extract_query, validate_query
+from app.recipes.agent import (
+    RecipeQuery,
+    adjust_quantities,
+    db_run_search,
+    extract_query,
+    validate_query,
+)
 from app.recipes.product_matching import match_ingredients
 from app.recipes.schemas import (
     ClarifyRequest,
     ClarifyResponse,
     RecipeProductsResponse,
+    RecipeQuantitiesRequest,
+    RecipeQuantitiesResponse,
     SearchRequest,
     SearchResponse,
     SuggestRequest,
@@ -317,4 +325,30 @@ async def feed_handler(
         total=total,
         page=page,
         page_size=page_size,
+    )
+
+
+async def get_recipe_quantities_handler(
+    id: str,
+    req: RecipeQuantitiesRequest,
+    session: AsyncSession,
+) -> RecipeQuantitiesResponse:
+    recipe = await get_recipe_handler(id, session)
+
+    adjustment = await adjust_quantities(
+        ingredients=req.ingredients or recipe.ingredients,
+        measurements=req.measurements or recipe.measurements,
+        original_servings=req.original_servings or recipe.servings,
+        desired_servings=req.desired_servings,
+        dietary_preferences=req.dietary_preferences,
+        conditions=req.conditions,
+        allergens=req.allergens,
+        recipe_name=req.recipe_name or recipe.name,
+    )
+
+    return RecipeQuantitiesResponse(
+        recipe_id=recipe.id,
+        recipe_name=recipe.name,
+        desired_servings=req.desired_servings,
+        ingredients=adjustment.ingredients,
     )

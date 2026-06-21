@@ -34,6 +34,7 @@ class RecipeItem(BaseModel):
     source_url: str | None = None
     author_name: str | None = None
     source: str | None = None
+    servings: int | None = None
 
 
 async def _meal_ids_by_ingredient(client: AsyncClient, ingredient: str) -> set[str]:
@@ -140,7 +141,9 @@ def _meal_to_item(meal: dict) -> RecipeItem:
         tags=tags,
         youtube_url=meal.get('strYoutube') or None,
         source_url=meal.get('strSource') or None,
+        author_name=None,
         source='mealdb',
+        servings=None,
     )
 
 
@@ -298,6 +301,7 @@ def recipe_to_item(recipe: Recipe) -> RecipeItem:
         source_url=recipe.source_url,
         author_name=recipe.author_name,
         source=recipe.source,
+        servings=recipe.servings,
     )
 
 

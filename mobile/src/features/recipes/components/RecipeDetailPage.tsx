@@ -8,9 +8,11 @@ import { Button } from '@/components/ui/button'
 import { SectionHeader } from '@/components/SectionHeader'
 import { Skeleton } from '@/components/ui/skeleton'
 import { BANNER_COMPACT, BANNER_FULL, useCollapsibleBanner } from '@/hooks/useCollapsibleBanner'
+import { useProfiles } from '@/providers/ProfilesProvider'
 import { useStore } from '@/providers/StoreProvider'
 import { ProductMiniCard } from '@/features/products/components/ProductMiniCard'
-import { getRecipeById, getRecipeProducts } from '../services/recipe'
+import { getRecipeById, getRecipeProducts, getRecipeQuantities } from '../services/recipe'
+import type { AdjustedIngredient } from '../services/recipe'
 import type { ProductVariant } from '../services/recipe'
 
 function IngredientProducts({
@@ -81,6 +83,12 @@ export function RecipeDetailPage() {
   const [openIngredients, setOpenIngredients] = useState<Set<number>>(new Set())
   const initializedRef = useRef(false)
 
+  const { profiles, activeProfile } = useProfiles()
+  const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null)
+  const [desiredServings, setDesiredServings] = useState(4)
+  const [adjustedQuantities, setAdjustedQuantities] = useState<AdjustedIngredient[] | null>(null)
+  const [isAdjusting, setIsAdjusting] = useState(false)
+
   const toggleIngredient = (i: number) => {
     setOpenIngredients((prev) => {
       const next = new Set(prev)
@@ -127,6 +135,55 @@ export function RecipeDetailPage() {
       initializedRef.current = true
     }
   }, [recipe, selectedStoreId, productsQuery.data])
+
+  const selectedProfile = selectedProfileId
+    ? profiles.find((p) => p.id === selectedProfileId) ?? null
+    : (activeProfile ?? null)
+
+  const initialServingsRef = useRef(false)
+  useEffect(() => {
+    if (!selectedProfileId && activeProfile) {
+      setSelectedProfileId(activeProfile.id)
+    }
+    if (recipe?.servings && !initialServingsRef.current) {
+      setDesiredServings(recipe.servings)
+      initialServingsRef.current = true
+    }
+  }, [activeProfile?.id, recipe?.id, recipe?.servings, selectedProfileId])
+
+  useEffect(() => {
+    if (!recipe) {
+      setAdjustedQuantities(null)
+      return
+    }
+
+    let cancelled = false
+    setIsAdjusting(true)
+
+    getRecipeQuantities(recipe.id, {
+      ingredients: recipe.ingredients,
+      measurements: recipe.measurements,
+      original_servings: recipe.servings,
+      desired_servings: desiredServings,
+      dietary_preferences: selectedProfile?.dietaryPreferences ?? [],
+      conditions: selectedProfile?.conditions.map((c) => c.name ?? c) ?? [],
+      allergens: selectedProfile?.allergens.map((a) => a.name ?? a) ?? [],
+      recipe_name: recipe.name,
+    })
+      .then((res) => {
+        if (!cancelled) setAdjustedQuantities(res.ingredients)
+      })
+      .catch(() => {
+        if (!cancelled) setAdjustedQuantities(null)
+      })
+      .finally(() => {
+        if (!cancelled) setIsAdjusting(false)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [recipe?.id, selectedProfileId, desiredServings])
 
   const optionsMap = new Map<string, ProductVariant[]>(
     productsQuery.data?.mappings.map((m) => [m.ingredient, m.options]) ?? [],
@@ -179,9 +236,16 @@ export function RecipeDetailPage() {
           transition={{ duration: 0.2 }}
           className="absolute inset-0 z-10 flex items-end pb-4 px-4 pointer-events-none"
         >
-          <span className="text-xl font-bold text-white capitalize drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)] truncate">
-            {recipe.name}
-          </span>
+          <div className="flex items-end justify-between w-full gap-2">
+            <span className="text-xl font-bold text-white capitalize drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)] truncate">
+              {recipe.name}
+            </span>
+            {selectedProfile && (
+              <span className="shrink-0 text-xs text-white/80 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                {selectedProfile.name} · {desiredServings}
+              </span>
+            )}
+          </div>
         </motion.div>
 
         <div className="relative w-full h-56">
@@ -228,12 +292,57 @@ export function RecipeDetailPage() {
                 </Badge>
               )}
             </div>
+            {profiles.length > 1 && (
+              <div className="flex gap-1.5 pt-1 overflow-x-auto scrollbar-none">
+                {profiles.map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() => setSelectedProfileId(p.id)}
+                    className={`shrink-0 rounded-full px-2.5 py-0.5 text-[11px] font-medium border transition-colors ${
+                      selectedProfileId === p.id
+                        ? 'bg-primary/80 text-primary-foreground border-primary'
+                        : 'bg-background/40 text-overlay-foreground/90 border-white/20 backdrop-blur-sm'
+                    }`}
+                  >
+                    {p.name}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </motion.div>
 
       <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto">
         <div className="px-4 pt-4 space-y-6 pb-20">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Servings
+              </span>
+              {isAdjusting && (
+                <span className="text-[10px] text-muted-foreground/60 italic">Adjusting...</span>
+              )}
+            </div>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setDesiredServings(Math.max(1, desiredServings - 1))}
+                className="w-7 h-7 rounded-full border border-border flex items-center justify-center text-foreground text-sm"
+              >
+                −
+              </button>
+              <span className="text-sm font-semibold tabular-nums w-5 text-center">
+                {desiredServings}
+              </span>
+              <button
+                onClick={() => setDesiredServings(desiredServings + 1)}
+                className="w-7 h-7 rounded-full border border-border flex items-center justify-center text-foreground text-sm"
+              >
+                +
+              </button>
+            </div>
+          </div>
+
           {recipe.ingredients.length > 0 && (
             <section>
               <button
@@ -262,9 +371,22 @@ export function RecipeDetailPage() {
                         >
                           <span className="w-1.5 h-1.5 rounded-full bg-primary/40 shrink-0" />
                           <span className="flex-1 text-foreground">{ingredient}</span>
-                          <span className="text-muted-foreground text-xs tabular-nums">
-                            {recipe.measurements[i] || ''}
-                          </span>
+                          {adjustedQuantities && adjustedQuantities[i] ? (
+                            <div className="flex flex-col items-end">
+                              <span className="text-foreground text-xs tabular-nums font-medium">
+                                {adjustedQuantities[i].adjusted_measurement}
+                              </span>
+                              {adjustedQuantities[i].note && (
+                                <span className="text-[10px] text-muted-foreground/60 italic leading-tight text-right max-w-[140px]">
+                                  {adjustedQuantities[i].note}
+                                </span>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground text-xs tabular-nums">
+                              {recipe.measurements[i] || ''}
+                            </span>
+                          )}
                           <ChevronDown
                             className={`h-3.5 w-3.5 text-muted-foreground/50 transition-transform duration-200 ${
                               openIngredients.has(i) ? '' : '-rotate-90'

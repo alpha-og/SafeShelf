@@ -84,3 +84,28 @@ class RecipeProductsResponse(BaseModel):
     recipe_id: str
     recipe_name: str
     mappings: list[IngredientMapping]
+
+
+class AdjustedIngredient(BaseModel):
+    ingredient: str
+    original_measurement: str
+    adjusted_measurement: str
+    note: str | None = None
+
+
+class RecipeQuantitiesRequest(BaseModel):
+    ingredients: list[str]
+    measurements: list[str]
+    original_servings: int | None = None
+    desired_servings: int = 4
+    dietary_preferences: list[str] = []
+    conditions: list[str] = []
+    allergens: list[str] = []
+    recipe_name: str | None = None
+
+
+class RecipeQuantitiesResponse(BaseModel):
+    recipe_id: str
+    recipe_name: str
+    desired_servings: int
+    ingredients: list[AdjustedIngredient]
