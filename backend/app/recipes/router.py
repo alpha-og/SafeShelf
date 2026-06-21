@@ -4,6 +4,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from app.recipes.schemas import (
     ClarifyRequest,
     ClarifyResponse,
+    RecipeItem,
     RecipeProductsResponse,
     RecipeQuantitiesRequest,
     RecipeQuantitiesResponse,
@@ -21,7 +22,6 @@ from app.recipes.service import (
     search_recipes_handler,
     suggest_recipes,
 )
-from app.recipes.tools import RecipeItem
 from app.shared.deps import get_current_user, get_session
 
 router = APIRouter(prefix='/recipes', tags=['recipes'])

@@ -3,17 +3,12 @@ import random
 from httpx import AsyncClient
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from app.recipes.agent import (
-    RecipeQuery,
-    adjust_quantities,
-    db_run_search,
-    extract_query,
-    validate_query,
-)
-from app.recipes.product_matching import match_ingredients
+from app.recipes.matching.service import match_ingredients
+from app.recipes.quantity.agent import adjust_quantities
 from app.recipes.schemas import (
     ClarifyRequest,
     ClarifyResponse,
+    RecipeItem,
     RecipeProductsResponse,
     RecipeQuantitiesRequest,
     RecipeQuantitiesResponse,
@@ -21,12 +16,9 @@ from app.recipes.schemas import (
     SearchResponse,
     SuggestRequest,
 )
-from app.recipes.tools import (
-    RecipeItem,
-    db_fetch_random,
-    db_lookup_recipe_by_id,
-    lookup_recipe_by_id,
-)
+from app.recipes.search.agent import RecipeQuery, extract_query, validate_query
+from app.recipes.search.db import db_fetch_random, db_lookup_recipe_by_id, db_run_search
+from app.recipes.search.mealdb import lookup_recipe_by_id
 from app.shared.timing import log_duration
 
 from .session import advance_round, create_session

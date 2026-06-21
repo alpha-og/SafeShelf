@@ -1,40 +1,18 @@
+from __future__ import annotations
+
 import asyncio
 import logging
-import re
 
 from httpx import AsyncClient, HTTPError
 from langchain_core.tools import tool
-from pydantic import BaseModel
-from sqlalchemy import String, cast, func, or_
-from sqlalchemy.engine import make_url
-from sqlmodel import select
-from sqlmodel.ext.asyncio.session import AsyncSession
 
 import app.shared._patch_platform  # noqa: F401 — system SSL cert store for httpx
-from app.recipes.models import Recipe
-from app.shared.config import settings
+from app.recipes.schemas import RecipeItem, RecipeQuery
 from app.shared.timing import log_duration
 
 logger = logging.getLogger(__name__)
 
 THEMEALDB_BASE = 'https://www.themealdb.com/api/json/v1/1/'
-
-
-class RecipeItem(BaseModel):
-    id: str
-    name: str
-    category: str | None = None
-    area: str | None = None
-    ingredients: list[str]
-    measurements: list[str]
-    instructions: str
-    thumbnail_url: str | None = None
-    tags: list[str] = []
-    youtube_url: str | None = None
-    source_url: str | None = None
-    author_name: str | None = None
-    source: str | None = None
-    servings: int | None = None
 
 
 async def _meal_ids_by_ingredient(client: AsyncClient, ingredient: str) -> set[str]:
@@ -247,155 +225,86 @@ async def search_recipes(
         return await _search_recipes_internal(client, category, ingredients, area)
 
 
-# ── Database-backed recipe search (primary source) ──────────────────────
+async def _execute_search(client: AsyncClient, q: RecipeQuery) -> list[RecipeItem]:
+    from app.recipes.search.db import _has_all_ingredients, _has_any_excluded
 
-_URL = make_url(settings.DATABASE_URL)
-_IS_SQLITE = _URL.drivername.startswith('sqlite')
+    if not q.categories and not q.areas and not q.ingredients:
+        return []
 
-_TOKEN_RE = re.compile(r'[a-z]+')
+    cats: list[str | None] = q.categories or [None]
+    areas: list[str | None] = q.areas or [None]
+    primary = q.ingredients[:1] if q.ingredients else None
 
+    tasks = []
+    for cat in cats:
+        for area in areas:
+            if cat is not None or area is not None or primary is not None:
+                tasks.append(_search_recipes_internal(client, cat, primary, area))
 
-def _match_ingredient(recipe_ingredient: str, search_term: str) -> bool:
-    tokens = _TOKEN_RE.findall(recipe_ingredient.lower())
-    st = search_term.lower().strip()
-    if not st or not tokens:
-        return False
-    for token in tokens:
-        if token == st:
-            return True
-        if len(st) > 2 and (token == st + 's' or token == st + 'es'):
-            return True
-        if len(token) > 2 and (st == token + 's' or st == token + 'es'):
-            return True
-        if token.endswith('ies') and st == token[:-3] + 'y':
-            return True
-        if st.endswith('ies') and token == st[:-3] + 'y':
-            return True
-    return False
+    if not tasks:
+        return []
 
+    async with log_duration('themealdb.gather'):
+        results = await asyncio.gather(*tasks)
 
-def _recipe_has_all_ingredients(recipe_item: RecipeItem, needed: list[str]) -> bool:
-    return all(
-        any(_match_ingredient(rn, need) for rn in recipe_item.ingredients) for need in needed
-    )
+    seen: set[str] = set()
+    deduped: list[RecipeItem] = []
+    for batch in results:
+        for r in batch:
+            if r.id not in seen:
+                seen.add(r.id)
+                deduped.append(r)
 
+    if q.ingredients:
+        deduped = [r for r in deduped if _has_all_ingredients(r, q.ingredients)]
 
-def _recipe_has_any_excluded(recipe_item: RecipeItem, excluded: list[str]) -> bool:
-    return any(
-        any(_match_ingredient(rn, excl) for rn in recipe_item.ingredients) for excl in excluded
-    )
+    if q.exclude_ingredients:
+        deduped = [r for r in deduped if not _has_any_excluded(r, q.exclude_ingredients)]
 
-
-def recipe_to_item(recipe: Recipe) -> RecipeItem:
-    return RecipeItem(
-        id=str(recipe.id),
-        name=recipe.name,
-        category=recipe.category,
-        area=recipe.cuisine,
-        ingredients=list(recipe.ingredients) if recipe.ingredients else [],
-        measurements=list(recipe.measurements) if recipe.measurements else [],
-        instructions=recipe.instructions or '',
-        thumbnail_url=recipe.image_url,
-        tags=list(recipe.tags) if recipe.tags else [],
-        youtube_url=recipe.youtube_url,
-        source_url=recipe.source_url,
-        author_name=recipe.author_name,
-        source=recipe.source,
-        servings=recipe.servings,
-    )
+    return deduped
 
 
-def _build_ingredient_filter(ingredients: list[str]):
-    """Build a broad SQL pre-filter that narrows results for ingredient search.
-
-    Uses text-level ILIKE on the serialized JSON array so it works on both
-    PostgreSQL and SQLite.  The filter is intentionally broad — accurate
-    matching happens later in Python via _recipe_has_all_ingredients.
-    """
-    if not ingredients:
-        return None
-    filters = [cast(Recipe.ingredients, String).ilike(f'%{ing}%') for ing in ingredients]
-    return or_(*filters)
+_FALLBACK_CATEGORIES = ['Chicken', 'Seafood', 'Pasta', 'Beef', 'Vegetarian', 'Dessert']
 
 
-async def _db_search_recipes_internal(
-    session: AsyncSession,
-    category: str | None = None,
-    ingredients: list[str] | None = None,
-    area: str | None = None,
-    page: int = 1,
-    page_size: int = 10,
-) -> tuple[list[RecipeItem], int]:
-    conditions = []
-
-    if category:
-        conditions.append(Recipe.category == category)
-
-    if area:
-        conditions.append(Recipe.cuisine == area)
-
-    if ingredients:
-        ing_filter = _build_ingredient_filter(ingredients)
-        if ing_filter is not None:
-            conditions.append(ing_filter)
-
-    count_stmt = select(func.count(Recipe.id))
-    if conditions:
-        count_stmt = count_stmt.where(*conditions)
-    total = (await session.exec(count_stmt)).one() or 0
-
-    stmt = select(Recipe)
-    if conditions:
-        stmt = stmt.where(*conditions)
-    offset = (page - 1) * page_size
-    stmt = stmt.offset(offset).limit(page_size)
-    rows = (await session.exec(stmt)).all()
-
-    items = [recipe_to_item(r) for r in rows]
-
-    if ingredients:
-        items = [r for r in items if _recipe_has_all_ingredients(r, ingredients)]
-
-    return items, total
+async def _fallback_search(client: AsyncClient) -> list[RecipeItem]:
+    tasks = [_search_recipes_internal(client, cat, None, None) for cat in _FALLBACK_CATEGORIES]
+    async with log_duration('themealdb.fallback_gather'):
+        results = await asyncio.gather(*tasks)
+    seen: set[str] = set()
+    deduped: list[RecipeItem] = []
+    for batch in results:
+        for r in batch:
+            if r.id not in seen:
+                seen.add(r.id)
+                deduped.append(r)
+    return deduped
 
 
-async def db_lookup_recipe_by_id(session: AsyncSession, recipe_id: int) -> RecipeItem | None:
-    stmt = select(Recipe).where(Recipe.id == recipe_id)
-    recipe = (await session.exec(stmt)).first()
-    return recipe_to_item(recipe) if recipe else None
+async def run_search(client: AsyncClient, q: RecipeQuery) -> list[RecipeItem]:
+    # Exact search with all constraints
+    async with log_duration('search.initial'):
+        results = await _execute_search(client, q)
+    if results:
+        return results
 
+    # Relaxation 1: drop ingredient constraint if there was one
+    if q.ingredients:
+        async with log_duration('search.relax_ingredients'):
+            results = await _execute_search(client, q.model_copy(update={'ingredients': []}))
+        if results:
+            return results
 
-async def db_lookup_recipe_by_source_id(
-    session: AsyncSession, source: str, source_id: str
-) -> RecipeItem | None:
-    stmt = select(Recipe).where(Recipe.source == source, Recipe.source_id == source_id)
-    recipe = (await session.exec(stmt)).first()
-    return recipe_to_item(recipe) if recipe else None
+    # Relaxation 2: drop area constraint too
+    if q.areas:
+        async with log_duration('search.relax_areas'):
+            results = await _execute_search(
+                client,
+                q.model_copy(update={'areas': [], 'ingredients': []}),
+            )
+        if results:
+            return results
 
-
-async def db_fetch_random(
-    session: AsyncSession,
-    limit: int = 50,
-    page: int = 1,
-    page_size: int = 10,
-) -> tuple[list[RecipeItem], int]:
-    count_stmt = select(func.count(Recipe.id))
-    total_in_db = (await session.exec(count_stmt)).one() or 0
-    pool_size = min(limit, total_in_db)
-
-    if pool_size == 0:
-        return [], 0
-
-    id_stmt = select(Recipe.id).order_by(func.random()).limit(pool_size)
-    random_ids = (await session.exec(id_stmt)).all()
-    pool_size = len(random_ids)
-
-    offset = (page - 1) * page_size
-    if offset >= pool_size:
-        return [], pool_size
-
-    page_ids = random_ids[offset : offset + page_size]
-    stmt = select(Recipe).where(Recipe.id.in_(page_ids))
-    rows = (await session.exec(stmt)).all()
-
-    return [recipe_to_item(r) for r in rows], pool_size
+    # Ultimate fallback: popular categories
+    async with log_duration('search.fallback'):
+        return await _fallback_search(client)

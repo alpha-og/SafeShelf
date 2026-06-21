@@ -109,3 +109,49 @@ class RecipeQuantitiesResponse(BaseModel):
     recipe_name: str
     desired_servings: int
     ingredients: list[AdjustedIngredient]
+
+
+class RecipeItem(BaseModel):
+    id: str
+    name: str
+    category: str | None = None
+    area: str | None = None
+    ingredients: list[str]
+    measurements: list[str]
+    instructions: str
+    thumbnail_url: str | None = None
+    tags: list[str] = []
+    youtube_url: str | None = None
+    source_url: str | None = None
+    author_name: str | None = None
+    source: str | None = None
+    servings: int | None = None
+
+
+class QuantitiesAdjustment(BaseModel):
+    ingredients: list[AdjustedIngredient]
+
+
+class ValidationResult(BaseModel):
+    is_valid: bool
+    reason: str | None = None
+    code: str | None = None
+
+
+class RecipeSearchResult(BaseModel):
+    success: bool
+    recipes: list[RecipeItem] = []
+    error: str | None = None
+    rejected: bool = False
+    rejection_reason: str | None = None
+
+
+class RecipeQuery(BaseModel):
+    is_recipe_query: bool = True
+    categories: list[str] = []
+    ingredients: list[str] = []
+    areas: list[str] = []
+    exclude_ingredients: list[str] = []
+    search_text: str = ''
+    needs_clarification: bool = False
+    clarifications: list[ClarificationField] = []
