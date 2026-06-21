@@ -17,23 +17,46 @@ import type { ProductVariant } from '../services/recipe'
 
 function IngredientProducts({
   options,
+  note,
+  dietaryPreferences,
+  allergens,
   onProductClick,
 }: {
   options: ProductVariant[]
+  note: string | null
+  dietaryPreferences: string[]
+  allergens: string[]
   onProductClick: (barcode: string) => void
 }) {
+  function hasConflict(productName: string): boolean {
+    const lower = productName.toLowerCase()
+    for (const pref of dietaryPreferences) {
+      if (DIETARY_KEYWORDS[pref]?.some((kw) => lower.includes(kw))) return true
+    }
+    for (const allergen of allergens) {
+      const name = allergen.toLowerCase()
+      if (name.length > 1 && lower.includes(name)) return true
+    }
+    return false
+  }
+
   if (options.length === 0) {
     return (
-      <div className="px-8 pb-3">
+      <div className="px-8 pb-3 space-y-1">
         <span className="text-[11px] text-muted-foreground/40 italic">
           Not available at this store
         </span>
+        {note && (
+          <p className="text-[10px] text-muted-foreground/60 italic leading-tight">
+            {note}
+          </p>
+        )}
       </div>
     )
   }
 
   return (
-    <div className="pl-7 pb-3 overflow-x-auto scrollbar-none">
+    <div className="pl-7 pb-3 overflow-x-auto scrollbar-none space-y-1.5">
       <div className="flex gap-2">
         {options.map((opt) => (
           <ProductMiniCard
@@ -41,12 +64,35 @@ function IngredientProducts({
             productName={opt.product_name}
             productImage={opt.product_image}
             price={opt.price}
+            badge={hasConflict(opt.product_name) ? 'conflict' : null}
             onClick={() => onProductClick(opt.barcode)}
           />
         ))}
       </div>
+      {note && (
+        <p className="text-[10px] text-muted-foreground/60 italic leading-tight px-2">
+          {note}
+        </p>
+      )}
     </div>
   )
+}
+
+const DIETARY_KEYWORDS: Record<string, string[]> = {
+  vegan: ['meat', 'beef', 'chicken', 'pork', 'lamb', 'turkey', 'duck', 'fish', 'seafood',
+    'milk', 'cream', 'cheese', 'butter', 'yogurt', 'egg', 'honey', 'gelatin', 'lard',
+    'whey', 'casein'],
+  vegetarian: ['meat', 'beef', 'chicken', 'pork', 'lamb', 'turkey', 'duck', 'fish',
+    'seafood', 'gelatin', 'lard', 'tallow'],
+  'dairy-free': ['milk', 'cream', 'cheese', 'butter', 'yogurt', 'whey', 'casein',
+    'ghee', 'sour cream'],
+  'gluten-free': ['wheat', 'flour', 'bread', 'pasta', 'noodle', 'cracker', 'biscuit',
+    'couscous', 'farro', 'spelt', 'rye', 'barley'],
+  'nut-free': ['almond', 'walnut', 'pecan', 'cashew', 'pistachio', 'hazelnut',
+    'macadamia', 'peanut'],
+  'low-sodium': ['salt', 'sodium', 'brine', 'cured', 'smoked', 'soy sauce'],
+  'low-sugar': ['sugar', 'syrup', 'honey', 'candy', 'chocolate', 'caramel'],
+  'low-fat': ['butter', 'oil', 'cream', 'cheese', 'lard', 'shortening', 'margarine'],
 }
 
 function InstructionsSection({ steps }: { steps: string[] }) {
@@ -372,16 +418,9 @@ export function RecipeDetailPage() {
                           <span className="w-1.5 h-1.5 rounded-full bg-primary/40 shrink-0" />
                           <span className="flex-1 text-foreground">{ingredient}</span>
                           {adjustedQuantities && adjustedQuantities[i] ? (
-                            <div className="flex flex-col items-end">
-                              <span className="text-foreground text-xs tabular-nums font-medium">
-                                {adjustedQuantities[i].adjusted_measurement}
-                              </span>
-                              {adjustedQuantities[i].note && (
-                                <span className="text-[10px] text-muted-foreground/60 italic leading-tight text-right max-w-[140px]">
-                                  {adjustedQuantities[i].note}
-                                </span>
-                              )}
-                            </div>
+                            <span className="text-foreground text-xs tabular-nums font-medium">
+                              {adjustedQuantities[i].adjusted_measurement}
+                            </span>
                           ) : (
                             <span className="text-muted-foreground text-xs tabular-nums">
                               {recipe.measurements[i] || ''}
@@ -407,6 +446,9 @@ export function RecipeDetailPage() {
                         {openIngredients.has(i) && selectedStoreId && !productsQuery.isLoading && (
                           <IngredientProducts
                             options={optionsMap.get(ingredient) ?? []}
+                            note={adjustedQuantities?.[i]?.note ?? null}
+                            dietaryPreferences={activeProfile?.dietaryPreferences ?? []}
+                            allergens={activeProfile?.allergens.map((a) => a.name) ?? []}
                             onProductClick={(barcode) =>
                               navigate({ to: '/product/$barcode', params: { barcode } })
                             }

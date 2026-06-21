@@ -1,4 +1,4 @@
-import { ImageOff } from 'lucide-react'
+import { AlertCircle, ImageOff } from 'lucide-react'
 import { useState } from 'react'
 
 interface ProductMiniCardProps {
@@ -6,6 +6,7 @@ interface ProductMiniCardProps {
   productImage: string | null
   price: number
   onClick?: () => void
+  badge?: 'conflict' | null
 }
 
 export function ProductMiniCard({
@@ -13,6 +14,7 @@ export function ProductMiniCard({
   productImage,
   price,
   onClick,
+  badge,
 }: ProductMiniCardProps) {
   const [imgError, setImgError] = useState(false)
   const [imgLoaded, setImgLoaded] = useState(false)
@@ -36,11 +38,17 @@ export function ProductMiniCard({
             onError={() => setImgError(true)}
           />
         )}
+        {badge === 'conflict' && (
+          <div
+            className="absolute top-1 right-1 z-10 rounded-full bg-destructive/90 p-1 shadow-md"
+            title="May conflict with dietary preferences"
+          >
+            <AlertCircle className="h-3 w-3 text-white" />
+          </div>
+        )}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent pt-6 px-1.5 pb-1.5 space-y-0.5">
           <p className="text-[11px] text-white leading-tight line-clamp-2">{titleCased}</p>
-          <p className="text-[11px] font-semibold text-white tabular-nums">
-            ${price.toFixed(2)}
-          </p>
+          <p className="text-[11px] font-semibold text-white tabular-nums">${price.toFixed(2)}</p>
         </div>
       </div>
     </div>
