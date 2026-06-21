@@ -110,3 +110,26 @@ async def query_similar_products(product: Product, n_results: int = 10) -> list[
     # Chroma returns ids, which are barcodes
     ids = results.get("ids", [[]])[0]
     return [b for b in ids if b != product.barcode]
+
+
+async def query_similar_to_text(text: str, n_results: int = 20) -> list[str]:
+    collection = _get_collection()
+
+    count = collection.count()
+    actual_n_results = min(n_results, count)
+    if actual_n_results == 0:
+        return []
+
+    model = _get_embedding_model()
+    query_embedding = model.encode(
+        text,
+        normalize_embeddings=True,
+        show_progress_bar=False,
+    ).tolist()
+
+    results = collection.query(
+        query_embeddings=[query_embedding],
+        n_results=actual_n_results,
+    )
+
+    return results.get("ids", [[]])[0]

@@ -2,6 +2,7 @@ import logging
 import re
 
 from sqlalchemy import and_, or_
+from sqlalchemy.orm import selectinload
 from sqlmodel import select
 
 from app.products.models import Product
@@ -172,6 +173,7 @@ async def match_ingredient(
         .where(Store.uuid == store_id)
         .where(StoreInventory.stock_quantity > 0)
         .where(and_(*token_conditions))
+        .options(selectinload(Product.categories))
     )
 
     stmt = stmt.order_by(StoreInventory.price).limit(20)
@@ -183,6 +185,7 @@ async def match_ingredient(
     ing_tokens = set(tokens)
     seen: set[str] = set()
     results: list[dict] = []
+    barcode_to_product: dict[str, Product] = {}
     for inv, prod in rows:
         name_lower = prod.product_name.lower()
         if name_lower in seen:
@@ -202,12 +205,56 @@ async def match_ingredient(
                 '_score': _relevance_score(prod.product_name, ing_tokens),
             }
         )
+        barcode_to_product[prod.barcode] = prod
+
+    try:
+        from app.suggestion.embeddings import query_similar_to_text
+
+        suggested_barcodes = await query_similar_to_text(ingredient, n_results=20)
+
+        matched_barcodes = set(barcode_to_product.keys())
+        new_barcodes = [b for b in suggested_barcodes if b not in matched_barcodes]
+
+        if new_barcodes:
+            suggestion_stmt = (
+                select(StoreInventory, Product)
+                .join(Product, StoreInventory.product_id == Product.id)
+                .join(Store, StoreInventory.store_id == Store.id)
+                .where(Store.uuid == store_id)
+                .where(StoreInventory.stock_quantity > 0)
+                .where(Product.barcode.in_(new_barcodes))
+            )
+            async with log_duration(f'db.suggest_{ingredient[:30]}'):
+                suggestion_result = await session.execute(suggestion_stmt)
+
+            for inv, prod in suggestion_result.all():
+                name_lower = prod.product_name.lower()
+                if name_lower in seen:
+                    continue
+                seen.add(name_lower)
+                score = _relevance_score(prod.product_name, ing_tokens)
+                if score == 0.0:
+                    continue
+                results.append(
+                    {
+                        'barcode': prod.barcode,
+                        'product_name': prod.product_name,
+                        'product_image': prod.product_image,
+                        'brand': prod.brand,
+                        'quantity': prod.quantity,
+                        'price': inv.price,
+                        'in_stock': inv.stock_quantity > 0,
+                        '_score': score,
+                    }
+                )
+    except Exception:
+        logger.debug('Embedding suggestions unavailable', exc_info=True)
 
     results.sort(key=lambda r: r['_score'], reverse=True)
     for r in results:
         del r['_score']
 
-    return results
+    return results[:20]
 
 
 async def match_ingredients(
