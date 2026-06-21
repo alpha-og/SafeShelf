@@ -130,9 +130,7 @@ export function RecipeFilterSheet({
                     key={area}
                     onClick={() =>
                       onAreasChange(
-                        active
-                          ? selectedAreas.filter((a) => a !== area)
-                          : [...selectedAreas, area],
+                        active ? selectedAreas.filter((a) => a !== area) : [...selectedAreas, area],
                       )
                     }
                     className={`w-full flex items-center gap-3 px-4 py-3 text-sm text-left transition-colors hover:bg-primary/[0.07] ${

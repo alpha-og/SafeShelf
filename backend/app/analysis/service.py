@@ -35,19 +35,19 @@ def _get_graph():
 async def deep_evaluate(req: DeepEvaluateRequest) -> DeepEvaluateResponse:
     graph = _get_graph()
     initial_state = {
-        "product": req.product,
-        "user_profile": req.user_profile,
-        "per_serving_nutrients": req.per_serving_nutrients,
-        "disease_contexts": {},
-        "personalized_rules": [],
-        "nutrient_checks": [],
-        "ingredient_checks": [],
-        "ingredient_has_fails": False,
-        "med_interaction_checks": [],
-        "final_checks": [],
+        'product': req.product,
+        'user_profile': req.user_profile,
+        'per_serving_nutrients': req.per_serving_nutrients,
+        'disease_contexts': {},
+        'personalized_rules': [],
+        'nutrient_checks': [],
+        'ingredient_checks': [],
+        'ingredient_has_fails': False,
+        'med_interaction_checks': [],
+        'final_checks': [],
     }
     result = await graph.ainvoke(initial_state)
     return DeepEvaluateResponse(
-        checks=result.get("final_checks", []),
+        checks=result.get('final_checks', []),
         agent_used=True,
     )

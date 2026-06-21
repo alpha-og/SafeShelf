@@ -29,22 +29,78 @@ CATEGORIES = {
 }
 
 STORES = [
-    Store(uuid='main', name='SafeShelf Kochi Central', address='MG Road, Ernakulam',
-          city='Kochi', lat=9.9816, lon=76.2999, hours='8:00 AM - 10:00 PM'),
-    Store(uuid='tvm-palayam', name='SafeShelf Trivandrum', address='Palayam',
-          city='Thiruvananthapuram', lat=8.5035, lon=76.9533, hours='7:00 AM - 11:00 PM'),
-    Store(uuid='calicut-sm', name='SafeShelf Kozhikode', address='SM Street',
-          city='Kozhikode', lat=11.2588, lon=75.7804, hours='9:00 AM - 9:00 PM'),
-    Store(uuid='thrissur-round', name='SafeShelf Thrissur', address='Swaraj Round',
-          city='Thrissur', lat=10.5276, lon=76.2144, hours='8:00 AM - 10:00 PM'),
-    Store(uuid='palakkad-stadium', name='SafeShelf Palakkad', address='Stadium Bypass Road',
-          city='Palakkad', lat=10.7867, lon=76.6548, hours='7:30 AM - 9:30 PM'),
-    Store(uuid='kottayam-baker', name='SafeShelf Kottayam', address='Baker Junction',
-          city='Kottayam', lat=9.5916, lon=76.5222, hours='8:00 AM - 9:00 PM'),
-    Store(uuid='kannur-thavakkara', name='SafeShelf Kannur', address='Thavakkara',
-          city='Kannur', lat=11.8745, lon=75.3704, hours='8:00 AM - 10:00 PM'),
-    Store(uuid='alappuzha-mullakkal', name='SafeShelf Alappuzha', address='Mullakkal',
-          city='Alappuzha', lat=9.4981, lon=76.3388, hours='9:00 AM - 8:00 PM'),
+    Store(
+        uuid='main',
+        name='SafeShelf Kochi Central',
+        address='MG Road, Ernakulam',
+        city='Kochi',
+        lat=9.9816,
+        lon=76.2999,
+        hours='8:00 AM - 10:00 PM',
+    ),
+    Store(
+        uuid='tvm-palayam',
+        name='SafeShelf Trivandrum',
+        address='Palayam',
+        city='Thiruvananthapuram',
+        lat=8.5035,
+        lon=76.9533,
+        hours='7:00 AM - 11:00 PM',
+    ),
+    Store(
+        uuid='calicut-sm',
+        name='SafeShelf Kozhikode',
+        address='SM Street',
+        city='Kozhikode',
+        lat=11.2588,
+        lon=75.7804,
+        hours='9:00 AM - 9:00 PM',
+    ),
+    Store(
+        uuid='thrissur-round',
+        name='SafeShelf Thrissur',
+        address='Swaraj Round',
+        city='Thrissur',
+        lat=10.5276,
+        lon=76.2144,
+        hours='8:00 AM - 10:00 PM',
+    ),
+    Store(
+        uuid='palakkad-stadium',
+        name='SafeShelf Palakkad',
+        address='Stadium Bypass Road',
+        city='Palakkad',
+        lat=10.7867,
+        lon=76.6548,
+        hours='7:30 AM - 9:30 PM',
+    ),
+    Store(
+        uuid='kottayam-baker',
+        name='SafeShelf Kottayam',
+        address='Baker Junction',
+        city='Kottayam',
+        lat=9.5916,
+        lon=76.5222,
+        hours='8:00 AM - 9:00 PM',
+    ),
+    Store(
+        uuid='kannur-thavakkara',
+        name='SafeShelf Kannur',
+        address='Thavakkara',
+        city='Kannur',
+        lat=11.8745,
+        lon=75.3704,
+        hours='8:00 AM - 10:00 PM',
+    ),
+    Store(
+        uuid='alappuzha-mullakkal',
+        name='SafeShelf Alappuzha',
+        address='Mullakkal',
+        city='Alappuzha',
+        lat=9.4981,
+        lon=76.3388,
+        hours='9:00 AM - 8:00 PM',
+    ),
 ]
 
 
@@ -89,7 +145,7 @@ async def _seed_inventory():
 
     import json
     import os
-    
+
     CUSTOM_PRODUCE = []
     data_path = os.path.join('data', 'fresh_produce.json')
     if os.path.exists(data_path):
@@ -97,21 +153,21 @@ async def _seed_inventory():
             with open(data_path, 'r', encoding='utf-8') as f:
                 CUSTOM_PRODUCE = json.load(f)
         except Exception as e:
-            warn(f"Failed to load custom produce dataset: {e}")
-            
+            warn(f'Failed to load custom produce dataset: {e}')
+
     for item in CUSTOM_PRODUCE:
         cat_name = item.get('category', 'Vegetables')
         if cat_name not in category_product_map:
             category_product_map[cat_name] = []
-        category_product_map[cat_name].append({
-            'code': item.get('barcode', item.get('code')),
-            'product_name': item.get('product_name'),
-            'image_url': item.get('image_url'),
-            'brands': 'Fresh Farm Produce',
-            'quantity': item.get('quantity')
-        })
-
-
+        category_product_map[cat_name].append(
+            {
+                'code': item.get('barcode', item.get('code')),
+                'product_name': item.get('product_name'),
+                'image_url': item.get('image_url'),
+                'brands': 'Fresh Farm Produce',
+                'quantity': item.get('quantity'),
+            }
+        )
 
     info('Seeding products and inventory...')
     async with async_session() as session:
@@ -154,10 +210,14 @@ async def _seed_inventory():
                     session.add(prod)
                     await session.flush()
 
-                link = (await session.exec(select(ProductCategory).where(
-                    ProductCategory.product_id == prod.id,
-                    ProductCategory.category_id == cat.id,
-                ))).first()
+                link = (
+                    await session.exec(
+                        select(ProductCategory).where(
+                            ProductCategory.product_id == prod.id,
+                            ProductCategory.category_id == cat.id,
+                        )
+                    )
+                ).first()
                 if not link:
                     session.add(ProductCategory(product_id=prod.id, category_id=cat.id))
 
@@ -182,18 +242,20 @@ async def _seed_inventory():
                             stock_qty = random.randint(20, 80)
                         else:
                             stock_qty = random.randint(10, 50)
-                        
+
                         if is_custom:
                             price = round(random.uniform(30.0, 150.0), 2)
                         else:
                             price = round(random.uniform(20.0, 1500.0), 2)
-                            
-                        await session.merge(StoreInventory(
-                            store_id=store.id,
-                            product_id=prod.id,
-                            stock_quantity=stock_qty,
-                            price=float(price),
-                        ))
+
+                        await session.merge(
+                            StoreInventory(
+                                store_id=store.id,
+                                product_id=prod.id,
+                                stock_quantity=stock_qty,
+                                price=float(price),
+                            )
+                        )
 
         await session.commit()
     success(f'Seeded {len(seen_barcodes)} products across {len(CATEGORIES)} categories')

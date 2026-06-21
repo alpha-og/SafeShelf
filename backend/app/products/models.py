@@ -1,8 +1,10 @@
 from sqlmodel import Field, SQLModel, Relationship
 
+
 class ProductCategory(SQLModel, table=True):
-    product_id: int = Field(foreign_key="product.id", primary_key=True)
-    category_id: int = Field(foreign_key="category.id", primary_key=True)
+    product_id: int = Field(foreign_key='product.id', primary_key=True)
+    category_id: int = Field(foreign_key='category.id', primary_key=True)
+
 
 class Category(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
@@ -10,7 +12,10 @@ class Category(SQLModel, table=True):
     name: str
     off_tag: str | None = None
 
-    products: list["Product"] = Relationship(back_populates="categories", link_model=ProductCategory)
+    products: list['Product'] = Relationship(
+        back_populates='categories', link_model=ProductCategory
+    )
+
 
 class Product(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
@@ -21,5 +26,5 @@ class Product(SQLModel, table=True):
     brand: str | None = None
     quantity: str | None = None
 
-    inventory: list["StoreInventory"] = Relationship(back_populates="product")
-    categories: list[Category] = Relationship(back_populates="products", link_model=ProductCategory)
+    inventory: list['StoreInventory'] = Relationship(back_populates='product')
+    categories: list[Category] = Relationship(back_populates='products', link_model=ProductCategory)

@@ -142,7 +142,8 @@ export function ProfileHubPage() {
                   key={group.id}
                   className={cn(
                     'w-full flex items-center gap-3 rounded-2xl border border-border/70 bg-card/90 px-4 py-3.5 transition-[color,background-color,border-color,box-shadow] backdrop-blur-sm',
-                    isActive && 'border-orange-300 bg-orange-50/80 shadow-[0_10px_30px_-24px_#f59e0b]',
+                    isActive &&
+                      'border-orange-300 bg-orange-50/80 shadow-[0_10px_30px_-24px_#f59e0b]',
                   )}
                 >
                   <button

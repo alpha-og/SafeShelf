@@ -27,5 +27,9 @@
   "devDependencies": {
     "@vitejs/plugin-basic-ssl": "^2.3.0",
     "concurrently": "^10.0.3"
+  },
+  "dependencies": {
+    "pnpm": "^11.8.0",
+    "uv": "^1.4.0"
   }
 }

@@ -27,10 +27,10 @@ export function HealthReportPage({ onSaveToProfile, onCreateProfile }: HealthRep
       const result = await uploadHealthReport(file)
       setState({ phase: 'review', data: result.extractedData, reportId: result.id })
     } catch (err) {
-      const message = (err as { response?: { data?: { detail?: string } } })?.response?.data
-        ?.detail
-        ?? (err as Error).message
-        ?? 'Failed to process report'
+      const message =
+        (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail ??
+        (err as Error).message ??
+        'Failed to process report'
       setState({ phase: 'error', message })
     }
   }, [])
@@ -60,7 +60,9 @@ export function HealthReportPage({ onSaveToProfile, onCreateProfile }: HealthRep
       <PageHeader title="Health Report" onBack={() => navigate({ to: '/profile' })} />
 
       <main className="flex-1 min-h-0 flex flex-col overflow-hidden">
-        {state.phase === 'idle' && <HealthReportUpload onFileSelected={handleFileSelected} disabled={false} />}
+        {state.phase === 'idle' && (
+          <HealthReportUpload onFileSelected={handleFileSelected} disabled={false} />
+        )}
 
         {(state.phase === 'uploading' || state.phase === 'processing') && (
           <div className="flex flex-col items-center justify-center gap-4 py-16">

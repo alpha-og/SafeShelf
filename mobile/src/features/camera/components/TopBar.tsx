@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { ChevronDown, History, MapPin, Settings, ShoppingCart, User, Users } from 'lucide-react'
-import { getInitials } from '@/lib/initials'
+import { ChevronDown, History, MapPin, ShoppingCart, User, Users } from 'lucide-react'
 import { forwardRef } from 'react'
-import { useProfiles } from '@/providers/ProfilesProvider'
 import { fetchStoreById } from '@/features/stores/services/storeApi'
+import { getInitials } from '@/lib/initials'
+import { useProfiles } from '@/providers/ProfilesProvider'
 import { useStore } from '@/providers/StoreProvider'
 
 interface TopBarProps {
@@ -33,9 +33,7 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar(
       <div className="flex items-center min-w-0 flex-1">
         <div
           className={`flex items-center rounded-full backdrop-blur-md border transition-colors p-0.5 ${
-            cameraAvailable
-                ? 'bg-primary/30 border-primary/30'
-              : 'bg-primary/30 border-primary/30'
+            cameraAvailable ? 'bg-primary/30 border-primary/30' : 'bg-primary/30 border-primary/30'
           }`}
         >
           <button
@@ -52,34 +50,34 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar(
               <User className="h-5 w-5" />
             )}
           </button>
-          {store && (
-            <Link
-              to="/stores"
-              className={`flex items-center gap-1 h-11 rounded-full transition-colors pl-1.5 pr-1.5 ${
-                cameraAvailable
-                  ? 'hover:bg-white/10 text-white/95'
-                  : 'hover:bg-white/10 text-white/90'
-              }`}
-            >
-              <MapPin className="h-3.5 w-3.5 shrink-0" />
-              <span className="text-xs font-medium truncate max-w-[80px]">{store.name}</span>
-              <ChevronDown className="h-3 w-3 shrink-0 text-white/85" />
-            </Link>
-          )}
+          <Link
+            to="/stores"
+            className={`flex items-center gap-1 h-11 rounded-full transition-colors pl-1.5 pr-1.5 ${
+              cameraAvailable
+                ? 'hover:bg-white/10 text-white/95'
+                : 'hover:bg-white/10 text-white/90'
+            }`}
+          >
+            <MapPin className="h-3.5 w-3.5 shrink-0" />
+            <span className="text-xs font-medium truncate max-w-[80px]">
+              {store ? store.name : 'Select Store'}
+            </span>
+            <ChevronDown className="h-3 w-3 shrink-0 text-white/85" />
+          </Link>
         </div>
       </div>
 
       <div
         className={`flex items-center backdrop-blur-md rounded-full border shrink-0 p-0.5 ${
           cameraAvailable
-          ? 'bg-primary/30 hover:scale-[1.02] border-primary/30'
+            ? 'bg-primary/30 hover:scale-[1.02] border-primary/30'
             : 'bg-primary/30 hover:scale-[1.02] border-primary/30'
         }`}
       >
         <button
           type="button"
           onClick={() => navigate({ to: '/cart' })}
-              className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors ${
+          className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors ${
             cameraAvailable
               ? 'text-white/95 hover:text-white hover:bg-primary-foreground/10 hover:scale-[1.02]'
               : 'text-white/90 hover:text-white hover:scale-[1.02]'

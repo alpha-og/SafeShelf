@@ -21,7 +21,7 @@ async def get_product_by_barcode(barcode: str) -> dict:
             if prod:
                 import json
                 import os
-                
+
                 nutrients = {}
                 data_path = os.path.join('data', 'fresh_produce.json')
                 if os.path.exists(data_path):
@@ -34,7 +34,7 @@ async def get_product_by_barcode(barcode: str) -> dict:
                                 break
                     except Exception:
                         pass
-                
+
                 return {
                     'barcode': prod.barcode,
                     'product_name': prod.product_name,

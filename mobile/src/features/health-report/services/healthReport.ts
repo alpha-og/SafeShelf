@@ -5,9 +5,13 @@ export async function uploadHealthReport(file: File): Promise<HealthReportUpload
   const formData = new FormData()
   formData.append('file', file)
 
-  const response = await api.post<HealthReportUploadResponse>('/v1/health-report/upload', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  })
+  const response = await api.post<HealthReportUploadResponse>(
+    '/v1/health-report/upload',
+    formData,
+    {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    },
+  )
 
   return response.data
 }

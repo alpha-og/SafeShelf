@@ -139,7 +139,12 @@ export function EditGroupPage({ groupId }: EditGroupPageProps) {
               Delete
             </Button>
           )}
-          <Button className="flex-1 bg-orange-500 hover:bg-orange-600 text-white" size="lg" disabled={!canSubmit} onClick={handleSave}>
+          <Button
+            className="flex-1 bg-orange-500 hover:bg-orange-600 text-white"
+            size="lg"
+            disabled={!canSubmit}
+            onClick={handleSave}
+          >
             Save
           </Button>
         </div>

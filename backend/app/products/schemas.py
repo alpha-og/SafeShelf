@@ -6,6 +6,7 @@ class CategoryResponse(BaseModel):
     name: str
     off_tag: str | None = None
 
+
 class ProductResponse(BaseModel):
     id: str
     barcode: str
@@ -14,6 +15,7 @@ class ProductResponse(BaseModel):
     brand: str | None = None
     quantity: str | None = None
     categories: list[CategoryResponse] = []
+
 
 class BarcodeResponse(BaseModel):
     barcode: str

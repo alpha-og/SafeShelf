@@ -14,7 +14,9 @@ export function useCollapsibleBanner() {
     if (!el) return
 
     const handleScroll = () => {
-      setCollapsed((prev) => (prev ? el.scrollTop > EXPAND_THRESHOLD : el.scrollTop > COLLAPSE_THRESHOLD))
+      setCollapsed((prev) =>
+        prev ? el.scrollTop > EXPAND_THRESHOLD : el.scrollTop > COLLAPSE_THRESHOLD,
+      )
     }
     el.addEventListener('scroll', handleScroll, { passive: true })
     return () => el.removeEventListener('scroll', handleScroll)

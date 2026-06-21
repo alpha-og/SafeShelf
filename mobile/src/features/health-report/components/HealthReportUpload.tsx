@@ -37,7 +37,12 @@ export function HealthReportUpload({ onFileSelected, disabled }: HealthReportUpl
         className="hidden"
         onChange={handleChange}
       />
-      <Button size="lg" onClick={handleClick} disabled={disabled} className="bg-green-500 hover:bg-green-600 text-white">
+      <Button
+        size="lg"
+        onClick={handleClick}
+        disabled={disabled}
+        className="bg-green-500 hover:bg-green-600 text-white"
+      >
         Upload PDF
       </Button>
     </div>

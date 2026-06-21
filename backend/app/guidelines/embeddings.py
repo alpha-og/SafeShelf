@@ -8,20 +8,18 @@ from sentence_transformers import SentenceTransformer
 
 @cache
 def _get_chroma_client() -> chromadb.PersistentClient:
-    return chromadb.PersistentClient(path="./chroma_db")
+    return chromadb.PersistentClient(path='./chroma_db')
 
 
 @cache
 def _get_collection():
-    return _get_chroma_client().get_or_create_collection(
-        name="nutrition_guidelines"
-    )
+    return _get_chroma_client().get_or_create_collection(name='nutrition_guidelines')
 
 
 @cache
 def _get_embedding_model() -> SentenceTransformer:
     logging.getLogger('sentence_transformers').setLevel(logging.ERROR)
-    return SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+    return SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
 
 def chunk_text(
@@ -76,8 +74,8 @@ async def embed_and_store_guideline(
             embeddings=embeddings,
             metadatas=[
                 {
-                    "source": url,
-                    "chunk_index": i + idx,
+                    'source': url,
+                    'chunk_index': i + idx,
                 }
                 for idx in range(len(batch_chunks))
             ],
@@ -86,18 +84,19 @@ async def embed_and_store_guideline(
     return total_chunks
 
 
-
-async def retrieve_disease_context(disease: str, aliases: list[str] = None, n_results: int = 12) -> str:
+async def retrieve_disease_context(
+    disease: str, aliases: list[str] = None, n_results: int = 12
+) -> str:
     """
     Retrieve guideline text relevant to a disease.
     """
-    alias_str = ", ".join(aliases) if aliases else "None"
+    alias_str = ', '.join(aliases) if aliases else 'None'
 
     # Formulate as a direct retrieval instruction
     query = (
-        f"Find clinical nutrition guidelines, dietary restrictions, maximum and minimum daily thresholds,interaction rules for medications, and any relevant ingredient aliases for the disease "
+        f'Find clinical nutrition guidelines, dietary restrictions, maximum and minimum daily thresholds,interaction rules for medications, and any relevant ingredient aliases for the disease '
         f"and allowable intake values for the disease '{disease}' (also known as: {alias_str}). "
-        f"Focus on metrics regarding sodium, potassium, sugar, fiber, protein, or fats."
+        f'Focus on metrics regarding sodium, potassium, sugar, fiber, protein, or fats.'
     )
 
     model = _get_embedding_model()
@@ -111,7 +110,7 @@ async def retrieve_disease_context(disease: str, aliases: list[str] = None, n_re
         n_results=n_results,
     )
 
-    documents = results.get("documents", [[]])[0]
+    documents = results.get('documents', [[]])[0]
 
     # Deduplicate chunks
     seen = set()
@@ -122,4 +121,4 @@ async def retrieve_disease_context(disease: str, aliases: list[str] = None, n_re
             seen.add(doc)
             unique_docs.append(doc)
 
-    return "\n\n".join(unique_docs)
+    return '\n\n'.join(unique_docs)

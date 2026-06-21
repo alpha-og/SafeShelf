@@ -13,7 +13,12 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, onBack, icon: Icon, actions, className }: PageHeaderProps) {
   return (
-    <header className={cn('shrink-0 border-b border-border/80 bg-background/90 backdrop-blur-sm', className)}>
+    <header
+      className={cn(
+        'shrink-0 border-b border-border/80 bg-background/90 backdrop-blur-sm',
+        className,
+      )}
+    >
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
         {onBack && (
           <Button

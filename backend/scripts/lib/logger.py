@@ -1,5 +1,14 @@
 import sys
 
+try:
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(encoding='utf-8')
+    if hasattr(sys.stderr, 'reconfigure'):
+        sys.stderr.reconfigure(encoding='utf-8')
+except Exception:
+    pass
+
+
 _COLORS = {
     'header': '\033[95m',
     'info': '\033[94m',
@@ -11,25 +20,32 @@ _COLORS = {
     'reset': '\033[0m',
 }
 
+
 def _color(code: str, text: str) -> str:
     if not sys.stdout.isatty() or 'NO_COLOR' in __import__('os').environ:
         return text
     return f'{_COLORS[code]}{text}{_COLORS["reset"]}'
 
+
 def header(text: str) -> None:
     print(f'\n{_color("bold", _color("header", f"═══ {text} ═══"))}\n')
+
 
 def info(text: str) -> None:
     print(_color('info', f'  → {text}'))
 
+
 def success(text: str) -> None:
     print(_color('success', f'  ✓ {text}'))
+
 
 def warn(text: str) -> None:
     print(_color('warn', f'  ⚠ {text}'))
 
+
 def error(text: str) -> None:
     print(_color('error', f'  ✗ {text}'))
+
 
 def divider() -> None:
     print(_color('dim', '  ─────────────────────────────'))

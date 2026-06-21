@@ -95,12 +95,7 @@ function SwipeableContainer() {
         </div>
       </motion.div>
 
-      <BottomNavBar
-        activeIndex={tab}
-        onChange={setTab}
-        mode={mode}
-        onModeChange={setMode}
-      />
+      <BottomNavBar activeIndex={tab} onChange={setTab} mode={mode} onModeChange={setMode} />
     </div>
   )
 }

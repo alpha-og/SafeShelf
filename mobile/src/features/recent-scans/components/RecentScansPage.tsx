@@ -1,6 +1,6 @@
 import { useNavigate } from '@tanstack/react-router'
 import { History, PackageX, Trash2 } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { EmptyState } from '@/components/EmptyState'
 import { PageHeader } from '@/components/PageHeader'
 import { StatusDot } from '@/components/StatusDot'

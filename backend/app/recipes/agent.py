@@ -15,6 +15,7 @@ from app.shared.config import settings
 
 logger = logging.getLogger(__name__)
 
+
 class RecipeQuery(BaseModel):
     is_recipe_query: bool = True
     categories: list[str] = []
@@ -262,6 +263,7 @@ _DISORDERED_KEYWORDS: set[str] = {
     'fasting for',
 }
 
+
 def _check_direct_contradiction(q: RecipeQuery) -> str | None:
     overlap = set(q.ingredients) & set(q.exclude_ingredients)
     if overlap:
@@ -328,9 +330,7 @@ def validate_query(query: str, q: RecipeQuery) -> ValidationResult:
 
     essential_reason = _check_essential_ingredients(query, q)
     if essential_reason is not None:
-        return ValidationResult(
-            is_valid=False, reason=essential_reason, code='contradiction'
-        )
+        return ValidationResult(is_valid=False, reason=essential_reason, code='contradiction')
 
     return ValidationResult(is_valid=True)
 
@@ -368,16 +368,12 @@ def _match_ingredient(recipe_ingredient: str, search_term: str) -> bool:
 
 def _has_all_ingredients(recipe: RecipeItem, needed: list[str]) -> bool:
     recipe_names = recipe.ingredients
-    return all(
-        any(_match_ingredient(rn, need) for rn in recipe_names) for need in needed
-    )
+    return all(any(_match_ingredient(rn, need) for rn in recipe_names) for need in needed)
 
 
 def _has_any_excluded(recipe: RecipeItem, excluded: list[str]) -> bool:
     recipe_names = recipe.ingredients
-    return any(
-        any(_match_ingredient(rn, excl) for rn in recipe_names) for excl in excluded
-    )
+    return any(any(_match_ingredient(rn, excl) for rn in recipe_names) for excl in excluded)
 
 
 async def run_search(client: AsyncClient, q: RecipeQuery) -> list[RecipeItem]:
@@ -392,9 +388,7 @@ async def run_search(client: AsyncClient, q: RecipeQuery) -> list[RecipeItem]:
     for cat in cats:
         for area in areas:
             if cat is not None or area is not None or primary is not None:
-                tasks.append(
-                    _search_recipes_internal(client, cat, primary, area)
-                )
+                tasks.append(_search_recipes_internal(client, cat, primary, area))
 
     if not tasks:
         return []
@@ -413,9 +407,7 @@ async def run_search(client: AsyncClient, q: RecipeQuery) -> list[RecipeItem]:
         deduped = [r for r in deduped if _has_all_ingredients(r, q.ingredients)]
 
     if q.exclude_ingredients:
-        deduped = [
-            r for r in deduped if not _has_any_excluded(r, q.exclude_ingredients)
-        ]
+        deduped = [r for r in deduped if not _has_any_excluded(r, q.exclude_ingredients)]
 
     return deduped
 
@@ -436,10 +428,12 @@ def _get_llm() -> ChatOpenAI:
 
 
 async def extract_query(query: str) -> RecipeQuery:
-    prompt = ChatPromptTemplate.from_messages([
-        ('system', EXTRACTION_PROMPT),
-        ('human', '{query}'),
-    ])
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            ('system', EXTRACTION_PROMPT),
+            ('human', '{query}'),
+        ]
+    )
     chain = prompt | _get_llm().with_structured_output(RecipeQuery, method='json_mode')
     return await chain.ainvoke({'query': query})
 

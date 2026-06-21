@@ -64,12 +64,11 @@ const AuthenticatedRecipesRoute = AuthenticatedRecipesRouteImport.update({
   path: '/recipes',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
-const AuthenticatedRecentScansRoute =
-  AuthenticatedRecentScansRouteImport.update({
-    id: '/recent-scans',
-    path: '/recent-scans',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
+const AuthenticatedRecentScansRoute = AuthenticatedRecentScansRouteImport.update({
+  id: '/recent-scans',
+  path: '/recent-scans',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedCartRoute = AuthenticatedCartRouteImport.update({
   id: '/cart',
   path: '/cart',
@@ -90,18 +89,16 @@ const AuthSigninRoute = AuthSigninRouteImport.update({
   path: '/signin',
   getParentRoute: () => AuthRoute,
 } as any)
-const AuthenticatedProfileRouteRoute =
-  AuthenticatedProfileRouteRouteImport.update({
-    id: '/profile',
-    path: '/profile',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
-const AuthenticatedProfileIndexRoute =
-  AuthenticatedProfileIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedProfileRouteRoute,
-  } as any)
+const AuthenticatedProfileRouteRoute = AuthenticatedProfileRouteRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedProfileIndexRoute = AuthenticatedProfileIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedProfileRouteRoute,
+} as any)
 const AuthenticatedRecipeIdRoute = AuthenticatedRecipeIdRouteImport.update({
   id: '/recipe/$id',
   path: '/recipe/$id',
@@ -112,42 +109,36 @@ const AuthenticatedProfileNewRoute = AuthenticatedProfileNewRouteImport.update({
   path: '/new',
   getParentRoute: () => AuthenticatedProfileRouteRoute,
 } as any)
-const AuthenticatedProfileHealthReportRoute =
-  AuthenticatedProfileHealthReportRouteImport.update({
-    id: '/health-report',
-    path: '/health-report',
-    getParentRoute: () => AuthenticatedProfileRouteRoute,
-  } as any)
-const AuthenticatedProfileProfileIdRoute =
-  AuthenticatedProfileProfileIdRouteImport.update({
-    id: '/$profileId',
-    path: '/$profileId',
-    getParentRoute: () => AuthenticatedProfileRouteRoute,
-  } as any)
-const AuthenticatedProductBarcodeRoute =
-  AuthenticatedProductBarcodeRouteImport.update({
-    id: '/product/$barcode',
-    path: '/product/$barcode',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
-const AuthenticatedProfileGroupsRouteRoute =
-  AuthenticatedProfileGroupsRouteRouteImport.update({
-    id: '/groups',
-    path: '/groups',
-    getParentRoute: () => AuthenticatedProfileRouteRoute,
-  } as any)
-const AuthenticatedProfileGroupsNewRoute =
-  AuthenticatedProfileGroupsNewRouteImport.update({
-    id: '/new',
-    path: '/new',
-    getParentRoute: () => AuthenticatedProfileGroupsRouteRoute,
-  } as any)
-const AuthenticatedProfileGroupsGroupIdRoute =
-  AuthenticatedProfileGroupsGroupIdRouteImport.update({
-    id: '/$groupId',
-    path: '/$groupId',
-    getParentRoute: () => AuthenticatedProfileGroupsRouteRoute,
-  } as any)
+const AuthenticatedProfileHealthReportRoute = AuthenticatedProfileHealthReportRouteImport.update({
+  id: '/health-report',
+  path: '/health-report',
+  getParentRoute: () => AuthenticatedProfileRouteRoute,
+} as any)
+const AuthenticatedProfileProfileIdRoute = AuthenticatedProfileProfileIdRouteImport.update({
+  id: '/$profileId',
+  path: '/$profileId',
+  getParentRoute: () => AuthenticatedProfileRouteRoute,
+} as any)
+const AuthenticatedProductBarcodeRoute = AuthenticatedProductBarcodeRouteImport.update({
+  id: '/product/$barcode',
+  path: '/product/$barcode',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedProfileGroupsRouteRoute = AuthenticatedProfileGroupsRouteRouteImport.update({
+  id: '/groups',
+  path: '/groups',
+  getParentRoute: () => AuthenticatedProfileRouteRoute,
+} as any)
+const AuthenticatedProfileGroupsNewRoute = AuthenticatedProfileGroupsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AuthenticatedProfileGroupsRouteRoute,
+} as any)
+const AuthenticatedProfileGroupsGroupIdRoute = AuthenticatedProfileGroupsGroupIdRouteImport.update({
+  id: '/$groupId',
+  path: '/$groupId',
+  getParentRoute: () => AuthenticatedProfileGroupsRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -467,12 +458,10 @@ interface AuthenticatedProfileGroupsRouteRouteChildren {
   AuthenticatedProfileGroupsNewRoute: typeof AuthenticatedProfileGroupsNewRoute
 }
 
-const AuthenticatedProfileGroupsRouteRouteChildren: AuthenticatedProfileGroupsRouteRouteChildren =
-  {
-    AuthenticatedProfileGroupsGroupIdRoute:
-      AuthenticatedProfileGroupsGroupIdRoute,
-    AuthenticatedProfileGroupsNewRoute: AuthenticatedProfileGroupsNewRoute,
-  }
+const AuthenticatedProfileGroupsRouteRouteChildren: AuthenticatedProfileGroupsRouteRouteChildren = {
+  AuthenticatedProfileGroupsGroupIdRoute: AuthenticatedProfileGroupsGroupIdRoute,
+  AuthenticatedProfileGroupsNewRoute: AuthenticatedProfileGroupsNewRoute,
+}
 
 const AuthenticatedProfileGroupsRouteRouteWithChildren =
   AuthenticatedProfileGroupsRouteRoute._addFileChildren(
@@ -487,21 +476,17 @@ interface AuthenticatedProfileRouteRouteChildren {
   AuthenticatedProfileIndexRoute: typeof AuthenticatedProfileIndexRoute
 }
 
-const AuthenticatedProfileRouteRouteChildren: AuthenticatedProfileRouteRouteChildren =
-  {
-    AuthenticatedProfileGroupsRouteRoute:
-      AuthenticatedProfileGroupsRouteRouteWithChildren,
-    AuthenticatedProfileProfileIdRoute: AuthenticatedProfileProfileIdRoute,
-    AuthenticatedProfileHealthReportRoute:
-      AuthenticatedProfileHealthReportRoute,
-    AuthenticatedProfileNewRoute: AuthenticatedProfileNewRoute,
-    AuthenticatedProfileIndexRoute: AuthenticatedProfileIndexRoute,
-  }
+const AuthenticatedProfileRouteRouteChildren: AuthenticatedProfileRouteRouteChildren = {
+  AuthenticatedProfileGroupsRouteRoute: AuthenticatedProfileGroupsRouteRouteWithChildren,
+  AuthenticatedProfileProfileIdRoute: AuthenticatedProfileProfileIdRoute,
+  AuthenticatedProfileHealthReportRoute: AuthenticatedProfileHealthReportRoute,
+  AuthenticatedProfileNewRoute: AuthenticatedProfileNewRoute,
+  AuthenticatedProfileIndexRoute: AuthenticatedProfileIndexRoute,
+}
 
-const AuthenticatedProfileRouteRouteWithChildren =
-  AuthenticatedProfileRouteRoute._addFileChildren(
-    AuthenticatedProfileRouteRouteChildren,
-  )
+const AuthenticatedProfileRouteRouteWithChildren = AuthenticatedProfileRouteRoute._addFileChildren(
+  AuthenticatedProfileRouteRouteChildren,
+)
 
 interface AuthenticatedRouteChildren {
   AuthenticatedProfileRouteRoute: typeof AuthenticatedProfileRouteRouteWithChildren
@@ -537,9 +522,7 @@ const OnboardingRouteChildren: OnboardingRouteChildren = {
   OnboardingOnboardingRoute: OnboardingOnboardingRoute,
 }
 
-const OnboardingRouteWithChildren = OnboardingRoute._addFileChildren(
-  OnboardingRouteChildren,
-)
+const OnboardingRouteWithChildren = OnboardingRoute._addFileChildren(OnboardingRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,

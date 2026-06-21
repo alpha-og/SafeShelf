@@ -28,7 +28,8 @@ export function StatusDot({ status, split, className }: StatusDotProps) {
       <span
         className={cn('w-3 h-3 rounded-full shrink-0', className)}
         style={{
-          background: 'linear-gradient(45deg, var(--color-status-fail) 50%, var(--color-status-pass) 50%)',
+          background:
+            'linear-gradient(45deg, var(--color-status-fail) 50%, var(--color-status-pass) 50%)',
         }}
       />
     )

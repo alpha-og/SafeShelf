@@ -50,9 +50,7 @@ class ResponseEnvelopeMiddleware:
                     try:
                         data = json.loads(raw_body)
                         meta: dict[str, object] = {
-                            'timestamp': datetime.now(UTC)
-                            .isoformat()
-                            .replace('+00:00', 'Z')
+                            'timestamp': datetime.now(UTC).isoformat().replace('+00:00', 'Z')
                         }
                         req_meta = scope.get('_envelope_meta')
                         if isinstance(req_meta, dict):

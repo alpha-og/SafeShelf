@@ -24,19 +24,35 @@ function StoresPage() {
     navigate({ to: '/' })
   }
 
+  const handleSkip = async () => {
+    const firstStore = stores && stores.length > 0 ? stores[0] : null
+    if (firstStore) {
+      await setSelectedStoreId(firstStore.id)
+    }
+    navigate({ to: '/' })
+  }
+
   return (
     <div className="flex flex-col h-full w-full bg-background">
       <header className="px-6 py-4">
-        <button
-          onClick={() => router.history.back()}
-          className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 border border-primary/40 hover:bg-primary/30 hover:scale-[1.02] transition-all mb-2"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </button>
+        <div className="flex items-center justify-between w-full mb-2">
+          <button
+            type="button"
+            onClick={() => router.history.back()}
+            className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 border border-primary/40 hover:bg-primary/30 hover:scale-[1.02] transition-all"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={handleSkip}
+            className="text-sm font-semibold text-primary hover:underline hover:scale-[1.02] transition-all px-3 py-1 rounded-full bg-primary/10 hover:bg-primary/20"
+          >
+            Skip
+          </button>
+        </div>
         <h1 className="text-2xl font-bold tracking-tight text-foreground">Select a Store</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          Choose a SafeShelf location near you.
-        </p>
+        <p className="text-muted-foreground text-sm mt-1">Choose a SafeShelf location near you.</p>
       </header>
 
       <main className="flex-1 overflow-y-auto px-6 pb-20">
@@ -48,6 +64,7 @@ function StoresPage() {
           <div className="flex flex-col gap-4">
             {stores?.map((store) => (
               <button
+                type="button"
                 key={store.id}
                 onClick={() => handleSelectStore(store.id)}
                 className={`flex flex-col p-5 rounded-2xl border text-left transition-all active:scale-[0.98]

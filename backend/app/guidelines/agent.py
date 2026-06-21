@@ -29,32 +29,30 @@ llm = ChatGroq(
 
 
 URLS: list[str] = [
-    "https://www.who.int/news-room/fact-sheets/detail/healthy-diet",
-    "https://www.fao.org/nutrition/education/food-dietary-guidelines/regions/countries/india/en/",
-    "https://www.niddk.nih.gov/health-information/kidney-disease/chronic-kidney-disease-ckd/healthy-eating-adults-chronic-kidney-disease",
-    "https://professional.diabetes.org/clinical-support/nutrition-wellness",
-    "https://www.fao.org/food-safety/scientific-advice/jecfa/en/",
-    "https://www.heart.org/en/health-topics/high-blood-pressure/changes-you-can-make-to-manage-high-blood-pressure/shaking-the-salt-habit-to-lower-high-blood-pressure",
-    "https://www.heart.org/en/healthy-living/healthy-eating/eat-smart/sodium/sodium-and-salt",
-    "https://nin.res.in/dietaryguidelines/pdfjs/locale/DGI_2024.pdf",
-    "https://iris.who.int/server/api/core/bitstreams/fe09e661-09a6-4f53-ae8a-420cbd0c6a6e/content",
-    "https://www.nhlbi.nih.gov/health/dash-eating-plan",
-    "https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight",
-    "https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342001/all/Asthma",
-    "https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342017/all/Coronary_Heart_Disease%C2%A0",
-    "https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342005/all/Hyperthyroidism",
-    "https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342029/all/Osteoporosis#5",
-    "https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342062/all/Celiac_Disease",
-    "https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342061/all/Irritable_Bowel_Syndrome",
-    "https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342090/all/Iron_Deficiency_Anemia",
-    "https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342007/all/Parkinson%E2%80%99s_Disease#4",
-    "https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342015/all/Gastroesophageal_Reflux_Disease",
-    "https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342076/all/Hypothyroidism",
-    "https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342050/all/Cirrhosis",
-    "https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342056/all/Migraine#4",
-
- ]
-    
+    'https://www.who.int/news-room/fact-sheets/detail/healthy-diet',
+    'https://www.fao.org/nutrition/education/food-dietary-guidelines/regions/countries/india/en/',
+    'https://www.niddk.nih.gov/health-information/kidney-disease/chronic-kidney-disease-ckd/healthy-eating-adults-chronic-kidney-disease',
+    'https://professional.diabetes.org/clinical-support/nutrition-wellness',
+    'https://www.fao.org/food-safety/scientific-advice/jecfa/en/',
+    'https://www.heart.org/en/health-topics/high-blood-pressure/changes-you-can-make-to-manage-high-blood-pressure/shaking-the-salt-habit-to-lower-high-blood-pressure',
+    'https://www.heart.org/en/healthy-living/healthy-eating/eat-smart/sodium/sodium-and-salt',
+    'https://nin.res.in/dietaryguidelines/pdfjs/locale/DGI_2024.pdf',
+    'https://iris.who.int/server/api/core/bitstreams/fe09e661-09a6-4f53-ae8a-420cbd0c6a6e/content',
+    'https://www.nhlbi.nih.gov/health/dash-eating-plan',
+    'https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight',
+    'https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342001/all/Asthma',
+    'https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342017/all/Coronary_Heart_Disease%C2%A0',
+    'https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342005/all/Hyperthyroidism',
+    'https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342029/all/Osteoporosis#5',
+    'https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342062/all/Celiac_Disease',
+    'https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342061/all/Irritable_Bowel_Syndrome',
+    'https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342090/all/Iron_Deficiency_Anemia',
+    'https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342007/all/Parkinson%E2%80%99s_Disease#4',
+    'https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342015/all/Gastroesophageal_Reflux_Disease',
+    'https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342076/all/Hypothyroidism',
+    'https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342050/all/Cirrhosis',
+    'https://nutritionguide.pcrm.org/nutritionguide/view/Nutrition_Guide_for_Clinicians/1342056/all/Migraine#4',
+]
 
 
 async def scrape_guidelines(url: str) -> str:
@@ -67,10 +65,10 @@ async def scrape_guidelines(url: str) -> str:
         resp = await client.get(url)
         resp.raise_for_status()
 
-    content_type = resp.headers.get("content-type", "").lower()
+    content_type = resp.headers.get('content-type', '').lower()
 
     # PDF handling
-    if resp.content[:4] == b"%PDF":
+    if resp.content[:4] == b'%PDF':
         try:
             pdf_file = BytesIO(resp.content)
             reader = PdfReader(pdf_file)
@@ -79,26 +77,28 @@ async def scrape_guidelines(url: str) -> str:
                 page_text = page.extract_text()
                 if page_text:
                     text_parts.append(page_text)
-            return "\n".join(text_parts)
+            return '\n'.join(text_parts)
         except Exception:
             pass  # fall through to HTML handling
 
     # HTML handling
-    soup = BeautifulSoup(resp.text, "lxml")
+    soup = BeautifulSoup(resp.text, 'lxml')
 
-    for tag in soup([
-        "script",
-        "style",
-        "nav",
-        "footer",
-        "header",
-        "aside",
-        "noscript",
-        "svg",
-    ]):
+    for tag in soup(
+        [
+            'script',
+            'style',
+            'nav',
+            'footer',
+            'header',
+            'aside',
+            'noscript',
+            'svg',
+        ]
+    ):
         tag.decompose()
 
-    return soup.get_text(separator="\n", strip=True)
+    return soup.get_text(separator='\n', strip=True)
 
 
 async def extract_thresholds(disease: str, context: str) -> dict:
@@ -189,18 +189,16 @@ async def extract_thresholds(disease: str, context: str) -> dict:
     response = await llm.ainvoke(
         [
             SystemMessage(content=prompt),
-            HumanMessage(
-                content=f"""TARGET DISEASE: {disease}   CONTEXT:{context}"""
-            ),
+            HumanMessage(content=f"""TARGET DISEASE: {disease}   CONTEXT:{context}"""),
         ]
     )
     content = response.content.strip()
 
-    if content.startswith("```"):
-        content = content.split("\n", 1)[1]
-        content = content.rsplit("```", 1)[0]
+    if content.startswith('```'):
+        content = content.split('\n', 1)[1]
+        content = content.rsplit('```', 1)[0]
     try:
-      return json.loads(content)
+        return json.loads(content)
     except json.JSONDecodeError:
-      print(content)
-      raise
+        print(content)
+        raise

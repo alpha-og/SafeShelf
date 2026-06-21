@@ -13,25 +13,24 @@ from app.shared.who_icd import fetch_icd11_code, get_valid_who_token
 async def import_guidelines(session: AsyncSession) -> dict:
     imported = []
     DISEASES_TO_IMPORT = [
-    "Diabetes Mellitus", 
-    "Hypertension", 
-    "Chronic Kidney Disease", 
-    "Celiac Disease",
-    "Hypercholesterolemia",
-    "Obesity and Overweight",
-    "Cardiovascular Disease",
-    "Asthma",
-    "Coronary Heart Disease",
-    "Hyperthyroidism",
-    "Osteoporosis",
-    "Irritable Bowel Syndrome",
-    "Parkinson's Disease",
-    "Gastroesophageal Reflux Disease",
-    "Hypothyroidism",
-    "Anemia",
-    "Cirrhosis",
-    "Migraine",
-
+        'Diabetes Mellitus',
+        'Hypertension',
+        'Chronic Kidney Disease',
+        'Celiac Disease',
+        'Hypercholesterolemia',
+        'Obesity and Overweight',
+        'Cardiovascular Disease',
+        'Asthma',
+        'Coronary Heart Disease',
+        'Hyperthyroidism',
+        'Osteoporosis',
+        'Irritable Bowel Syndrome',
+        "Parkinson's Disease",
+        'Gastroesophageal Reflux Disease',
+        'Hypothyroidism',
+        'Anemia',
+        'Cirrhosis',
+        'Migraine',
     ]
     who_token = await get_valid_who_token()
     for url in URLS:
@@ -40,14 +39,14 @@ async def import_guidelines(session: AsyncSession) -> dict:
 
     for target_disease in DISEASES_TO_IMPORT:
         icd_data = await fetch_icd11_code(target_disease, who_token)
-        standard_name = icd_data.get("standard_name", target_disease)
-        icd_code = icd_data.get("icd11_code", "UNKNOWN")
-        aliases = icd_data.get("aliases", [])
+        standard_name = icd_data.get('standard_name', target_disease)
+        icd_code = icd_data.get('icd11_code', 'UNKNOWN')
+        aliases = icd_data.get('aliases', [])
 
         context = await retrieve_disease_context(disease=standard_name, aliases=aliases)
-        
+
         if not context.strip():
-            continue 
+            continue
 
         bootstrap = await extract_thresholds(standard_name, context)
 

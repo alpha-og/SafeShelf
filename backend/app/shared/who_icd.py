@@ -30,7 +30,7 @@ async def get_valid_who_token() -> str:
             detail='WHO client credentials are missing. Set WHO_CLIENT_ID and WHO_CLIENT_SECRET.',
         )
 
-    async with httpx.AsyncClient(timeout=20.0,verify=False) as client:
+    async with httpx.AsyncClient(timeout=20.0, verify=False) as client:
         response = await client.post(
             WHO_TOKEN_URL,
             data=data,
@@ -61,21 +61,21 @@ async def fetch_icd11_code(disease_name: str, token: str) -> dict[str, str]:
     async with httpx.AsyncClient(verify=False) as client:
         response = await client.get(WHO_SEARCH_URL, headers=headers, params=params)
         if response.status_code != 200:
-            return {"icd11_code": "UNKNOWN", "standard_name": disease_name, "aliases": []}
-    
-        entities = response.json().get("destinationEntities", [])
+            return {'icd11_code': 'UNKNOWN', 'standard_name': disease_name, 'aliases': []}
+
+        entities = response.json().get('destinationEntities', [])
         if not entities:
-            return {"icd11_code": "UNKNOWN", "standard_name": disease_name, "aliases": []}
+            return {'icd11_code': 'UNKNOWN', 'standard_name': disease_name, 'aliases': []}
         top_match = entities[0]
         raw_title = top_match.get('title', disease_name)
         clean_title = re.sub(r'<[^>]+>', '', raw_title)
         aliases = []
-        for term in top_match.get("matchingTags", []):
+        for term in top_match.get('matchingTags', []):
             clean_term = re.sub(r'<[^>]+>', '', term)
             if clean_term and clean_term not in aliases:
                 aliases.append(clean_term)
         return {
-            "icd11_code": top_match.get("theCode", "UNKNOWN"),
-            "standard_name": clean_title,
-            "aliases": aliases
+            'icd11_code': top_match.get('theCode', 'UNKNOWN'),
+            'standard_name': clean_title,
+            'aliases': aliases,
         }

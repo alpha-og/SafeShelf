@@ -96,7 +96,7 @@ export function RecipeDetailPage() {
           <div className="absolute top-0 left-0 z-20 p-3">
             <button
               className="flex items-center justify-center w-9 h-9 rounded-full bg-primary/55 backdrop-blur-md text-white hover:bg-primary/65 transition-colors border border-primary/50"
-                  onClick={() => router.history.back()}
+              onClick={() => router.history.back()}
             >
               <ArrowLeft className="h-5 w-5" />
             </button>
@@ -105,7 +105,7 @@ export function RecipeDetailPage() {
           <div className="absolute inset-0 bg-linear-to-t from-overlay/80 via-overlay/30 to-transparent pointer-events-none" />
 
           <div className="absolute bottom-0 left-0 right-0 p-5 space-y-1.5">
-                <h1 className="text-2xl font-bold text-overlay-foreground capitalize">{recipe.name}</h1>
+            <h1 className="text-2xl font-bold text-overlay-foreground capitalize">{recipe.name}</h1>
             <div className="flex flex-wrap gap-1.5">
               {recipe.category && (
                 <Badge variant="secondary" className="text-[11px] px-2 py-0.5">

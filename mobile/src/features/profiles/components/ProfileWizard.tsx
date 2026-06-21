@@ -84,6 +84,39 @@ export function ProfileWizard({
     }
   }
 
+  async function handleSkip() {
+    if (step < 4) {
+      if (step === 1 && !name.trim()) {
+        setName('User')
+      }
+      setStep(step + 1)
+    } else {
+      let finalName = name.trim()
+      if (!finalName) {
+        finalName = 'User'
+        setName('User')
+      }
+      if (hasSubmittedRef.current) return
+      hasSubmittedRef.current = true
+      setSubmitting(true)
+      try {
+        await onSubmit({
+          name: finalName,
+          age: age ? parseInt(age, 10) : null,
+          dietaryPreferences,
+          budget,
+          servingSettings,
+          conditions,
+          allergens,
+          prescriptions,
+        })
+      } catch {
+        hasSubmittedRef.current = false
+        setSubmitting(false)
+      }
+    }
+  }
+
   return (
     <div className="flex-1 min-h-0 bg-background flex flex-col overflow-hidden">
       <PageHeader
@@ -152,25 +185,27 @@ export function ProfileWizard({
         )}
       </main>
 
-      <footer className="border-t border-border shrink-0 px-4 py-3">
+      <footer className="border-t border-border shrink-0 px-4 py-3 flex gap-3">
+        <Button
+          type="button"
+          variant="ghost"
+          className="flex-1 text-muted-foreground hover:text-foreground"
+          onClick={handleSkip}
+          disabled={submitting}
+        >
+          Skip
+        </Button>
         {step < 4 ? (
           <Button
             type="button"
-            className="w-full"
-            size="lg"
+            className="flex-1"
             disabled={step === 1 && !canAdvanceStep1}
             onClick={() => setStep(step + 1)}
           >
             Next
           </Button>
         ) : (
-          <Button
-            type="button"
-            className="w-full"
-            size="lg"
-            disabled={!canSubmit}
-            onClick={handleSubmit}
-          >
+          <Button type="button" className="flex-1" disabled={!canSubmit} onClick={handleSubmit}>
             {submitLabel}
           </Button>
         )}
