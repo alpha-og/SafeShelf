@@ -14,10 +14,10 @@ export default defineConfig(({ mode }) => {
   const mobilePort = Number(env.MOBILE_PORT) || 8826
 
   let mobileHost: boolean | string = true
-  if (env.MOBILE_HOST === 'false') {
+  if (env.MOBILE_PREVIEW_HOST === 'false') {
     mobileHost = false
-  } else if (env.MOBILE_HOST && env.MOBILE_HOST !== 'true') {
-    mobileHost = env.MOBILE_HOST
+  } else if (env.MOBILE_PREVIEW_HOST && env.MOBILE_PREVIEW_HOST !== 'true') {
+    mobileHost = env.MOBILE_PREVIEW_HOST
   }
 
   let allowedHosts: true | string[] | undefined = true

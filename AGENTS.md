@@ -54,6 +54,8 @@ safeshelf/
 | Dry-run ingredient generation | `uv run python -m scripts.dev seed-ingredients --dry-run` |
 | Seed DB (stores + inventory + recipes) | `uv run python -m scripts.dev seed` |
 
+See [docs/SCRIPTS.md](docs/SCRIPTS.md) for full script documentation including subcommand flags and library modules.
+
 ## Configuration
 
 Environment variables are loaded hierarchically:
@@ -62,7 +64,7 @@ Environment variables are loaded hierarchically:
 2. **`/backend/.env`** / **`/mobile/.env`** — sub-package overrides
 3. **`/backend/.env.local`** / **`/mobile/.env.local`** — local-only overrides (gitignored)
 
-Later values override earlier ones. Each sub-package can have its own `.env` for private secrets. See `/.env.example` for all shared variables.
+Later values override earlier ones. Each sub-package can have its own `.env` for private secrets. See `/.env.example` or the full reference at [docs/ENV_VARS.md](docs/ENV_VARS.md). Mobile-only variables are documented in `mobile/.env.example`.
 
 ## Backend
 

@@ -43,7 +43,20 @@ def cmd_generate_ingredients(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description='SafeShelf Backend Dev Script')
+    parser = argparse.ArgumentParser(
+        prog='uv run python -m scripts.dev',
+        description='SafeShelf Backend Dev Script — seed database and generate ingredient data.',
+        epilog=(
+            'Examples:\n'
+            '  seed                   Seed all (stores + inventory + recipes)\n'
+            '  seed --stores          Seed stores only\n'
+            '  seed --recipes --limit 1000  Seed 1000 recipes\n'
+            '  seed-ingredients       Generate ingredient seed JSON\n'
+            '  seed-ingredients --dry-run   Dry run, no files written\n'
+            '  seed-ingredients --skip-usda  Skip USDA API calls\n'
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     sub = parser.add_subparsers(dest='command', required=True)
 
     seed = sub.add_parser('seed', help='Seed database with stores, inventory, and recipes')

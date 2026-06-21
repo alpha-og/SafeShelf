@@ -38,6 +38,10 @@ main()
 
 function main() {
   const cmd = process.argv[2]
+  if (!cmd || cmd === '--help' || cmd === 'help') {
+    showHelp()
+    return
+  }
   switch (cmd) {
     case 'setup':
       return cmdSetup()
@@ -46,7 +50,9 @@ function main() {
     case 'ios':
       return cmdRun('ios')
     default:
+      warn(`Unknown command: ${cmd}`)
       showHelp()
+      process.exit(1)
   }
 }
 

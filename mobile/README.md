@@ -47,10 +47,14 @@ Builds the app, copies native assets, and launches on the connected device with 
 HTTPS is required for camera access on physical devices. Setup uses mkcert to generate locally-trusted certificates.
 
 | Variable | Default | Description |
-|---|---|---|
+|---|---|---|---|
 | `MOBILE_TLS_ENABLED` | `true` | Enable HTTPS. `false` uses HTTP (disables camera on device). |
 | `DEV_CERTS_MODE` | `auto` | `auto` uses mkcert if installed. `skip` uses Vite basicSsl fallback. |
 | `MOBILE_PORT` | `8826` | Dev server port |
+| `MOBILE_PREVIEW_HOST` | `true` | `true` (all interfaces), `false` (localhost), or IP string |
+| `MOBILE_ALLOWED_HOSTS` | `true` | `true` (any), `false` (none), or comma-separated hosts |
+
+See [docs/ENV_VARS.md](../docs/ENV_VARS.md) for the full environment reference.
 
 After setup:
 - Android: Install the mkcert CA (instructions printed by `dev:setup`)

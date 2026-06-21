@@ -31,8 +31,11 @@ pnpm dev                # starts both backend and mobile
 | `BACKEND_PORT` | `8926` | Server port |
 | `BACKEND_HOST` | `localhost` | Server bind address |
 | `DATABASE_URL` | — | PostgreSQL URL. Uses SQLite if not set. |
+| `SECRET_KEY` | — | JWT signing key |
+| `GROQ_API_KEY` | — | Groq LLM API key |
+| `USDA_FDC_API_KEY` | — | USDA FoodData Central API key |
 
-See `/backend/.env.example` and `/.env.example` for all options.
+See [docs/ENV_VARS.md](../docs/ENV_VARS.md) for the full reference, or `/.env.example` and `/backend/.env.example`.
 
 ## API
 
