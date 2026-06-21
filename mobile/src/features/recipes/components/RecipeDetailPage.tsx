@@ -417,13 +417,9 @@ export function RecipeDetailPage() {
                         >
                           <span className="w-1.5 h-1.5 rounded-full bg-primary/40 shrink-0" />
                           <span className="flex-1 text-foreground">{ingredient}</span>
-                          {adjustedQuantities && adjustedQuantities[i] ? (
+                          {adjustedQuantities?.[i] && (
                             <span className="text-foreground text-xs tabular-nums font-medium">
                               {adjustedQuantities[i].adjusted_measurement}
-                            </span>
-                          ) : (
-                            <span className="text-muted-foreground text-xs tabular-nums">
-                              {recipe.measurements[i] || ''}
                             </span>
                           )}
                           <ChevronDown
