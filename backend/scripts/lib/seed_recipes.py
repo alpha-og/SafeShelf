@@ -75,6 +75,23 @@ def _load_dataframe(csv_path: str | None, limit: int) -> pd.DataFrame:
         df = pd.read_csv(csv_path)
     else:
         info('Downloading dataset from Kaggle (irkaal/foodcom-recipes-and-reviews) ...')
+        import ssl
+        import urllib3.util.ssl_
+        import urllib3.connection
+        _orig_create_context = urllib3.util.ssl_.create_urllib3_context
+        def _unverified_context(*args, **kwargs):
+            kwargs['cert_reqs'] = ssl.CERT_NONE
+            return _orig_create_context(*args, **kwargs)
+        _orig_ssl_wrap = urllib3.util.ssl_.ssl_wrap_socket
+        def _unverified_wrap(sock, server_hostname=None, ssl_context=None, **kwargs):
+            if ssl_context:
+                ssl_context.verify_mode = ssl.CERT_NONE
+                ssl_context.check_hostname = False
+            return _orig_ssl_wrap(sock, server_hostname=server_hostname, ssl_context=ssl_context, **kwargs)
+        urllib3.util.ssl_.create_urllib3_context = _unverified_context
+        urllib3.connection.create_urllib3_context = _unverified_context
+        urllib3.util.ssl_.ssl_wrap_socket = _unverified_wrap
+        urllib3.connection.ssl_wrap_socket = _unverified_wrap
         path = kagglehub.dataset_download('irkaal/foodcom-recipes-and-reviews')
         recipes_path = f'{path}/recipes.csv'
         info(f'Loading CSV from {recipes_path}')

@@ -17,19 +17,19 @@ def _color(code: str, text: str) -> str:
     return f'{_COLORS[code]}{text}{_COLORS["reset"]}'
 
 def header(text: str) -> None:
-    print(f'\n{_color("bold", _color("header", f"═══ {text} ═══"))}\n')
+    print(f'\n{_color("bold", _color("header", f"--- {text} ---"))}\n')
 
 def info(text: str) -> None:
-    print(_color('info', f'  → {text}'))
+    print(_color('info', f'  -> {text}'))
 
 def success(text: str) -> None:
-    print(_color('success', f'  ✓ {text}'))
+    print(_color('success', f'  OK {text}'))
 
 def warn(text: str) -> None:
-    print(_color('warn', f'  ⚠ {text}'))
+    print(_color('warn', f'  !! {text}'))
 
 def error(text: str) -> None:
-    print(_color('error', f'  ✗ {text}'))
+    print(_color('error', f'  XX {text}'))
 
 def divider() -> None:
-    print(_color('dim', '  ─────────────────────────────'))
+    print(_color('dim', '  ------------------------------'))
