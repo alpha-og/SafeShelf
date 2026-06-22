@@ -5,11 +5,12 @@ import random
 import uuid
 
 import httpx
+from sqlalchemy import text
 from sqlmodel import SQLModel, select
 
 from app.products.models import Category, Product, ProductCategory
 from app.shared.db import async_session, engine
-from app.stores.models import Store, StoreInventory
+from app.stores.models import Store
 from scripts.lib.logger import info, success, warn
 
 # Categories that are fetched from OpenFoodFacts API
@@ -211,6 +212,9 @@ async def _seed_inventory():
                     continue
                 seen_barcodes.add(barcode)
 
+                if len(seen_barcodes) % 50 == 0:
+                    info(f'Processed {len(seen_barcodes)} unique products...')
+
                 is_custom = barcode.startswith('PROD-')
                 is_produce = cat_name in ('Fruits', 'Vegetables')
 
@@ -248,12 +252,21 @@ async def _seed_inventory():
                         else:
                             price = round(random.uniform(20.0, 1500.0), 2)
 
-                        await session.merge(StoreInventory(
-                            store_id=store.id,
-                            product_id=prod.id,
-                            stock_quantity=stock_qty,
-                            price=float(price),
-                        ))
+                        await session.execute(
+                            text("""
+                                INSERT INTO storeinventory (store_id, product_id, stock_quantity, price, in_stock)
+                                VALUES (:store_id, :product_id, :stock_quantity, :price, :in_stock)
+                                ON CONFLICT (store_id, product_id)
+                                DO UPDATE SET stock_quantity = :stock_quantity, price = :price, in_stock = :in_stock
+                            """),
+                            {
+                                "store_id": store.id,
+                                "product_id": prod.id,
+                                "stock_quantity": stock_qty,
+                                "price": float(price),
+                                "in_stock": stock_qty > 0,
+                            }
+                        )
 
         await session.commit()
     success(f'Seeded {len(seen_barcodes)} products across {len(CATEGORIES)} categories')
