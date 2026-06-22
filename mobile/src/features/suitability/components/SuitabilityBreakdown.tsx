@@ -130,9 +130,13 @@ function ChecksList({ checks }: { checks: SuitabilityCheck[] }) {
                       ) : (
                         <CircleAlert className="h-3.5 w-3.5 mt-0.5 shrink-0 text-[#F7C8D3]" />
                       )}
-                      <div className="min-w-0">
-                        <p className="font-medium text-foreground leading-tight">{check.label}</p>
-                        <p className="text-muted-foreground text-xs mt-0.5">{check.detail}</p>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-foreground leading-tight break-words">
+                          {check.label}
+                        </p>
+                        <p className="text-muted-foreground text-xs mt-0.5 break-words">
+                          {check.detail}
+                        </p>
                         {check.owners && check.owners.length > 0 && (
                           <div className="flex flex-wrap items-center gap-1 mt-1.5">
                             <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
@@ -219,13 +223,13 @@ export function SuitabilityBreakdown({
             <div className="bg-muted/40 rounded-lg p-3 space-y-3 border border-border/50">
               <div className="flex items-start gap-3 text-xs">
                 {renderStepIcon(stepper.basic_metrics)}
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <p
-                    className={`font-semibold ${stepper.basic_metrics === 'pass' ? 'text-foreground' : 'text-muted-foreground'}`}
+                    className={`font-semibold break-words ${stepper.basic_metrics === 'pass' ? 'text-foreground' : 'text-muted-foreground'}`}
                   >
                     Nutrient Verification
                   </p>
-                  <p className="text-muted-foreground text-[11px] mt-0.5 leading-normal">
+                  <p className="text-muted-foreground text-[11px] mt-0.5 leading-normal break-words">
                     {stepper.basic_metrics_summary ||
                       'Verifying personalized rules (sodium, sugars, fats)...'}
                   </p>
@@ -233,13 +237,13 @@ export function SuitabilityBreakdown({
               </div>
               <div className="flex items-start gap-3 text-xs">
                 {renderStepIcon(stepper.ingredient_analysis)}
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <p
-                    className={`font-semibold ${stepper.ingredient_analysis === 'pass' ? 'text-foreground' : 'text-muted-foreground'}`}
+                    className={`font-semibold break-words ${stepper.ingredient_analysis === 'pass' ? 'text-foreground' : 'text-muted-foreground'}`}
                   >
                     Raw Ingredient Evaluation
                   </p>
-                  <p className="text-muted-foreground text-[11px] mt-0.5 leading-normal">
+                  <p className="text-muted-foreground text-[11px] mt-0.5 leading-normal break-words">
                     {stepper.ingredient_analysis_summary ||
                       'Analyzing raw ingredient text for derivatives...'}
                   </p>
@@ -247,13 +251,13 @@ export function SuitabilityBreakdown({
               </div>
               <div className="flex items-start gap-3 text-xs">
                 {renderStepIcon(stepper.medication_check)}
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <p
-                    className={`font-semibold ${stepper.medication_check === 'pass' ? 'text-foreground' : 'text-muted-foreground'}`}
+                    className={`font-semibold break-words ${stepper.medication_check === 'pass' ? 'text-foreground' : 'text-muted-foreground'}`}
                   >
                     Medication Interaction Check
                   </p>
-                  <p className="text-muted-foreground text-[11px] mt-0.5 leading-normal">
+                  <p className="text-muted-foreground text-[11px] mt-0.5 leading-normal break-words">
                     {stepper.medication_check_summary || 'Checking medication-food interactions...'}
                   </p>
                 </div>

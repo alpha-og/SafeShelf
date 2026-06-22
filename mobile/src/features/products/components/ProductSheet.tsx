@@ -105,7 +105,7 @@ export function ProductSheet({
                 isAgentLoading ||
                 agentError ||
                 agentUsed ||
-                triggerMode === 'manual') && (
+                (triggerMode === 'manual' && !!startAgentEval)) && (
                 <SuitabilityBreakdown
                   checks={suitability.checks}
                   isAgentLoading={isAgentLoading}
@@ -130,9 +130,7 @@ export function ProductSheet({
               </Button>
             )}
 
-            {result.barcode && (
-              <ProductSuggestions barcode={result.barcode} />
-            )}
+            {result.barcode && <ProductSuggestions barcode={result.barcode} />}
 
             {result.barcode && (
               <div className="flex justify-center">
