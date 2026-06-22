@@ -6,6 +6,7 @@ let accessToken: string | null = null
 let onLogout: (() => void) | null = null
 
 const api: AxiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || '',
   withCredentials: true,
   headers: { 'Content-Type': 'application/json' },
 })
@@ -63,7 +64,7 @@ api.interceptors.response.use(
       isRefreshing = true
 
       try {
-        const { data } = await axios.post('/v1/auth/refresh', {}, { withCredentials: true })
+        const { data } = await api.post('/v1/auth/refresh', {})
         const newToken: string = data.data?.access_token ?? data.access_token
         accessToken = newToken
         await setToken(newToken)
