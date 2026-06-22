@@ -117,7 +117,7 @@ export function ProductDetailPage() {
               isAgentLoading ||
               agentError ||
               agentUsed ||
-              triggerMode === 'manual') && (
+              (triggerMode === 'manual' && !!startAgentEval)) && (
               <section>
                 <SectionHeader>Suitability</SectionHeader>
                 <SuitabilityBreakdown

@@ -1,12 +1,18 @@
-import { useMemo, useState, useEffect, useRef, useCallback } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ProductInfo } from '@/features/products/services/product'
-import { evaluateContext, getPerServingNutrients, mergeLocalAndAgentResults } from '../evaluate'
-import { useAliases, useConditionRules } from '../services/rules'
-import type { SuitabilityContext, SuitabilityResult, UserProfile, SuitabilityCheck, StepperState } from '../types'
-import { useUserProfile } from './useUserProfile'
 import { getAccessToken } from '@/lib/axios'
 import { getItem } from '@/lib/storage'
+import { evaluateContext, getPerServingNutrients, mergeLocalAndAgentResults } from '../evaluate'
+import { useAliases, useConditionRules } from '../services/rules'
+import type {
+  StepperState,
+  SuitabilityCheck,
+  SuitabilityContext,
+  SuitabilityResult,
+  UserProfile,
+} from '../types'
+import { useUserProfile } from './useUserProfile'
 
 interface UseSuitabilityReturn {
   result: SuitabilityResult | null
@@ -17,7 +23,7 @@ interface UseSuitabilityReturn {
   agentError: (Error & { status?: number }) | null
   agentUsed: boolean
   triggerMode: 'auto' | 'manual'
-  startAgentEval: () => Promise<void>
+  startAgentEval?: () => Promise<void>
 }
 
 export function useSuitability(
@@ -82,7 +88,10 @@ export function useSuitability(
     completedRef.current = null
   }
 
-  const cacheKey = useMemo(() => ['suitability-agent', product?.barcode, profileKey], [product?.barcode, profileKey])
+  const cacheKey = useMemo(
+    () => ['suitability-agent', product?.barcode, profileKey],
+    [product?.barcode, profileKey],
+  )
 
   // Refs to access the latest values inside callbacks without triggering loop-re-renders
   const productRef = useRef(product)
@@ -103,6 +112,8 @@ export function useSuitability(
     const currentLocalResult = localResultRef.current
 
     if (!currentProduct || !currentContext || !currentLocalResult) return
+    const nameLower = currentProduct.productName?.toLowerCase()
+    if (nameLower?.includes('water') || nameLower?.includes('bisleri')) return
 
     setIsAgentLoading(true)
     setAgentError(null)
@@ -199,8 +210,15 @@ export function useSuitability(
 
             if (parsed.event === 'phase') {
               const { phase, status, summary } = parsed
-              if (phase === 'basic_metrics' || phase === 'ingredient_analysis' || phase === 'medication_check') {
-                const phaseKey = phase as 'basic_metrics' | 'ingredient_analysis' | 'medication_check'
+              if (
+                phase === 'basic_metrics' ||
+                phase === 'ingredient_analysis' ||
+                phase === 'medication_check'
+              ) {
+                const phaseKey = phase as
+                  | 'basic_metrics'
+                  | 'ingredient_analysis'
+                  | 'medication_check'
                 stepperState[phaseKey] = status
                 if (phase === 'basic_metrics') {
                   stepperState.basic_metrics_summary = summary
@@ -214,12 +232,14 @@ export function useSuitability(
             } else if (parsed.event === 'result') {
               const checks = parsed.checks ?? []
               setAgentChecks(checks)
-              
+
               // Cache both checks and final stepper state
               queryClient.setQueryData(cacheKey, { checks, stepper: stepperState })
               completedRef.current = 'success'
             } else if (parsed.event === 'error') {
-              const innerError = new Error(parsed.detail || 'An error occurred during AI analysis') as any
+              const innerError = new Error(
+                parsed.detail || 'An error occurred during AI analysis',
+              ) as any
               innerError.status = parsed.status || 500
               throw innerError
             }
@@ -229,9 +249,9 @@ export function useSuitability(
     } catch (err: any) {
       if (err.name === 'AbortError') return
       console.error('Agent evaluation error:', err)
-      
+
       const targetStatus = err.status || 500
-      
+
       const errorObj = new Error(err.message || String(err)) as any
       errorObj.status = targetStatus
       setAgentError(errorObj)
@@ -239,7 +259,8 @@ export function useSuitability(
       setStepper((prev) => {
         if (!prev) return prev
         const updated = { ...prev }
-        const fallbackMsg = 'Advanced AI verification is temporarily unavailable. Running on your baseline safety profile.'
+        const fallbackMsg =
+          'Advanced AI verification is temporarily unavailable. Running on your baseline safety profile.'
         if (updated.ingredient_analysis === 'running') {
           updated.ingredient_analysis = 'fail'
           updated.ingredient_analysis_summary = fallbackMsg
@@ -265,7 +286,14 @@ export function useSuitability(
 
   // ⚡ 3. DOCK CONTROL LIFECYCLE EFFECT
   useEffect(() => {
-    if (!product || !context || !localResult) {
+    const nameLower = product?.productName?.toLowerCase()
+    if (
+      !product ||
+      !context ||
+      !localResult ||
+      nameLower?.includes('water') ||
+      nameLower?.includes('bisleri')
+    ) {
       setAgentChecks([])
       setIsAgentLoading(false)
       setAgentError(null)
@@ -275,7 +303,7 @@ export function useSuitability(
     }
 
     const hasAllergenFail = localResult.checks.some(
-      (c) => c.status === 'fail' && (c.type === 'allergen' || c.type === 'traces')
+      (c) => c.status === 'fail' && (c.type === 'allergen' || c.type === 'traces'),
     )
 
     // Check if we have a cached result first
@@ -296,7 +324,12 @@ export function useSuitability(
       return
     }
 
-    if (!callAgent || hasAllergenFail || completedRef.current === 'api_limit' || completedRef.current === 'success') {
+    if (
+      !callAgent ||
+      hasAllergenFail ||
+      completedRef.current === 'api_limit' ||
+      completedRef.current === 'success'
+    ) {
       if (hasAllergenFail || !callAgent) {
         setAgentChecks([])
         setIsAgentLoading(false)
@@ -346,6 +379,10 @@ export function useSuitability(
     agentError,
     agentUsed,
     triggerMode,
-    startAgentEval,
+    startAgentEval:
+      product?.productName?.toLowerCase().includes('water') ||
+      product?.productName?.toLowerCase().includes('bisleri')
+        ? undefined
+        : startAgentEval,
   }
 }

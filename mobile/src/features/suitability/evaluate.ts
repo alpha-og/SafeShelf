@@ -530,6 +530,18 @@ export function evaluate(
   thresholds: ConditionThreshold[],
   aliases: Record<string, string>,
 ): SuitabilityResult {
+  const productNameLower = product.productName?.toLowerCase()
+  if (productNameLower?.includes('water') || productNameLower?.includes('bisleri')) {
+    const settings = profile.servingSettings ?? DEFAULT_SERVING_SETTINGS
+    const servingInfo = buildServingInfo(product.servingSize, product.categories, settings)
+    return {
+      overall: 'suitable',
+      checks: [],
+      insights: [],
+      serving: servingInfo,
+    }
+  }
+
   const checks: SuitabilityCheck[] = []
   const settings = profile.servingSettings ?? DEFAULT_SERVING_SETTINGS
 

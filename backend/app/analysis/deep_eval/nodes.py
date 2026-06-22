@@ -229,6 +229,12 @@ async def _run_ingredient_eval(state: AgentState) -> dict:
     profile = state["user_profile"]
     rules_list = state.get("personalized_rules", [])
 
+    product_name = (
+        product.get("productName")
+        or product.get("product_name")
+        or "Unknown Product"
+    )
+    diseases = profile.get("conditions", [])
     ingredients = product.get("ingredients", [])
     allergens = profile.get("allergens", [])
     dietary_preferences = profile.get("dietaryPreferences", [])
@@ -258,6 +264,8 @@ async def _run_ingredient_eval(state: AgentState) -> dict:
         return {"ingredient_checks": [], "ingredient_has_fails": False}
 
     human_content = (
+        f"PRODUCT NAME:\n{product_name}\n\n"
+        f"DISEASES / MEDICAL CONDITIONS:\n{', '.join(diseases) if diseases else '(none)'}\n\n"
         f"INGREDIENTS:\n{', '.join(ingredients) if ingredients else '(none)'}\n\n"
         f"ALLERGENS:\n{', '.join(allergens) if allergens else '(none)'}\n\n"
         f"DIETARY PREFERENCES:\n{', '.join(dietary_preferences) if dietary_preferences else '(none)'}\n\n"
