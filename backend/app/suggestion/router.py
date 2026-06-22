@@ -3,29 +3,10 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.products.schemas import CategoryResponse, ProductResponse
 from app.shared.deps import get_session
-from app.suggestion.service import embed_all_products_task, get_product_suggestions
+from app.suggestion.service import get_product_suggestions
 
 router = APIRouter(prefix="/suggestion", tags=["suggestion"])
 
-@router.post("/embed-all")
-async def embed_all(session: AsyncSession = Depends(get_session)):
-    """
-    Generate and save vector embeddings for all products currently in the database.
-    """
-    try:
-        count = await embed_all_products_task(session)
-        return {
-            "success": True,
-            "message": (
-                f"Successfully loaded and embedded {count} "
-                "products in the suggestions index."
-            )
-        }
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to index products: {str(e)}"
-        )
 
 @router.get("/{barcode}", response_model=list[ProductResponse])
 async def get_suggestions(
