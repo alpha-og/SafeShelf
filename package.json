@@ -25,7 +25,13 @@
     "backend:seed": "cd backend && uv run python -m scripts.dev seed",
     "backend:docker:build": "docker build -t safeshelf-backend ./backend",
     "backend:docker:run": "docker run -p 7860:7860 --env-file ./backend/.env safeshelf-backend",
-    "backend:hf:deploy": "cd backend && bash scripts/deploy_hf.sh"
+    "backend:hf:deploy": "cd backend && bash scripts/deploy_hf.sh",
+    "backend:guidelines:import": "curl -s -X POST http://localhost:8926/v1/admin/guidelines/import -H 'X-Admin-Key: $ADMIN_API_KEY'",
+    "backend:embeddings:generate": "curl -s -X POST http://localhost:8926/v1/admin/embeddings/products -H 'X-Admin-Key: $ADMIN_API_KEY'",
+    "backend:chroma:package": "cd backend && tar czf chroma_db.tar.gz chroma_db/",
+    "backend:hf:guidelines:import": "curl -s -X POST https://alpha0g-safe-shelf.hf.space/v1/admin/guidelines/import -H 'X-Admin-Key: test-admin-key'",
+    "backend:hf:embeddings:generate": "curl -s -X POST https://alpha0g-safe-shelf.hf.space/v1/admin/embeddings/products -H 'X-Admin-Key: test-admin-key'",
+    "backend:hf:chroma:upload": "pnpm backend:chroma:package && curl -s -X POST https://alpha0g-safe-shelf.hf.space/v1/admin/chroma/upload -H 'X-Admin-Key: test-admin-key' -F \"file=@backend/chroma_db.tar.gz\""
   },
   "devDependencies": {
     "@vitejs/plugin-basic-ssl": "^2.3.0",

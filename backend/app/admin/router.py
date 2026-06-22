@@ -1,4 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, Header
+import os
+import tarfile
+import tempfile
+
+from fastapi import APIRouter, Depends, Header, HTTPException, UploadFile
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -42,3 +46,25 @@ async def admin_embed_products(
     products = (await session.exec(select(Product))).all()
     await upsert_products_batch(products)
     return {'status': 'ok', 'count': len(products)}
+
+
+@router.post('/chroma/upload')
+async def admin_upload_chroma(
+    file: UploadFile,
+    _=Depends(verify_admin_key),
+):
+    dest = settings.CHROMA_PERSIST_DIR or './chroma_db'
+    os.makedirs(dest, exist_ok=True)
+
+    with tempfile.NamedTemporaryFile(suffix='.tar.gz', delete=False) as tmp:
+        content = await file.read()
+        tmp.write(content)
+        tmp_path = tmp.name
+
+    try:
+        with tarfile.open(tmp_path, 'r:gz') as tar:
+            tar.extractall(path=dest)
+    finally:
+        os.unlink(tmp_path)
+
+    return {'status': 'ok', 'path': dest}
