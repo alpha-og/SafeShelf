@@ -49,6 +49,11 @@ api.interceptors.response.use(
     if (!originalRequest) return Promise.reject(error)
 
     if (error.response?.status === 401 && !originalRequest._retry) {
+      const hadAuth = !!originalRequest.headers?.Authorization
+      if (!hadAuth) {
+        return Promise.reject(error)
+      }
+
       if (isRefreshing) {
         return new Promise<string>((resolve, reject) => {
           failedQueue.push({ resolve, reject })
