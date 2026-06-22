@@ -34,7 +34,6 @@ jobs:
             --exclude='.env' \
             --exclude='.env.local' \
             --exclude='README.md' \
-            --exclude='data/' \
             --exclude='.git/' \
             backend/ hf-space/
           cd hf-space
