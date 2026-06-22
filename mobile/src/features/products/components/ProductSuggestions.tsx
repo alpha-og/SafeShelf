@@ -8,9 +8,10 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useStore } from '@/providers/StoreProvider'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { BottomSheet } from '@/components/ui/BottomSheet'
 import { Stack } from '@/components/ui/Stack'
-import { PackageX } from 'lucide-react'
+import { PackageX, X } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { createPortal } from 'react-dom'
 
 interface ProductSuggestionsProps {
   barcode: string
@@ -29,7 +30,7 @@ export function ProductSuggestions({ barcode }: ProductSuggestionsProps) {
   //fetch suggestions from backend
   const { data: rawSuggestions = [], isLoading: isLoadingSuggestions } = useQuery({
     queryKey: ['suggestions', barcode, selectedStoreId],
-    queryFn: () => getSuggestions(barcode, selectedStoreId ?? undefined, 10), 
+    queryFn: () => getSuggestions(barcode, selectedStoreId ?? undefined, 10),
     enabled: !!barcode,
   })
 
@@ -80,9 +81,9 @@ export function ProductSuggestions({ barcode }: ProductSuggestionsProps) {
   }
 
   const cards = evaluatedSuggestions.map((p) => (
-    <div 
-      key={p.barcode} 
-      className="w-full h-full flex flex-col relative" 
+    <div
+      key={p.barcode}
+      className="w-full h-full flex flex-col relative"
       onClick={() => {
         setIsOpen(false)
         navigate({ to: '/product/$barcode', params: { barcode: p.barcode! } })
@@ -105,35 +106,76 @@ export function ProductSuggestions({ barcode }: ProductSuggestionsProps) {
     </div>
   ))
 
+  const overlay = (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Blurred backdrop */}
+          <motion.div
+            key="suggestions-backdrop"
+            className="fixed inset-0 z-[70] bg-black/40 backdrop-blur-md"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            onClick={() => setIsOpen(false)}
+          />
+
+          {/* Card stack overlay */}
+          <motion.div
+            key="suggestions-content"
+            className="fixed inset-0 z-[71] flex flex-col items-center justify-center pointer-events-none"
+            initial={{ opacity: 0, scale: 0.92, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.92, y: 20 }}
+            transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+          >
+            {/* Close button */}
+            <div className="pointer-events-auto absolute top-[calc(var(--sat,0px)+1rem)] right-4">
+              <button
+                onClick={() => setIsOpen(false)}
+                className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white/80 hover:bg-white/20 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Label */}
+            <p className="text-white/60 text-xs tracking-widest uppercase font-semibold mb-6 pointer-events-none">
+              Safe Alternatives
+            </p>
+
+            {/* Stack */}
+            <div className="w-[72vw] max-w-xs pointer-events-auto" style={{ height: '380px' }}>
+              <Stack
+                cards={cards}
+                sendToBackOnClick={false}
+                randomRotation={true}
+                sensitivity={100}
+              />
+            </div>
+
+            {/* Hint */}
+            <p className="text-white/40 text-xs mt-6 animate-pulse pointer-events-none">
+              Swipe cards · Tap to view details
+            </p>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  )
+
   return (
     <div className="w-full pt-2 pb-2">
-      <Button 
-        variant="secondary" 
+      <Button
+        variant="secondary"
         className="w-full h-14 text-base font-semibold rounded-2xl bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20"
         onClick={() => setIsOpen(true)}
       >
         View Safe Alternatives
       </Button>
 
-      <BottomSheet
-        open={isOpen}
-        onDismiss={() => setIsOpen(false)}
-        snapPoints={{ peek: 10, full: 0 }}
-      >
-        <div className="flex-1 flex flex-col items-center justify-center px-8 py-10">
-          <div className="w-full max-w-sm aspect-[3/4]">
-            <Stack 
-              cards={cards} 
-              sendToBackOnClick={false} 
-              randomRotation={true}
-              sensitivity={100}
-            />
-          </div>
-          <p className="text-muted-foreground text-sm mt-8 animate-pulse text-center">
-            Swipe cards to browse, tap to view details
-          </p>
-        </div>
-      </BottomSheet>
+      {createPortal(overlay, document.body)}
     </div>
   )
 }
