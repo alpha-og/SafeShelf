@@ -2,10 +2,11 @@ import argparse
 import asyncio
 import sys
 
+from app.shared.config import settings
+from scripts.lib.generate_ingredient_seed import run_generate
 from scripts.lib.logger import header
 from scripts.lib.seed import run_seed
 from scripts.lib.seed_recipes import run_seed_recipes
-from scripts.lib.generate_ingredient_seed import run_generate
 
 
 def cmd_seed(
@@ -14,6 +15,8 @@ def cmd_seed(
     recipes: bool,
     csv_path: str | None,
     limit: int,
+    remote: bool = False,
+    clean: bool = False,
 ) -> None:
     do_stores = stores
     do_inventory = inventory
@@ -24,9 +27,14 @@ def cmd_seed(
         do_inventory = True
         do_recipes = True
 
+    db_url = settings.SUPABASE_DATABASE_URL if remote else None
+
     if do_stores or do_inventory:
         header('Seeding Database')
-        asyncio.run(run_seed(stores_only=not do_inventory, inventory_only=not do_stores))
+        asyncio.run(run_seed(
+            stores_only=not do_inventory, inventory_only=not do_stores,
+            db_url=db_url, clean=clean,
+        ))
 
     if do_recipes:
         header('Seeding Recipes from Food.com Dataset')
@@ -67,6 +75,10 @@ def main() -> None:
                       help='Path to recipes.csv (downloads via kagglehub if omitted)')
     seed.add_argument('--limit', type=int, default=50_000,
                       help='Max recipes to seed (default: 50,000)')
+    seed.add_argument('--remote', action='store_true',
+                      help='Seed against SUPABASE_DATABASE_URL instead of local DB')
+    seed.add_argument('--clean', action='store_true',
+                      help='Truncate seed tables before re-seeding')
 
     gen = sub.add_parser('seed-ingredients',
                          help='Generate ingredient seed JSON files from recipe analysis + USDA')
@@ -86,6 +98,8 @@ def main() -> None:
             recipes=args.recipes,
             csv_path=args.csv_path,
             limit=args.limit,
+            remote=args.remote,
+            clean=args.clean,
         )
     elif args.command == 'seed-ingredients':
         cmd_generate_ingredients(

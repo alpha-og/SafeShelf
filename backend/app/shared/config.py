@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     WHO_CLIENT_SECRET: str = ''
     USDA_FDC_API_KEY: str = ''
     ADMIN_API_KEY: str = ''
+    SUPABASE_DATABASE_URL: str = ''
 
     REQUIRED_ENV_VARS: list[str] = [
         'WHO_CLIENT_ID',
