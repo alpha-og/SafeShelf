@@ -33,6 +33,7 @@ Later files override earlier ones:
 | `WHO_CLIENT_ID` | — | WHO ICD API client ID |
 | `WHO_CLIENT_SECRET` | — | WHO ICD API client secret |
 | `USDA_FDC_API_KEY` | — | USDA FoodData Central API key (free signup) |
+| `ADMIN_API_KEY` | — | API key for admin endpoints (`X-Admin-Key` header) |
 
 ## Mobile — Vite Dev Server (`mobile/vite.config.ts`)
 
@@ -43,6 +44,7 @@ Later files override earlier ones:
 | `MOBILE_ALLOWED_HOSTS` | `true` | `true` (any host), `false` (none), or comma-separated list of allowed hosts |
 | `MOBILE_TLS_ENABLED` | `true` | Enable HTTPS. Set to `false` for HTTP (disables camera on device). |
 | `VITE_PROXY_TARGET` | `http://localhost:8926` | Target URL for the `/v1` API proxy. Match to your backend address. |
+| `VITE_API_URL` | `''` | Base URL for production API (Capacitor builds). Leave empty to proxy through Vite dev server. |
 
 ## Mobile — Dev Script (`mobile/scripts/dev.mjs`)
 

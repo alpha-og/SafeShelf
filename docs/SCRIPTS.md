@@ -22,6 +22,9 @@ All scripts available in the SafeShelf monorepo.
 | `pnpm backend:serve` | Alias for `pnpm backend:dev` |
 | `pnpm backend:sync` | Sync Python dependencies (uv sync) |
 | `pnpm backend:seed` | Seed database (stores + inventory + recipes) |
+| `pnpm backend:docker:build` | Build Docker image for backend |
+| `pnpm backend:docker:run` | Run backend container locally on port 7860 |
+| `pnpm backend:hf:deploy` | Deploy backend to Hugging Face Space |
 
 ## Mobile: `mobile/scripts/dev.mjs`
 
