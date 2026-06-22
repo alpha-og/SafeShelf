@@ -177,16 +177,105 @@ async def search_recipes_handler(req: SearchRequest, session: AsyncSession) -> S
     async with log_duration('db.search_recipes'):
         all_recipes = await db_run_search(session, extracted)
 
+    # RAG Generation: Only generate a new AI recipe on the first page if explicitly requested
+    ai_recipe_dict = None
+    ai_generation_error = None
+    if req.generate_ai_recipe and req.page == 1 and req.query and req.query.strip():
+        from app.recipes.embeddings import query_similar_recipes
+        from app.recipes.generation import generate_personalized_recipe
+        from app.recipes.models import Recipe
+        from sqlmodel import select
+
+        async with log_duration('rag.query_similar'):
+            similar_ids = await query_similar_recipes(req.query, n_results=5)
+            reference_recipes = []
+            if similar_ids:
+                stmt = select(Recipe).where(Recipe.id.in_(similar_ids))
+                res = await session.execute(stmt)
+                reference_recipes = res.scalars().all()
+
+        try:
+            async with log_duration('llm.generate_personalized_recipe'):
+                generated_data = await generate_personalized_recipe(
+                    query=req.query,
+                    dietary_preferences=req.dietary_preferences,
+                    conditions=req.conditions,
+                    allergens=req.allergens,
+                    reference_recipes=reference_recipes,
+                )
+
+            # Upsert: if same source_id already exists, return the existing one
+            source_id = f"ai_{hash(req.query + str(sorted(req.dietary_preferences)))}"
+            existing_stmt = select(Recipe).where(
+                Recipe.source == 'ai',
+                Recipe.source_id == source_id
+            )
+            existing_res = await session.execute(existing_stmt)
+            ai_recipe = existing_res.scalar_one_or_none()
+
+            if ai_recipe is None:
+                ai_recipe = Recipe(
+                    source='ai',
+                    source_id=source_id,
+                    is_ai_generated=True,
+                    name=generated_data.name,
+                    category=generated_data.category,
+                    cuisine=generated_data.cuisine,
+                    ingredients=generated_data.ingredients,
+                    measurements=generated_data.measurements,
+                    instructions=generated_data.instructions,
+                    prep_time_minutes=generated_data.prep_time_minutes,
+                    cook_time_minutes=generated_data.cook_time_minutes,
+                    servings=generated_data.servings,
+                )
+                session.add(ai_recipe)
+                await session.commit()
+                await session.refresh(ai_recipe)
+
+            # Map to response dict
+            ai_recipe_dict = {
+                "id": str(ai_recipe.id),
+                "name": ai_recipe.name,
+                "category": ai_recipe.category,
+                "area": ai_recipe.cuisine,
+                "ingredients": ai_recipe.ingredients,
+                "measurements": ai_recipe.measurements or [],
+                "instructions": ai_recipe.instructions,
+                "thumbnail_url": ai_recipe.image_url,
+                "tags": ai_recipe.tags,
+                "youtube_url": ai_recipe.youtube_url,
+                "source_url": ai_recipe.source_url,
+                "author_name": ai_recipe.author_name,
+                "source": ai_recipe.source,
+                "servings": ai_recipe.servings,
+                "is_ai_generated": True,
+            }
+        except Exception as e:
+            import logging
+            logging.error(f"Failed to generate AI recipe: {e}")
+            ai_generation_error = str(e)
+
     total = len(all_recipes)
     start = (req.page - 1) * req.page_size
     sliced = all_recipes[start : start + req.page_size]
+    
+    recipes_response = []
+    if ai_recipe_dict and req.page == 1:
+        recipes_response.append(ai_recipe_dict)
+    
+    # Map deterministic DB recipes to response format
+    for r in sliced:
+        r_dict = r.model_dump()
+        r_dict["id"] = str(r.id)
+        recipes_response.append(r_dict)
 
     return SearchResponse(
         success=True,
-        recipes=[r.model_dump() for r in sliced],
-        total=total,
+        recipes=recipes_response,
+        total=total + (1 if ai_recipe_dict else 0),
         page=req.page,
         page_size=req.page_size,
+        ai_generation_error=ai_generation_error,
     )
 
 
@@ -344,3 +433,30 @@ async def get_recipe_quantities_handler(
         desired_servings=req.desired_servings,
         ingredients=adjustment.ingredients,
     )
+
+
+async def embed_all_recipes_task(session: AsyncSession, batch_size: int = 100) -> int:
+    from sqlmodel import select
+    from app.recipes.embeddings import upsert_recipes_batch
+    from app.recipes.models import Recipe
+
+    offset = 0
+    total_embedded = 0
+
+    while True:
+        stmt = (
+            select(Recipe)
+            .offset(offset)
+            .limit(batch_size)
+        )
+        res = await session.execute(stmt)
+        recipes = res.scalars().all()
+
+        if not recipes:
+            break
+
+        await upsert_recipes_batch(recipes)
+        total_embedded += len(recipes)
+        offset += batch_size
+
+    return total_embedded

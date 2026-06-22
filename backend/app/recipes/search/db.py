@@ -68,6 +68,7 @@ def recipe_to_item(recipe: Recipe) -> RecipeItem:
         author_name=recipe.author_name,
         source=recipe.source,
         servings=recipe.servings,
+        is_ai_generated=recipe.is_ai_generated,
     )
 
 
@@ -190,10 +191,11 @@ async def _db_execute_search(session: AsyncSession, q: RecipeQuery) -> list[Reci
             conditions.append(ing_filter)
 
     if q.search_text:
-        words = set(re.findall(r'[a-z]+', q.search_text.lower()))
-        for w in sorted(words, key=len, reverse=True):
-            if len(w) > 2:
-                conditions.append(Recipe.name.ilike(f'%{w}%'))
+        # Use OR across all meaningful words so "chicken biriyani" still finds biryani recipes
+        words = list({w for w in re.findall(r'[a-z]+', q.search_text.lower()) if len(w) > 2})
+        if words:
+            word_conditions = [Recipe.name.ilike(f'%{w}%') for w in words]
+            conditions.append(or_(*word_conditions))
 
     stmt = select(Recipe)
     if conditions:
@@ -202,6 +204,14 @@ async def _db_execute_search(session: AsyncSession, q: RecipeQuery) -> list[Reci
     rows = (await session.exec(stmt)).all()
 
     items = [recipe_to_item(r) for r in rows]
+
+    if q.search_text:
+        # Sort by relevance: how many words from the query are in the recipe name
+        words = [w for w in re.findall(r'[a-z]+', q.search_text.lower()) if len(w) > 2]
+        def relevance(item: RecipeItem) -> int:
+            name_lower = item.name.lower()
+            return sum(1 for w in words if w in name_lower)
+        items.sort(key=relevance, reverse=True)
 
     if q.ingredients:
         items = [r for r in items if _has_all_ingredients(r, q.ingredients)]

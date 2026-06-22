@@ -25,8 +25,31 @@ from app.shared.exceptions import (
 from app.shared.middleware import setup_middleware
 
 import app.products.models
-import app.recipes.models  
+import app.recipes.models
 
+
+def _warm_embedding_models() -> None:
+    """Eagerly load sentence-transformer models and Chroma clients at startup.
+
+    Both modules use @functools.cache so the objects are only created once.
+    Calling the getters here means the first request will never block waiting
+    for a 100-weight model download.
+    """
+    try:
+        from app.recipes.embeddings import _get_chroma_client, _get_collection, _get_embedding_model
+        _get_embedding_model()
+        _get_chroma_client()
+        _get_collection()
+    except Exception:  # noqa: BLE001
+        logger.warning('Could not pre-load recipe embedding model at startup.')
+
+    try:
+        from app.suggestion.embeddings import _get_chroma_client as _sc, _get_collection as _scol, _get_embedding_model as _sem
+        _sem()
+        _sc()
+        _scol()
+    except Exception:  # noqa: BLE001
+        logger.warning('Could not pre-load suggestion embedding model at startup.')
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -46,6 +69,12 @@ async def lifespan(app: FastAPI):
     except Exception:
         logger.exception('Failed to connect to database at %s', settings.DATABASE_URL)
         os._exit(1)
+
+    # Warm embedding models in a thread so the event loop stays unblocked
+    import asyncio
+    loop = asyncio.get_event_loop()
+    await loop.run_in_executor(None, _warm_embedding_models)
+
     yield
     await engine.dispose()
 

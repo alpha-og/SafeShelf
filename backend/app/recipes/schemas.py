@@ -20,6 +20,11 @@ class SearchRequest(BaseModel):
     areas: list[str] = []
     page: int = 1
     page_size: int = 10
+    dietary_preferences: list[str] = []
+    conditions: list[str] = []
+    allergens: list[str] = []
+    generate_ai_recipe: bool = False
+
 
 
 class ClarificationField(BaseModel):
@@ -126,6 +131,7 @@ class RecipeItem(BaseModel):
     author_name: str | None = None
     source: str | None = None
     servings: int | None = None
+    is_ai_generated: bool = False
 
 
 class QuantitiesAdjustment(BaseModel):
