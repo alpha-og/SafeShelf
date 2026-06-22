@@ -26,6 +26,7 @@ class Settings(BaseSettings):
     USDA_FDC_API_KEY: str = ''
     ADMIN_API_KEY: str = ''
     SUPABASE_DATABASE_URL: str = ''
+    CHROMA_PERSIST_DIR: str = ''
 
     REQUIRED_ENV_VARS: list[str] = [
         'WHO_CLIENT_ID',
