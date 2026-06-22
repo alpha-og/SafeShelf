@@ -12,7 +12,6 @@ venv/
 .ruff_cache/
 . ruff/
 README.md
-data/
 dist/
 build/
 *.egg-info/

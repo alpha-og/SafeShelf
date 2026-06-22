@@ -29,8 +29,6 @@ COPY --from=builder /app /app
 
 RUN mkdir -p /app/data
 
-VOLUME /app/data
-
 ENV PATH=/app/.venv/bin:$PATH \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
