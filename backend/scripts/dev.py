@@ -7,6 +7,7 @@ from scripts.lib.generate_ingredient_seed import run_generate
 from scripts.lib.logger import header
 from scripts.lib.seed import run_seed
 from scripts.lib.seed_recipes import run_seed_recipes
+from scripts.lib.setup_data import run_setup_data
 
 
 def cmd_seed(
@@ -31,10 +32,14 @@ def cmd_seed(
 
     if do_stores or do_inventory:
         header('Seeding Database')
-        asyncio.run(run_seed(
-            stores_only=not do_inventory, inventory_only=not do_stores,
-            db_url=db_url, clean=clean,
-        ))
+        asyncio.run(
+            run_seed(
+                stores_only=not do_inventory,
+                inventory_only=not do_stores,
+                db_url=db_url,
+                clean=clean,
+            )
+        )
 
     if do_recipes:
         header('Seeding Recipes from Food.com Dataset')
@@ -50,12 +55,25 @@ def cmd_generate_ingredients(
     asyncio.run(run_generate(top_n=top_n, skip_usda=skip_usda, dry_run=dry_run))
 
 
+def cmd_data(
+    remote: bool = False,
+    guidelines: bool = True,
+    embeddings: bool = True,
+) -> None:
+    header('Data Setup — Guidelines + Embeddings')
+    asyncio.run(run_setup_data(remote=remote, guidelines=guidelines, embeddings=embeddings))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         prog='uv run python -m scripts.dev',
-        description='SafeShelf Backend Dev Script — seed database and generate ingredient data.',
+        description='SafeShelf Backend Dev Script — seed, setup data, generate ingredients.',
         epilog=(
             'Examples:\n'
+            '  data                   Import guidelines + embed products (local DB)\n'
+            '  data --remote          Same against SUPABASE_DATABASE_URL + upload chroma to HF\n'
+            '  data --guidelines       Import guidelines only\n'
+            '  data --embeddings       Generate embeddings only\n'
             '  seed                   Seed all (stores + inventory + recipes)\n'
             '  seed --stores          Seed stores only\n'
             '  seed --recipes --limit 1000  Seed 1000 recipes\n'
@@ -71,27 +89,54 @@ def main() -> None:
     seed.add_argument('--stores', action='store_true', help='Seed stores')
     seed.add_argument('--inventory', action='store_true', help='Seed inventory')
     seed.add_argument('--recipes', action='store_true', help='Seed recipes from Food.com')
-    seed.add_argument('--csv-path', type=str, default=None,
-                      help='Path to recipes.csv (downloads via kagglehub if omitted)')
-    seed.add_argument('--limit', type=int, default=50_000,
-                      help='Max recipes to seed (default: 50,000)')
-    seed.add_argument('--remote', action='store_true',
-                      help='Seed against SUPABASE_DATABASE_URL instead of local DB')
-    seed.add_argument('--clean', action='store_true',
-                      help='Truncate seed tables before re-seeding')
+    seed.add_argument(
+        '--csv-path',
+        type=str,
+        default=None,
+        help='Path to recipes.csv (downloads via kagglehub if omitted)',
+    )
+    seed.add_argument(
+        '--limit', type=int, default=50_000, help='Max recipes to seed (default: 50,000)'
+    )
+    seed.add_argument(
+        '--remote',
+        action='store_true',
+        help='Seed against SUPABASE_DATABASE_URL instead of local DB',
+    )
+    seed.add_argument('--clean', action='store_true', help='Truncate seed tables before re-seeding')
 
-    gen = sub.add_parser('seed-ingredients',
-                         help='Generate ingredient seed JSON files from recipe analysis + USDA')
-    gen.add_argument('--top-n', type=int, default=200,
-                     help='Number of top ingredients to process (default: 200)')
-    gen.add_argument('--skip-usda', action='store_true',
-                     help='Skip USDA API lookup (use empty nutrients)')
-    gen.add_argument('--dry-run', action='store_true',
-                     help='Extract + normalize only, do not write seed files')
+    data = sub.add_parser('data', help='Import guidelines and generate product embeddings')
+    data.add_argument(
+        '--remote',
+        action='store_true',
+        help='Use SUPABASE_DATABASE_URL + upload chroma to HF Space',
+    )
+    data.add_argument('--guidelines', action='store_true', help='Import guidelines only')
+    data.add_argument('--embeddings', action='store_true', help='Generate embeddings only')
+
+    gen = sub.add_parser(
+        'seed-ingredients', help='Generate ingredient seed JSON files from recipe analysis + USDA'
+    )
+    gen.add_argument(
+        '--top-n', type=int, default=200, help='Number of top ingredients to process (default: 200)'
+    )
+    gen.add_argument(
+        '--skip-usda', action='store_true', help='Skip USDA API lookup (use empty nutrients)'
+    )
+    gen.add_argument(
+        '--dry-run', action='store_true', help='Extract + normalize only, do not write seed files'
+    )
 
     args = parser.parse_args()
 
-    if args.command == 'seed':
+    if args.command == 'data':
+        guidelines = args.guidelines
+        embeddings = args.embeddings
+        if not guidelines and not embeddings:
+            guidelines = True
+            embeddings = True
+        cmd_data(remote=args.remote, guidelines=guidelines, embeddings=embeddings)
+    elif args.command == 'seed':
         cmd_seed(
             stores=args.stores,
             inventory=args.inventory,

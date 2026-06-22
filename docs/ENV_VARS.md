@@ -34,6 +34,9 @@ Later files override earlier ones:
 | `WHO_CLIENT_SECRET` | — | WHO ICD API client secret |
 | `USDA_FDC_API_KEY` | — | USDA FoodData Central API key (free signup) |
 | `ADMIN_API_KEY` | — | API key for admin endpoints (`X-Admin-Key` header) |
+| `SUPABASE_DATABASE_URL` | — | Remote PostgreSQL URL for `--remote` seed/data commands |
+| `CHROMA_PERSIST_DIR` | `./chroma_db` | ChromaDB persistent storage directory |
+| `HF_SPACE_URL` | `https://alpha0g-safe-shelf.hf.space` | HF Space URL for chroma upload in `data --remote` |
 
 ## Mobile — Vite Dev Server (`mobile/vite.config.ts`)
 

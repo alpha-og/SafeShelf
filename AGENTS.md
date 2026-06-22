@@ -53,6 +53,10 @@ safeshelf/
 | Generate ingredient seed JSON | `uv run python -m scripts.lib.generate_ingredient_seed` or `uv run python -m scripts.dev seed-ingredients` |
 | Dry-run ingredient generation | `uv run python -m scripts.dev seed-ingredients --dry-run` |
 | Seed DB (stores + inventory + recipes) | `uv run python -m scripts.dev seed` |
+| Data setup (guidelines + embeddings) | `pnpm backend:data:setup` |
+| Data setup (remote DB + upload chroma) | `pnpm backend:data:setup -- --remote` |
+| Data setup (guidelines only) | `pnpm backend:data:setup -- --guidelines` |
+| Data setup (embeddings only) | `pnpm backend:data:setup -- --embeddings` |
 
 See [docs/SCRIPTS.md](docs/SCRIPTS.md) for full script documentation including subcommand flags and library modules.
 

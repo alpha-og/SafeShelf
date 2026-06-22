@@ -3,6 +3,7 @@ import tarfile
 import tempfile
 
 from fastapi import APIRouter, Depends, Header, HTTPException, UploadFile
+from sqlalchemy.orm import selectinload
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -43,7 +44,11 @@ async def admin_embed_products(
 ):
     from app.products.models import Product
     from app.suggestion.embeddings import upsert_products_batch
-    products = (await session.exec(select(Product))).all()
+    products = (
+        await session.exec(
+            select(Product).options(selectinload(Product.categories))
+        )
+    ).all()
     await upsert_products_batch(products)
     return {'status': 'ok', 'count': len(products)}
 
