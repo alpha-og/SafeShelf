@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+.env
+.env.local
+.env.example
+*.db
+**/chroma_db/
+.ruff_cache/
+. ruff/
+README.md
+scripts/
+data/
+dist/
+build/
+*.egg-info/
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+.pyright/
