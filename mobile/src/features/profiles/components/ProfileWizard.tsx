@@ -78,12 +78,7 @@ export function ProfileWizard({
         healthData,
         healthReportFileName,
       })
-      // On success the caller navigates away and this wizard unmounts. We
-      // deliberately leave the guard engaged: resetting it here would re-open
-      // the door for a late ghost-click / duplicate tap to fire onSubmit again
-      // before unmount and create a second profile.
-    } catch {
-      // Only re-enable submission when it actually failed, so the user can retry.
+    } finally {
       hasSubmittedRef.current = false
       setSubmitting(false)
     }
