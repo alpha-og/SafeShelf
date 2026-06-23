@@ -20,6 +20,10 @@ def _get_collection():
 
 @cache
 def _get_embedding_model() -> SentenceTransformer:
+    from huggingface_hub import set_client_factory
+    import httpx
+
+    set_client_factory(lambda: httpx.Client(verify=False, follow_redirects=True, timeout=None))
     logging.getLogger('sentence_transformers').setLevel(logging.ERROR)
     return SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
