@@ -4,7 +4,7 @@ const ACCESS_TOKEN_KEY = 'access_token'
 
 let nativeDb: {
   execute: (statements: string) => Promise<unknown>
-  query: (statement: string, values?: unknown[]) => Promise<{ values?: unknown[][] }>
+  query: (statement: string, values?: unknown[]) => Promise<{ values?: unknown[] }>
   close: () => Promise<void>
 } | null = null
 
@@ -22,13 +22,28 @@ async function initNative(): Promise<boolean> {
       close: () => db.close(),
     }
     return true
-  } catch (e) {
-    console.error('SQLite init failed, falling back to localStorage:', e)
+  } catch {
     return false
   }
 }
 
-const initPromise: Promise<boolean> = initNative()
+async function initNativeWithTimeout(): Promise<boolean> {
+  return Promise.race([
+    initNative(),
+    new Promise<boolean>((resolve) => setTimeout(() => resolve(false), 5000)),
+  ])
+}
+
+const initPromise: Promise<boolean> = initNativeWithTimeout()
+
+function firstValue(row: unknown): string | null {
+  if (Array.isArray(row)) return row.length > 0 ? String(row[0]) : null
+  if (row && typeof row === 'object') {
+    const val = Object.values(row as Record<string, unknown>)[0]
+    return val != null ? String(val) : null
+  }
+  return null
+}
 
 async function getToken(): Promise<string | null> {
   const native = await initPromise
@@ -37,8 +52,8 @@ async function getToken(): Promise<string | null> {
       ACCESS_TOKEN_KEY,
     ])
     const rows = res.values
-    if (rows && rows.length > 0 && rows[0].length > 0) {
-      return String(rows[0][0])
+    if (rows && rows.length > 0) {
+      return firstValue(rows[0])
     }
     return null
   }
@@ -69,8 +84,9 @@ async function getItem<T>(key: string): Promise<T | null> {
   if (native && nativeDb) {
     const res = await nativeDb.query('SELECT value FROM key_value WHERE key = ?', [key])
     const rows = res.values
-    if (rows && rows.length > 0 && rows[0].length > 0) {
-      const raw = String(rows[0][0])
+    if (rows && rows.length > 0) {
+      const raw = firstValue(rows[0])
+      if (raw == null) return null
       try {
         return JSON.parse(raw) as T
       } catch {

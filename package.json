@@ -19,6 +19,8 @@
     "dev:setup": "node mobile/scripts/dev.mjs setup",
     "dev:android": "node mobile/scripts/dev.mjs android",
     "dev:ios": "node mobile/scripts/dev.mjs ios",
+    "build:android": "pnpm --filter mobile build:android",
+    "build:ios": "pnpm --filter mobile build:ios",
     "backend:dev": "cd backend && uv run python -m app",
     "backend:serve": "cd backend && uv run python -m app",
     "backend:sync": "cd backend && uv sync",

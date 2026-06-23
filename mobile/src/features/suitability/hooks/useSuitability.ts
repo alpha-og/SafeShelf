@@ -2,6 +2,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ProductInfo } from '@/features/products/services/product'
 import { getAccessToken } from '@/lib/axios'
+import { apiError, warn } from '@/lib/logger'
 import { getItem } from '@/lib/storage'
 import { evaluateContext, getPerServingNutrients, mergeLocalAndAgentResults } from '../evaluate'
 import { useAliases, useConditionRules } from '../services/rules'
@@ -44,7 +45,7 @@ export function useSuitability(
           setTriggerMode(mode)
         }
       } catch (err) {
-        console.error('Failed to load trigger mode setting:', err)
+        warn('loadTriggerMode', err)
       }
     }
     loadSetting()
@@ -202,7 +203,7 @@ export function useSuitability(
             try {
               parsed = JSON.parse(dataStr)
             } catch (e) {
-              console.error('Failed to parse SSE event JSON:', e)
+              warn('parseSSEEvent', e)
               continue
             }
 
@@ -248,7 +249,7 @@ export function useSuitability(
       }
     } catch (err: any) {
       if (err.name === 'AbortError') return
-      console.error('Agent evaluation error:', err)
+      apiError('agentEval', err)
 
       const targetStatus = err.status || 500
 

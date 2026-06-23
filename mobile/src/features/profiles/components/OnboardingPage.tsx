@@ -1,6 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { useEffect } from 'react'
+import { toast } from 'sonner'
 import { useProfiles } from '@/providers/ProfilesProvider'
 import { createProfile, setActiveProfileId } from '../services/profileStorage'
 import { ProfileWizard, type ProfileWizardValues } from './ProfileWizard'
@@ -8,23 +9,26 @@ import { ProfileWizard, type ProfileWizardValues } from './ProfileWizard'
 export function OnboardingPage() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const { refresh, hasProfile } = useProfiles()
+  const { hasProfile } = useProfiles()
 
-  // Leave onboarding once a profile exists. We navigate from an effect rather
-  // than imperatively right after createProfile: the router context that drives
-  // the /_authenticated profile gate only reflects the new profile on the next
-  // render, so an immediate navigate('/') would be bounced straight back here by
-  // a still-empty hasProfile check.
+  // Leave onboarding once a profile exists.
   useEffect(() => {
     if (hasProfile) navigate({ to: '/' })
   }, [hasProfile, navigate])
 
   async function handleSubmit(values: ProfileWizardValues) {
-    const profile = await createProfile({ ...values, isMain: true })
-    await setActiveProfileId(profile.id)
-    queryClient.invalidateQueries({ queryKey: ['userProfile'] })
-    await refresh()
-    // Navigation is handled by the effect above once hasProfile flips true.
+    try {
+      const profile = await createProfile({ ...values, isMain: true })
+      await setActiveProfileId(profile.id)
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['profiles'], refetchType: 'all' }),
+        queryClient.invalidateQueries({ queryKey: ['groups'] }),
+        queryClient.invalidateQueries({ queryKey: ['activeSelection'] }),
+        queryClient.invalidateQueries({ queryKey: ['userProfile'] }),
+      ])
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to create profile')
+    }
   }
 
   return (

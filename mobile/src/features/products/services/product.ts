@@ -1,4 +1,5 @@
 import { api } from '@/lib/axios'
+import { apiError } from '@/lib/logger'
 
 export interface ProductInfo {
   barcode: string | null
@@ -50,7 +51,7 @@ export async function lookupByBarcode(barcode: string): Promise<ProductInfo | nu
     const response = await api.get(url)
     return mapResponse(response.data)
   } catch (err) {
-    console.error('Failed to lookup barcode:', err)
+    apiError('lookupByBarcode', err)
     return null
   }
 }
@@ -72,7 +73,7 @@ export async function getSuggestions(barcode: string, storeId?: string, n = 5): 
     })
     return response.data as SuggestionResponse[]
   } catch (err) {
-    console.error('Failed to get suggestions:', err)
+    apiError('getSuggestions', err)
     return []
   }
 }

@@ -32,7 +32,9 @@ pnpm dev:ios            # build and deploy to iOS device
 | `pnpm dev:setup` | Prerequisite check, dependency install, SSL cert generation |
 | `pnpm dev:android` | Build and deploy mobile app to Android device |
 | `pnpm dev:ios` | Build and deploy mobile app to iOS device |
-| `pnpm build` | Production build of mobile app |
+| `pnpm build` | Production build of mobile web assets |
+| `pnpm build:android` | Build bundled APK and install on Android device |
+| `pnpm build:ios` | Build bundled app and deploy to iOS simulator/device |
 | `pnpm typecheck` | TypeScript type checking |
 | `pnpm lint` | Biome (mobile) + ruff (backend) |
 | `pnpm backend:dev` | Start backend dev server only |

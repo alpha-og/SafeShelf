@@ -1,15 +1,22 @@
+import { Capacitor } from '@capacitor/core'
 import type { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios'
 import axios from 'axios'
+import { apiError } from './logger'
 import { getToken, setToken } from './storage'
+import { capacitorHttpAdapter } from './capacitorHttpAdapter'
 
 let accessToken: string | null = null
 let onLogout: (() => void) | null = null
 
+const isNative = Capacitor.isNativePlatform()
+const apiUrl = import.meta.env.VITE_API_URL || ''
+
 const api: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '',
-  withCredentials: true,
+  baseURL: isNative ? apiUrl : '',
+  withCredentials: !isNative,
   timeout: 30_000,
   headers: { 'Content-Type': 'application/json' },
+  ...(isNative && apiUrl ? { adapter: capacitorHttpAdapter } : {}),
 })
 
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
@@ -49,6 +56,8 @@ api.interceptors.response.use(
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean }
     if (!originalRequest) return Promise.reject(error)
 
+    apiError('ResponseInterceptor', error)
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       const hadAuth = !!originalRequest.headers?.Authorization
       if (!hadAuth) {
@@ -86,6 +95,7 @@ api.interceptors.response.use(
         }
         return api(originalRequest)
       } catch (refreshError) {
+        apiError('RefreshToken', refreshError)
         processQueue(refreshError, null)
         accessToken = null
         await setToken(null)

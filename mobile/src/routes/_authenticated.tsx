@@ -46,8 +46,6 @@ function RouteComponent() {
           const nearest = stores.length > 0 ? stores[0] : null
           if (nearest) {
             setSelectedStoreId(nearest.id)
-          } else {
-            navigate({ to: '/stores' })
           }
         })
       }
@@ -74,6 +72,5 @@ function RouteComponent() {
     )
   }
 
-  if (!selectedStoreId && currentPath !== '/stores') return null
   return <Outlet />
 }

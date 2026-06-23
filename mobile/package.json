@@ -16,7 +16,9 @@
     "cap:ios": "cap open ios",
     "dev:setup": "node scripts/dev.mjs setup",
     "dev:android": "node scripts/dev.mjs android",
-    "dev:ios": "node scripts/dev.mjs ios"
+    "dev:ios": "node scripts/dev.mjs ios",
+    "build:android": "node scripts/build.mjs android",
+    "build:ios": "node scripts/build.mjs ios"
   },
   "dependencies": {
     "@capacitor-community/sqlite": "^8.1.0",

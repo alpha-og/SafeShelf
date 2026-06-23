@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { toast } from 'sonner'
 import { PageHeader } from '@/components/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -78,6 +79,8 @@ export function ProfileWizard({
         healthData,
         healthReportFileName,
       })
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to create profile')
     } finally {
       hasSubmittedRef.current = false
       setSubmitting(false)
@@ -192,7 +195,7 @@ export function ProfileWizard({
             disabled={!canSubmit}
             onClick={handleSubmit}
           >
-            {submitLabel}
+            {submitting ? 'Creating...' : submitLabel}
           </Button>
         )}
       </footer>

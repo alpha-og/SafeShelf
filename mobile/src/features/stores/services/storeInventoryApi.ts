@@ -1,4 +1,5 @@
 import { api } from '@/lib/axios'
+import { apiError } from '@/lib/logger'
 
 export interface InventoryResponse {
   store_id: string
@@ -20,7 +21,7 @@ export async function searchStoreInventory(
     })
     return response.data as InventoryResponse[]
   } catch (error) {
-    console.error('Failed to search store inventory:', error)
+    apiError('searchStoreInventory', error)
     return []
   }
 }
@@ -30,7 +31,7 @@ export async function getAllStoreInventory(storeId: string): Promise<InventoryRe
     const response = await api.get(`/v1/stores/${storeId}/inventory`)
     return response.data as InventoryResponse[]
   } catch (error) {
-    console.error('Failed to get store inventory:', error)
+    apiError('getAllStoreInventory', error)
     return []
   }
 }

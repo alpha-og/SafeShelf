@@ -44,6 +44,18 @@ function StoresPage() {
           <div className="flex items-center justify-center h-40">
             <p className="text-muted-foreground animate-pulse">Detecting nearby stores...</p>
           </div>
+        ) : !stores?.length ? (
+          <div className="flex flex-col items-center justify-center h-40 text-center">
+            <p className="text-muted-foreground mb-4">
+              No stores found nearby. You can choose one later from settings.
+            </p>
+            <button
+              onClick={() => navigate({ to: '/' })}
+              className="px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-medium hover:opacity-90 active:scale-[0.98] transition-all"
+            >
+              Skip for now
+            </button>
+          </div>
         ) : (
           <div className="flex flex-col gap-4">
             {stores?.map((store) => (

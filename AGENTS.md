@@ -48,6 +48,8 @@ safeshelf/
 | Capacitor Android | `pnpm cap:android` |
 | Deploy to Android device | `pnpm dev:android` or `node mobile/scripts/dev.mjs android` |
 | Deploy to iOS device | `pnpm dev:ios` or `node mobile/scripts/dev.mjs ios` |
+| Build production APK + install | `pnpm build:android` or `node mobile/scripts/build.mjs android` |
+| Build production iOS app | `pnpm build:ios` or `node mobile/scripts/build.mjs ios` |
 | Backend dev server (port 8926) | `pnpm backend:dev` or `pnpm backend:serve` |
 | Backend sync deps | `pnpm backend:sync` (uv sync) |
 | Generate ingredient seed JSON | `uv run python -m scripts.lib.generate_ingredient_seed` or `uv run python -m scripts.dev seed-ingredients` |
