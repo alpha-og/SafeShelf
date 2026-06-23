@@ -200,6 +200,13 @@ async def extract_thresholds(disease: str, context: str) -> dict:
     if content.startswith("```"):
         content = content.split("\n", 1)[1]
         content = content.rsplit("```", 1)[0]
+        content = content.strip()
+
+    first_brace = content.find("{")
+    last_brace = content.rfind("}")
+    if first_brace != -1 and last_brace != -1 and last_brace > first_brace:
+        content = content[first_brace:last_brace + 1]
+
     try:
       return json.loads(content)
     except json.JSONDecodeError:

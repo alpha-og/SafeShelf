@@ -22,6 +22,10 @@ All scripts available in the SafeShelf monorepo.
 | `pnpm backend:serve` | Alias for `pnpm backend:dev` |
 | `pnpm backend:sync` | Sync Python dependencies (uv sync) |
 | `pnpm backend:seed` | Seed database (stores + inventory + recipes) |
+| `pnpm backend:docker:build` | Build Docker image for backend |
+| `pnpm backend:docker:run` | Run backend container locally on port 7860 |
+| `pnpm backend:hf:deploy` | Deploy backend to Hugging Face Space |
+| `pnpm backend:data:setup` | Import guidelines + generate embeddings (pass `-- --remote` for remote DB + chroma upload) |
 
 ## Mobile: `mobile/scripts/dev.mjs`
 
@@ -93,6 +97,23 @@ uv run python -m scripts.dev seed-ingredients [--top-n N] [--skip-usda] [--dry-r
 | `--skip-usda` | `false` | Skip USDA API lookup (empty nutrients) |
 | `--dry-run` | `false` | Extract + normalize only; do not write seed files |
 
+#### `data`
+
+Import guidelines and/or generate product embeddings.
+
+```
+uv run python -m scripts.dev data [--remote] [--guidelines] [--embeddings]
+```
+
+| Flag | Description |
+|---|---|
+| `--remote` | Use `SUPABASE_DATABASE_URL` for DB and upload chroma to HF Space |
+| `--guidelines` | Import guidelines only |
+| `--embeddings` | Generate embeddings only |
+
+If neither `--guidelines` nor `--embeddings` is specified, both run.
+With `--remote`, chroma upload happens automatically after embeddings.
+
 ### Library Modules
 
 | Module | Path | Description |
@@ -101,4 +122,5 @@ uv run python -m scripts.dev seed-ingredients [--top-n N] [--skip-usda] [--dry-r
 | `seed_recipes` | `backend/scripts/lib/seed_recipes.py` | Recipe seeding from Kaggle Food.com dataset |
 | `generate_ingredient_seed` | `backend/scripts/lib/generate_ingredient_seed.py` | Ingredient normalization + USDA lookup + seed JSON generation |
 | `generate_produce` | `backend/scripts/lib/generate_produce.py` | Fresh produce JSON seed generator (standalone) |
+| `setup_data` | `backend/scripts/lib/setup_data.py` | Guidelines import + embeddings generation + chroma upload for `data` command |
 | `logger` | `backend/scripts/lib/logger.py` | Colored console output for Python scripts |

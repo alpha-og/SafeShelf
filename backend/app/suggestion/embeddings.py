@@ -5,11 +5,13 @@ import chromadb
 from sentence_transformers import SentenceTransformer
 
 from app.products.models import Product
+from app.shared.config import settings
 
 
 @cache
 def _get_chroma_client() -> chromadb.PersistentClient:
-    return chromadb.PersistentClient(path="./chroma_db")
+    path = settings.CHROMA_PERSIST_DIR or './chroma_db'
+    return chromadb.PersistentClient(path=path)
 
 @cache
 def _get_embedding_model() -> SentenceTransformer:

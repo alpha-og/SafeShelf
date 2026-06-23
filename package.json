@@ -22,7 +22,11 @@
     "backend:dev": "cd backend && uv run python -m app",
     "backend:serve": "cd backend && uv run python -m app",
     "backend:sync": "cd backend && uv sync",
-    "backend:seed": "cd backend && uv run python -m scripts.dev seed"
+    "backend:seed": "cd backend && uv run python -m scripts.dev seed",
+    "backend:docker:build": "docker build -t safeshelf-backend ./backend",
+    "backend:docker:run": "docker run -p 7860:7860 --env-file ./backend/.env safeshelf-backend",
+    "backend:hf:deploy": "cd backend && bash scripts/deploy_hf.sh",
+    "backend:data:setup": "cd backend && uv run python -m scripts.dev data"
   },
   "devDependencies": {
     "@vitejs/plugin-basic-ssl": "^2.3.0",

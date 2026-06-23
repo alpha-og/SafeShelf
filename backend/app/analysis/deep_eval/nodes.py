@@ -176,7 +176,6 @@ def nutrient_check(state: AgentState) -> dict:
 
     for condition in rules_list:
         disease = condition.get("disease", "Unknown")
-        code = condition.get("code", "")
         for rule in condition.get("rules", []):
             nutrient = rule.get("nutrient")
             threshold = rule.get("value")

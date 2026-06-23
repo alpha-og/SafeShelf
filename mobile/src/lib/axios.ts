@@ -6,7 +6,9 @@ let accessToken: string | null = null
 let onLogout: (() => void) | null = null
 
 const api: AxiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || '',
   withCredentials: true,
+  timeout: 30_000,
   headers: { 'Content-Type': 'application/json' },
 })
 
@@ -48,6 +50,11 @@ api.interceptors.response.use(
     if (!originalRequest) return Promise.reject(error)
 
     if (error.response?.status === 401 && !originalRequest._retry) {
+      const hadAuth = !!originalRequest.headers?.Authorization
+      if (!hadAuth) {
+        return Promise.reject(error)
+      }
+
       if (isRefreshing) {
         return new Promise<string>((resolve, reject) => {
           failedQueue.push({ resolve, reject })
@@ -63,7 +70,7 @@ api.interceptors.response.use(
       isRefreshing = true
 
       try {
-        const { data } = await axios.post('/v1/auth/refresh', {}, { withCredentials: true })
+        const { data } = await api.post('/v1/auth/refresh', {})
         const newToken: string = data.data?.access_token ?? data.access_token
         accessToken = newToken
         await setToken(newToken)

@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 
+from app.admin.router import router as admin_router
 from app.analysis.router import router as analysis_router
 from app.auth.router import router as auth_router
 from app.cart.router import router as cart_router
@@ -14,6 +15,7 @@ from app.stores.router import router as stores_router
 from app.suggestion.router import router as suggestion_router
 
 v1_router = APIRouter(prefix='/v1')
+v1_router.include_router(admin_router)
 v1_router.include_router(analysis_router)
 v1_router.include_router(auth_router)
 v1_router.include_router(cart_router)

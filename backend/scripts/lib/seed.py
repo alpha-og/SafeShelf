@@ -5,12 +5,26 @@ import random
 import uuid
 
 import httpx
+from sqlalchemy import text
+from sqlalchemy.engine import make_url
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlmodel import SQLModel, select
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.products.models import Category, Product, ProductCategory
+from app.shared.config import settings
 from app.shared.db import async_session, engine
-from app.stores.models import Store, StoreInventory
+from app.stores.models import Store
 from scripts.lib.logger import info, success, warn
+
+SEED_TABLES = [
+    'store',
+    'category',
+    'product',
+    'recipe',
+    'productcategory',
+    'storeinventory',
+]
 
 # Categories that are fetched from OpenFoodFacts API
 CATEGORIES = {
@@ -77,9 +91,28 @@ STORES = [
 ]
 
 
-async def _seed_stores():
+def _make_session_maker(db_url: str | None = None):
+    if db_url:
+        url = make_url(db_url)
+        connect_args = (
+            {'timeout': 5}
+            if not url.drivername.startswith('sqlite')
+            else {'check_same_thread': False}
+        )
+        eng = create_async_engine(db_url, echo=settings.DB_ECHO, connect_args=connect_args)
+        return eng, async_sessionmaker(eng, class_=AsyncSession, expire_on_commit=False)
+    return engine, async_session
+
+
+async def _truncate_seed_tables(session):
+    for table in reversed(SEED_TABLES):
+        await session.execute(text(f'DELETE FROM {table}'))
+
+
+async def _seed_stores(session_maker=None):
     info('Seeding stores...')
-    async with async_session() as session:
+    sm = session_maker or async_session
+    async with sm() as session:
         for store in STORES:
             existing = (await session.exec(select(Store).where(Store.uuid == store.uuid))).first()
             if not existing:
@@ -105,7 +138,8 @@ async def _fetch_off_products(category_tag: str, limit: int = 30) -> list[dict]:
     return []
 
 
-async def _seed_inventory():
+async def _seed_inventory(session_maker=None):
+    sm = session_maker or async_session
     seen_barcodes: set[str] = set()
     category_product_map: dict[str, list[dict]] = {}
 
@@ -129,7 +163,7 @@ async def _seed_inventory():
             continue
         fpath = os.path.join(data_dir, fname)
         try:
-            with open(fpath, 'r', encoding='utf-8') as f:
+            with open(fpath, encoding='utf-8') as f:
                 items = json.load(f)
         except Exception as e:
             warn(f"Failed to load {fname}: {e}")
@@ -156,7 +190,7 @@ async def _seed_inventory():
 
     # Phase 3: Seed products and inventory
     info('Seeding products and inventory...')
-    async with async_session() as session:
+    async with sm() as session:
         stores = (await session.exec(select(Store))).all()
         if not stores:
             warn('No stores found! Run seed with --stores-only first.')
@@ -175,7 +209,6 @@ async def _seed_inventory():
             if not cat:
                 cat = Category(uuid=str(uuid.uuid4()), name=cat_name, off_tag=off_tag)
                 session.add(cat)
-                await session.flush()
 
             cat_type = CAT_TYPE.get(cat_name, 'Others')
 
@@ -198,7 +231,6 @@ async def _seed_inventory():
                         quantity=str(row.get('quantity')) if row.get('quantity') else None,
                     )
                     session.add(prod)
-                    await session.flush()
 
                 link = (await session.exec(select(ProductCategory).where(
                     ProductCategory.product_id == prod.id,
@@ -211,9 +243,13 @@ async def _seed_inventory():
                     continue
                 seen_barcodes.add(barcode)
 
+                if len(seen_barcodes) % 50 == 0:
+                    info(f'Processed {len(seen_barcodes)} unique products...')
+
                 is_custom = barcode.startswith('PROD-')
                 is_produce = cat_name in ('Fruits', 'Vegetables')
 
+                inventory_rows = []
                 for store in stores:
                     prob = 0.30
                     if is_custom:
@@ -230,7 +266,6 @@ async def _seed_inventory():
                             stock_qty = random.randint(10, 50)
 
                         if is_custom:
-                            # Per-category pricing for generated products
                             custom_price_map = {
                                 'Dairy': (25, 400),
                                 'Meats': (80, 800),
@@ -248,25 +283,73 @@ async def _seed_inventory():
                         else:
                             price = round(random.uniform(20.0, 1500.0), 2)
 
-                        await session.merge(StoreInventory(
-                            store_id=store.id,
-                            product_id=prod.id,
-                            stock_quantity=stock_qty,
-                            price=float(price),
-                        ))
+                        inventory_rows.append({
+                            'store_id': store.id,
+                            'product_id': prod.id,
+                            'stock_quantity': stock_qty,
+                            'price': float(price),
+                            'in_stock': stock_qty > 0,
+                        })
+
+                if inventory_rows:
+                    params = {}
+                    placeholders = []
+                    for i, row in enumerate(inventory_rows):
+                        idx = str(i)
+                        params[f'sid_{idx}'] = row['store_id']
+                        params[f'pid_{idx}'] = row['product_id']
+                        params[f'sq_{idx}'] = row['stock_quantity']
+                        params[f'pr_{idx}'] = row['price']
+                        params[f'is_{idx}'] = row['in_stock']
+                        placeholders.append(
+                            f'(:sid_{idx}, :pid_{idx}, :sq_{idx}, :pr_{idx}, :is_{idx})'
+                        )
+
+                    cols = 'store_id, product_id, stock_quantity, price, in_stock'
+                    conflict_set = (
+                        'stock_quantity = EXCLUDED.stock_quantity, '
+                        'price = EXCLUDED.price, '
+                        'in_stock = EXCLUDED.in_stock'
+                    )
+                    await session.execute(
+                        text(f"""
+                            INSERT INTO storeinventory ({cols})
+                            VALUES {', '.join(placeholders)}
+                            ON CONFLICT (store_id, product_id)
+                            DO UPDATE SET {conflict_set}
+                        """),
+                        params
+                    )
 
         await session.commit()
     success(f'Seeded {len(seen_barcodes)} products across {len(CATEGORIES)} categories')
 
 
-async def run_seed(stores_only: bool = False, inventory_only: bool = False) -> None:
+async def run_seed(
+    stores_only: bool = False,
+    inventory_only: bool = False,
+    db_url: str | None = None,
+    clean: bool = False,
+) -> None:
+    _engine, session_maker = _make_session_maker(db_url)
+
     info('Initializing database...')
-    async with engine.begin() as conn:
+    async with _engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
 
+    if clean:
+        info('Clearing seed tables...')
+        async with session_maker() as session:
+            await _truncate_seed_tables(session)
+            await session.commit()
+        info('Seed tables cleared')
+
     if not inventory_only:
-        await _seed_stores()
+        await _seed_stores(session_maker)
     if not stores_only:
-        await _seed_inventory()
+        await _seed_inventory(session_maker)
+
+    if db_url:
+        await _engine.dispose()
 
     success('All done')

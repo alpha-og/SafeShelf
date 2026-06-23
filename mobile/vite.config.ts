@@ -48,7 +48,11 @@ export default defineConfig(({ mode }) => {
     port: mobilePort,
     allowedHosts,
     proxy: {
-      '/v1': env.VITE_PROXY_TARGET || 'http://localhost:8926',
+      '/v1': {
+        target: env.VITE_PROXY_TARGET || 'http://localhost:8926',
+        changeOrigin: true,
+        secure: false,
+      },
     },
   }
 

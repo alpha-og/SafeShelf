@@ -90,3 +90,8 @@ app.add_exception_handler(Exception, global_exception_handler)
 app.add_exception_handler(HTTPException, http_exception_handler)
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
 app.include_router(v1_router)
+
+
+@app.get('/v1/health')
+async def health():
+    return {'status': 'ok'}
