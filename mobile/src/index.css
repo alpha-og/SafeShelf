@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Drive `dark:` utilities from the `.dark` class toggled by ThemeProvider,
+   instead of Tailwind v4's default `prefers-color-scheme` media query. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -22,9 +26,9 @@
   --color-ring: hsl(var(--ring));
   --radius-DEFAULT: var(--radius);
 
-  --color-overlay: #2d3a47;
-  --color-overlay-foreground: #fff7e6;
-  --color-overlay-muted: #a9b7c6;
+  --color-overlay: #15281d;
+  --color-overlay-foreground: #eafff1;
+  --color-overlay-muted: #9db8a6;
 
   --color-status-pass: #8a9b76;
   --color-status-warn: #d4919c;
@@ -44,48 +48,48 @@
     --sab: env(safe-area-inset-bottom, 0px);
     --sal: env(safe-area-inset-left, 0px);
 
-    --background: 41 100% 95%; /* Vanilla Cream */
-    --foreground: 210 23% 23%; /* Midnight Lagoon */
-    --card: 0 0% 100%; /* White */
-    --card-foreground: 210 23% 23%; /* Midnight Lagoon */
-    --popover: 0 0% 100%; /* White */
-    --popover-foreground: 210 23% 23%; /* Midnight Lagoon */
-    --primary: 354 33% 56%; /* Rosewood */
+    --background: 120 38% 96%; /* Pale Mint */
+    --foreground: 150 32% 14%; /* Deep Forest */
+    --card: 120 33% 99%; /* Mist White */
+    --card-foreground: 150 32% 14%; /* Deep Forest */
+    --popover: 120 33% 99%; /* Mist White */
+    --popover-foreground: 150 32% 14%; /* Deep Forest */
+    --primary: 142 52% 34%; /* Forest Green */
     --primary-foreground: 0 0% 100%; /* White */
-    --secondary: 78 23% 63%; /* Sage Leaf */
-    --secondary-foreground: 210 23% 23%; /* Midnight Lagoon */
-    --muted: 211 20% 72%; /* Misty Sky */
-    --muted-foreground: 211 15% 45%; /* darker Misty Sky */
-    --accent: 346 75% 88%; /* Blush Petal */
-    --accent-foreground: 210 23% 23%; /* Midnight Lagoon */
+    --secondary: 130 30% 85%; /* Soft Sage */
+    --secondary-foreground: 150 32% 18%; /* Deep Forest */
+    --muted: 130 22% 90%; /* Muted Mint */
+    --muted-foreground: 150 14% 38%; /* darker Forest */
+    --accent: 140 42% 84%; /* Light Leaf */
+    --accent-foreground: 150 32% 18%; /* Deep Forest */
     --destructive: 0 84% 60%; /* Red (keep) */
     --destructive-foreground: 0 0% 100%; /* White */
-    --border: 211 20% 88%; /* light Misty Sky */
-    --input: 211 20% 72%; /* Misty Sky */
-    --ring: 354 33% 56%; /* Rosewood */
+    --border: 135 25% 84%; /* light Sage */
+    --input: 135 25% 84%; /* light Sage */
+    --ring: 142 52% 34%; /* Forest Green */
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 210 23% 23%; /* Midnight Lagoon */
-    --foreground: 41 100% 90%; /* Vanilla Cream */
-    --card: 210 20% 28%; /* lighter Midnight Lagoon */
-    --card-foreground: 41 100% 90%; /* Vanilla Cream */
-    --popover: 210 20% 28%; /* lighter Midnight Lagoon */
-    --popover-foreground: 41 100% 90%; /* Vanilla Cream */
-    --primary: 354 40% 65%; /* lighter Rosewood */
-    --primary-foreground: 210 23% 23%; /* Midnight Lagoon */
-    --secondary: 78 20% 40%; /* darker Sage Leaf */
-    --secondary-foreground: 41 100% 90%; /* Vanilla Cream */
-    --muted: 210 18% 30%; /* muted dark */
-    --muted-foreground: 211 20% 65%; /* lighter Misty Sky */
-    --accent: 346 50% 50%; /* muted Blush Petal */
-    --accent-foreground: 41 100% 90%; /* Vanilla Cream */
+    --background: 155 30% 8%; /* Midnight Forest */
+    --foreground: 130 25% 90%; /* Pale Mint */
+    --card: 156 26% 12%; /* lighter Midnight Forest */
+    --card-foreground: 130 25% 90%; /* Pale Mint */
+    --popover: 156 26% 12%; /* lighter Midnight Forest */
+    --popover-foreground: 130 25% 90%; /* Pale Mint */
+    --primary: 142 55% 48%; /* Emerald */
+    --primary-foreground: 155 30% 8%; /* Midnight Forest */
+    --secondary: 150 18% 22%; /* Deep Sage */
+    --secondary-foreground: 130 25% 90%; /* Pale Mint */
+    --muted: 152 16% 18%; /* muted dark green */
+    --muted-foreground: 135 16% 64%; /* lighter Sage */
+    --accent: 150 28% 26%; /* muted Emerald */
+    --accent-foreground: 130 25% 90%; /* Pale Mint */
     --destructive: 0 75% 52%; /* brighter red for legibility */
-    --destructive-foreground: 41 100% 90%; /* Vanilla Cream */
-    --border: 210 18% 33%; /* lighter Midnight Lagoon */
-    --input: 210 18% 33%; /* lighter Midnight Lagoon */
-    --ring: 354 40% 65%; /* lighter Rosewood */
+    --destructive-foreground: 130 25% 90%; /* Pale Mint */
+    --border: 152 16% 20%; /* lighter Midnight Forest */
+    --input: 152 16% 20%; /* lighter Midnight Forest */
+    --ring: 142 55% 48%; /* Emerald */
   }
 }
 

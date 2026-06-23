@@ -75,7 +75,7 @@ export function BottomNavBar({ activeIndex, onChange, mode, onModeChange }: Bott
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 8, opacity: 0 }}
             transition={{ duration: 0.15, ease: 'easeOut' }}
-            className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 flex items-center gap-1 rounded-full border border-primary/30 bg-primary/30 backdrop-blur-md px-1.5 py-1.5 shadow-2xl"
+            className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 flex items-center gap-1 rounded-full border border-accent/80 bg-accent/85 dark:border-primary/30 dark:bg-primary/30 backdrop-blur-md px-1.5 py-1.5 shadow-2xl"
           >
             {SCAN_MODES.map((m) => {
               const isActive = m.value === mode
@@ -89,8 +89,8 @@ export function BottomNavBar({ activeIndex, onChange, mode, onModeChange }: Bott
                   }}
                   className={`flex flex-row items-center gap-1.5 rounded-full px-3 py-1.5 transition-colors ${
                     isActive
-                      ? 'bg-primary/50 text-white'
-                      : 'text-white/60 hover:text-white/90 hover:bg-primary/20'
+                      ? 'bg-primary text-white dark:bg-primary/50 dark:text-foreground'
+                      : 'text-foreground/60 hover:text-foreground/90 hover:bg-accent/50 dark:hover:bg-primary/20'
                   }`}
                 >
                   <m.icon className="h-5 w-5 shrink-0" />
@@ -104,7 +104,7 @@ export function BottomNavBar({ activeIndex, onChange, mode, onModeChange }: Bott
         )}
       </AnimatePresence>
 
-      <nav className="flex items-center gap-1 bg-primary/30 backdrop-blur-md border border-primary/30 rounded-full px-2 py-1.5 shadow-2xl">
+      <nav className="flex items-center gap-1 bg-accent/85 dark:bg-primary/30 backdrop-blur-md border border-accent/80 dark:border-primary/30 rounded-full px-2 py-1.5 shadow-2xl">
         {tabs.map((tab, i) => {
           const isActive = i === activeIndex
           const isCameraSelector = i === CAMERA_TAB && onCamera
@@ -116,13 +116,15 @@ export function BottomNavBar({ activeIndex, onChange, mode, onModeChange }: Bott
               type="button"
               onClick={() => handleTabClick(i)}
               className={`relative flex items-center justify-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                isActive ? 'text-white' : 'text-white/50 hover:text-white/80 hover:scale-[1.02]'
+                isActive
+                  ? 'text-white dark:text-foreground'
+                  : 'text-foreground/50 hover:text-foreground/80 hover:scale-[1.02]'
               }`}
             >
               {isActive && (
                 <motion.div
                   layoutId="activeTab"
-                  className="absolute inset-0 bg-primary/40 rounded-full"
+                  className="absolute inset-0 bg-primary dark:bg-primary/40 rounded-full"
                   transition={{ type: 'spring', bounce: 0.2, duration: 0.4 }}
                 />
               )}

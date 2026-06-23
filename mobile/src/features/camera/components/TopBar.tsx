@@ -34,21 +34,21 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar(
         <div
           className={`flex items-center rounded-full backdrop-blur-md border transition-colors p-0.5 ${
             cameraAvailable
-              ? 'bg-primary/30 border-primary/30'
-              : 'bg-primary/20 border-primary/20'
+              ? 'bg-accent/85 border-accent/80 dark:bg-primary/30 dark:border-primary/30'
+              : 'bg-accent/60 border-accent/60 dark:bg-primary/20 dark:border-primary/20'
           }`}
         >
           <button
             type="button"
             onClick={() => navigate({ to: '/profile' })}
             aria-label={activeGroup ? `Profile (${activeGroup.name} group active)` : 'Profile'}
-            className="flex items-center justify-center w-10 h-10 rounded-full transition-colors bg-primary/40 hover:bg-primary/50 text-white"
+            className="flex items-center justify-center w-10 h-10 rounded-full transition-colors bg-primary hover:bg-primary/90 text-white dark:bg-primary/40 dark:hover:bg-primary/50 dark:text-foreground"
           >
             {activeProfile ? (
               <Avatar
                 name={activeProfile.name}
                 size="sm"
-                className="bg-white/20 text-white border-white/30"
+                className="bg-white/20 text-white border-white/30 dark:bg-foreground/15 dark:text-foreground dark:border-foreground/20"
               />
             ) : activeGroup ? (
               <Users className="h-5 w-5" />
@@ -61,13 +61,13 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar(
               to="/stores"
               className={`flex items-center gap-1 h-10 rounded-full transition-colors pl-1.5 pr-1.5 ${
                 cameraAvailable
-                  ? 'hover:bg-white/10 text-white/70'
-                  : 'hover:bg-white/10 text-white/40'
+                  ? 'hover:bg-foreground/10 text-foreground/70'
+                  : 'hover:bg-foreground/10 text-foreground/40'
               }`}
             >
               <MapPin className="h-3.5 w-3.5 shrink-0" />
               <span className="text-xs font-medium truncate max-w-[80px]">{store.name}</span>
-              <ChevronDown className="h-3 w-3 shrink-0 text-white/50" />
+              <ChevronDown className="h-3 w-3 shrink-0 text-foreground/50" />
             </Link>
           )}
         </div>
@@ -76,8 +76,8 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar(
       <div
         className={`flex items-center backdrop-blur-md rounded-full border shrink-0 p-0.5 ${
           cameraAvailable
-            ? 'bg-primary/30 hover:scale-[1.02] border-primary/30'
-            : 'bg-primary/20 hover:scale-[1.02] border-primary/20'
+            ? 'bg-accent/85 hover:scale-[1.02] border-accent/80 dark:bg-primary/30 dark:border-primary/30'
+            : 'bg-accent/60 hover:scale-[1.02] border-accent/60 dark:bg-primary/20 dark:border-primary/20'
         }`}
       >
         <button
@@ -85,8 +85,8 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar(
           onClick={() => navigate({ to: '/cart' })}
           className={`flex items-center justify-center w-10 h-10 rounded-full transition-colors ${
             cameraAvailable
-              ? 'text-white/70 hover:text-white hover:bg-primary-foreground/10 hover:scale-[1.02]'
-              : 'text-white/40 hover:text-white/60 hover:scale-[1.02]'
+              ? 'text-foreground/70 hover:text-foreground hover:bg-foreground/10 hover:scale-[1.02]'
+              : 'text-foreground/40 hover:text-foreground/60 hover:scale-[1.02]'
           }`}
         >
           <ShoppingCart className="h-5 w-5" />
@@ -96,8 +96,8 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar(
           onClick={() => navigate({ to: '/recent-scans' })}
           className={`flex items-center justify-center w-10 h-10 rounded-full transition-colors ${
             cameraAvailable
-              ? 'text-white/70 hover:text-white hover:bg-primary-foreground/10 hover:scale-[1.02]'
-              : 'text-white/40 hover:text-white/60 hover:scale-[1.02]'
+              ? 'text-foreground/70 hover:text-foreground hover:bg-foreground/10 hover:scale-[1.02]'
+              : 'text-foreground/40 hover:text-foreground/60 hover:scale-[1.02]'
           }`}
         >
           <History className="h-5 w-5" />
