@@ -88,7 +88,7 @@ function SwipeableContainer() {
           <RecipeHub />
         </div>
         <div className="w-[100vw] h-full relative overflow-hidden shrink-0">
-          <CameraViewfinder mode={mode} onCaptureActiveChange={setCaptureActive} />
+          <CameraViewfinder mode={mode} activeTab={tab} onCaptureActiveChange={setCaptureActive} />
         </div>
         <div className="w-[100vw] h-full shrink-0 bg-background">
           <SearchScreen onSheetOpenChange={setCaptureActive} />

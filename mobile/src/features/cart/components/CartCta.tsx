@@ -89,7 +89,10 @@ export function CartCta({
 
   return (
     <>
-      <ShinyButton className="h-14 w-full" onClick={handleAdd}>
+      <ShinyButton
+        className={`h-14 w-full border-2 backdrop-blur-md ${isUnsuitable ? 'bg-destructive/15 border-destructive/25 text-black' : 'bg-green-500/15 border-green-500/25 text-black'}`}
+        onClick={handleAdd}
+      >
         <ShoppingCart className="h-6 w-6" />
         Add to Cart
       </ShinyButton>

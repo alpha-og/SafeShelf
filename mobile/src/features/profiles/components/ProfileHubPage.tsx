@@ -212,13 +212,13 @@ export function ProfileHubPage() {
           <SectionHeader variant="default" className="px-4">
             Health Report
           </SectionHeader>
-          <div>
+          <div className="px-3">
             <button
               type="button"
               onClick={() => navigate({ to: '/profile/health-report' })}
-              className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-foreground transition-colors hover:bg-accent"
+              className="w-full flex items-center gap-3 rounded-2xl border border-green-300 px-4 py-3.5 text-sm text-foreground transition-colors hover:bg-green-50"
             >
-              <FileText className="h-5 w-5 text-muted-foreground shrink-0" />
+              <FileText className="h-5 w-5 text-green-600 shrink-0" />
               <span className="flex-1 text-left">Upload & manage health reports</span>
             </button>
           </div>
