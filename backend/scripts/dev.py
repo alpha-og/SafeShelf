@@ -1,3 +1,7 @@
+# Must be imported before other modules to patch httpx's SSL context
+# (Windows system cert store) and platform.machine() (WMI hang).
+from app.shared import _patch_platform  # noqa: F401
+
 import argparse
 import asyncio
 import sys
