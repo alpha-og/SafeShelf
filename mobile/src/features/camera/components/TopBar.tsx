@@ -61,13 +61,13 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar(
               to="/stores"
               className={`flex items-center gap-1 h-10 rounded-full transition-colors pl-1.5 pr-1.5 ${
                 cameraAvailable
-                  ? 'hover:bg-foreground/10 text-foreground/70'
-                  : 'hover:bg-foreground/10 text-foreground/40'
+                  ? 'text-foreground/85'
+                  : 'text-foreground/60'
               }`}
             >
               <MapPin className="h-3.5 w-3.5 shrink-0" />
               <span className="text-xs font-medium truncate max-w-[80px]">{store.name}</span>
-              <ChevronDown className="h-3 w-3 shrink-0 text-foreground/50" />
+              <ChevronDown className="h-3 w-3 shrink-0 text-foreground/70" />
             </Link>
           )}
         </div>
@@ -85,8 +85,8 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar(
           onClick={() => navigate({ to: '/cart' })}
           className={`flex items-center justify-center w-10 h-10 rounded-full transition-colors ${
             cameraAvailable
-              ? 'text-foreground/70 hover:text-foreground hover:bg-foreground/10 hover:scale-[1.02]'
-              : 'text-foreground/40 hover:text-foreground/60 hover:scale-[1.02]'
+              ? 'text-foreground/85 hover:text-foreground hover:bg-foreground/10 hover:scale-[1.02]'
+              : 'text-foreground/60 hover:text-foreground/80 hover:scale-[1.02]'
           }`}
         >
           <ShoppingCart className="h-5 w-5" />
@@ -96,8 +96,8 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar(
           onClick={() => navigate({ to: '/recent-scans' })}
           className={`flex items-center justify-center w-10 h-10 rounded-full transition-colors ${
             cameraAvailable
-              ? 'text-foreground/70 hover:text-foreground hover:bg-foreground/10 hover:scale-[1.02]'
-              : 'text-foreground/40 hover:text-foreground/60 hover:scale-[1.02]'
+              ? 'text-foreground/85 hover:text-foreground hover:bg-foreground/10 hover:scale-[1.02]'
+              : 'text-foreground/60 hover:text-foreground/80 hover:scale-[1.02]'
           }`}
         >
           <History className="h-5 w-5" />

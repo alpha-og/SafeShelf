@@ -1,4 +1,5 @@
 import { AnimatePresence } from 'framer-motion'
+import { CameraIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { SessionBanner } from '@/features/cart/components/SessionBanner'
 import { useCamera } from '../hooks/useCamera'
@@ -16,12 +17,17 @@ interface CameraViewfinderProps {
   /** Notifies the parent when a scan result is on screen, so it can bump the
    *  camera tab's z-index above the bottom bar. */
   onCaptureActiveChange?: (active: boolean) => void
+  /** Current tab index — camera auto-stops when not on the camera tab. */
+  activeTab: number
 }
 
-export function CameraViewfinder({ mode, onCaptureActiveChange }: CameraViewfinderProps) {
+const CAMERA_TAB = 1
+
+export function CameraViewfinder({ mode, onCaptureActiveChange, activeTab }: CameraViewfinderProps) {
   const { videoRef, error, isCameraReady, capturePhoto, pickFromGallery, stopCamera, startCamera } =
     useCamera()
   const [capturedImage, setCapturedImage] = useState<string | null>(() => scanStore.capturedImage)
+  const [isStarting, setIsStarting] = useState(false)
 
   useEffect(() => {
     if (capturedImage) {
@@ -30,13 +36,26 @@ export function CameraViewfinder({ mode, onCaptureActiveChange }: CameraViewfind
     }
   }, [capturedImage, stopCamera])
 
+  // Stop camera when the user swipes away from the camera tab.
+  useEffect(() => {
+    if (activeTab !== CAMERA_TAB) {
+      stopCamera()
+    }
+  }, [activeTab, stopCamera])
+
   useEffect(() => {
     onCaptureActiveChange?.(capturedImage !== null)
   }, [capturedImage, onCaptureActiveChange])
 
   const handleCapture = async () => {
-    const photo = await capturePhoto()
-    if (photo) setCapturedImage(photo)
+    if (isCameraReady) {
+      const photo = await capturePhoto()
+      if (photo) setCapturedImage(photo)
+    } else {
+      setIsStarting(true)
+      await startCamera()
+      setIsStarting(false)
+    }
   }
 
   const handleGalleryPick = async () => {
@@ -50,26 +69,35 @@ export function CameraViewfinder({ mode, onCaptureActiveChange }: CameraViewfind
     startCamera()
   }
 
+  const isIdle = !isCameraReady && !error && !capturedImage
+
   return (
     <div className="absolute inset-0 w-full h-full bg-background">
       <div
         className={`absolute inset-0 transition-opacity duration-200 ${capturedImage ? 'opacity-0 pointer-events-none' : ''}`}
       >
-        <div className="absolute inset-0 bg-black/[0.04]" />
-        <CameraPreview videoRef={videoRef} isCameraReady={isCameraReady} error={error} />
+        {isIdle && !isStarting ? (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
+            <CameraIcon className="h-16 w-16 text-foreground/30" />
+            <p className="text-xl font-bold text-foreground">Camera is OFF</p>
+            <p className="text-sm text-foreground/50 text-center px-8">
+              Tap on shutter to turn on camera
+            </p>
+          </div>
+        ) : (
+          <CameraPreview videoRef={videoRef} isCameraReady={isCameraReady} error={error} />
+        )}
 
         <TopBar cameraAvailable={isCameraReady} />
 
         <SessionBanner />
 
-        {/* Capture controls sit above the shared bottom bar (which now hosts the
-            mode selector), so they're padded clear of it. */}
         <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center pb-[calc(7rem+var(--sab))] sm:pb-[calc(8rem+var(--sab))]">
           <div className="flex items-center gap-6 sm:gap-8">
             <GalleryButton onClick={handleGalleryPick} cameraAvailable={isCameraReady} />
             <CaptureButton
               onClick={handleCapture}
-              disabled={!isCameraReady}
+              disabled={isStarting}
               cameraAvailable={isCameraReady}
             />
             <div className="w-12 sm:w-14" />

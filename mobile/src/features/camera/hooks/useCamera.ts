@@ -1,5 +1,5 @@
 import { Camera } from '@capacitor/camera'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 export type ScanMode = 'auto' | 'barcode' | 'image' | 'nutrient-label'
 
@@ -118,47 +118,6 @@ export function useCamera(): UseCameraReturn {
       return pickFromGalleryNative()
     }
     return pickFromGalleryWeb()
-  }, [])
-
-  useEffect(() => {
-    let cancelled = false
-
-    async function init() {
-      try {
-        const mediaStream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: 'environment',
-            width: { ideal: 1920 },
-            height: { ideal: 1080 },
-          },
-          audio: false,
-        })
-        if (cancelled) {
-          mediaStream.getTracks().forEach((t) => t.stop())
-          return
-        }
-        streamRef.current = mediaStream
-        if (videoRef.current) {
-          videoRef.current.srcObject = mediaStream
-          await videoRef.current.play()
-          setIsCameraReady(true)
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : 'Failed to access camera')
-        }
-      }
-    }
-
-    init()
-
-    return () => {
-      cancelled = true
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach((track) => track.stop())
-        streamRef.current = null
-      }
-    }
   }, [])
 
   return {
