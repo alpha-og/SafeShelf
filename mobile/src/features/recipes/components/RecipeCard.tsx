@@ -1,4 +1,4 @@
-import { ImageOff } from 'lucide-react'
+import { ImageOff, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
@@ -47,6 +47,12 @@ export function RecipeCard({ recipe, onPress }: RecipeCardProps) {
               {recipe.area && (
                 <Badge variant="outline" className="text-[10px] px-1.5 py-0">
                   {recipe.area}
+                </Badge>
+              )}
+              {recipe.is_ai_generated && (
+                <Badge variant="default" className="text-[10px] px-1.5 py-0 gap-0.5 bg-purple-500/40 text-purple-300 border-purple-500/30">
+                  <Sparkles className="h-3 w-3" />
+                  AI
                 </Badge>
               )}
             </div>

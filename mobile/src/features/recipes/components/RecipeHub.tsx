@@ -46,6 +46,8 @@ export function RecipeHub() {
                 onAreasChange={search.setSelectedAreas}
                 hasFilters={search.hasFilters}
                 onClearAll={search.clearAll}
+                generateAiRecipe={search.generateAiRecipe}
+                onGenerateAiRecipeChange={search.setGenerateAiRecipe}
               />
             </div>
           )}

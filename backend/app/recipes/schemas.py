@@ -47,6 +47,7 @@ class SearchResponse(BaseModel):
     rejection_reason: str | None = None
     session_id: str | None = None
     clarifications: list[ClarificationField] | None = None
+    ai_generation_error: str | None = None
 
 
 class ClarifyRequest(BaseModel):

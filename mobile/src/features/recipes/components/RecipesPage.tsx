@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router'
-import { Loader2, RefreshCw, SearchX, Utensils } from 'lucide-react'
+import { Loader2, RefreshCw, SearchX, Sparkles, Utensils } from 'lucide-react'
 import { useCallback, useRef } from 'react'
 import { EmptyState } from '@/components/EmptyState'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -98,6 +98,13 @@ export function RecipesPage({ search }: RecipesPageProps) {
           >
             <RefreshCw className="h-5 w-5" />
           </button>
+        </div>
+      )}
+
+      {search.aiGenerationError && search.recipes.length > 0 && (
+        <div className="flex items-center gap-2 px-3 py-2 mt-2 rounded-lg bg-amber-500/20 border border-amber-500/30 text-xs text-amber-300">
+          <Sparkles className="h-3.5 w-3.5 shrink-0" />
+          <span>AI generation failed: {search.aiGenerationError}</span>
         </div>
       )}
 

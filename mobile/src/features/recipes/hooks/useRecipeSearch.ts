@@ -30,6 +30,7 @@ export function useRecipeSearch() {
   const [searchText, _setSearchText] = useState("");
   const [selectedCategories, _setSelectedCategories] = useState<string[]>([]);
   const [selectedAreas, _setSelectedAreas] = useState<string[]>([]);
+  const [generateAiRecipe, setGenerateAiRecipe] = useState(false);
   const [searchStatus, setSearchStatus] = useState<SearchStatus>("idle");
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [clarifications, setClarifications] = useState<ClarificationField[]>([]);
@@ -115,7 +116,7 @@ export function useRecipeSearch() {
     && isInitialized.current;
 
   const query = useInfiniteQuery({
-    queryKey: ["recipes", debouncedSearchText, debouncedCategories, debouncedAreas],
+    queryKey: ["recipes", debouncedSearchText, debouncedCategories, debouncedAreas, generateAiRecipe],
     queryFn: async ({ pageParam }) => {
       if (pageParam === 1) {
         setSearchStatus("searching");
@@ -125,6 +126,7 @@ export function useRecipeSearch() {
         debouncedCategories,
         debouncedAreas,
         pageParam,
+        generateAiRecipe,
       );
 
       if (res.status === "clarification_needed" && res.clarifications) {
@@ -210,6 +212,7 @@ export function useRecipeSearch() {
       return p.recipes;
     }) ?? [];
   const recipes = clarifyResults ?? queryRecipes;
+  const aiGenerationError = query.data?.pages[0]?.ai_generation_error ?? null;
 
   const result: RecipeSearchState = {
     searchText,
@@ -218,6 +221,8 @@ export function useRecipeSearch() {
     setSelectedCategories,
     selectedAreas,
     setSelectedAreas,
+    generateAiRecipe,
+    setGenerateAiRecipe,
     recipes,
     isLoading: query.isLoading,
     isFetchingNextPage: query.isFetchingNextPage,
@@ -226,6 +231,7 @@ export function useRecipeSearch() {
     error:
       query.data?.pages[0]?.error ??
       (query.error ? (query.error as Error).message : null),
+    aiGenerationError,
     rejected: query.data?.pages[0]?.rejected ?? false,
     rejectionReason: query.data?.pages[0]?.rejection_reason ?? null,
     hasFilters,
@@ -248,12 +254,15 @@ export interface RecipeSearchState {
   setSelectedCategories: (categories: string[]) => void;
   selectedAreas: string[];
   setSelectedAreas: (areas: string[]) => void;
+  generateAiRecipe: boolean;
+  setGenerateAiRecipe: (value: boolean) => void;
   recipes: RecipeItem[];
   isLoading: boolean;
   isFetchingNextPage: boolean;
   hasNextPage: boolean;
   fetchNextPage: () => void;
   error: string | null;
+  aiGenerationError: string | null;
   rejected: boolean;
   rejectionReason: string | null;
   hasFilters: boolean;

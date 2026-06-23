@@ -15,6 +15,7 @@ export interface RecipeItem {
   author_name: string | null
   source: string | null
   servings: number | null
+  is_ai_generated?: boolean
 }
 
 export interface AdjustedIngredient {
@@ -61,6 +62,7 @@ export interface SearchResponse {
   rejection_reason?: string | null
   session_id?: string | null
   clarifications?: ClarificationField[] | null
+  ai_generation_error?: string | null
 }
 
 export interface ClarifyResponse {
@@ -115,6 +117,7 @@ export async function searchRecipes(
   categories: string[],
   areas: string[],
   page: number,
+  generateAiRecipe: boolean = false,
 ): Promise<SearchResponse> {
   const { data } = await api.post('/v1/recipes/search', {
     query,
@@ -122,6 +125,7 @@ export async function searchRecipes(
     areas,
     page,
     page_size: 10,
+    generate_ai_recipe: generateAiRecipe,
   })
   return data as SearchResponse
 }

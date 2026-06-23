@@ -1,4 +1,4 @@
-import { X } from 'lucide-react'
+import { Sparkles, X } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { RecipeFilterSheet } from './RecipeFilterSheet'
@@ -12,6 +12,8 @@ interface RecipeSearchBarProps {
   onAreasChange: (areas: string[]) => void
   hasFilters: boolean
   onClearAll: () => void
+  generateAiRecipe: boolean
+  onGenerateAiRecipeChange: (value: boolean) => void
 }
 
 export function RecipeSearchBar({
@@ -23,6 +25,8 @@ export function RecipeSearchBar({
   onAreasChange,
   hasFilters,
   onClearAll,
+  generateAiRecipe,
+  onGenerateAiRecipeChange,
 }: RecipeSearchBarProps) {
   return (
     <div className="space-y-2">
@@ -43,6 +47,18 @@ export function RecipeSearchBar({
             </button>
           )}
         </div>
+
+        <button
+          onClick={() => onGenerateAiRecipeChange(!generateAiRecipe)}
+          className={`flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 hover:scale-105 active:scale-90 ${
+            generateAiRecipe
+              ? 'bg-purple-500/40 text-purple-300'
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
+          title="Generate AI recipe"
+        >
+          <Sparkles className="h-4 w-4" />
+        </button>
 
         <RecipeFilterSheet
           selectedCategories={selectedCategories}
