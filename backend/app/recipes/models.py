@@ -15,8 +15,9 @@ class Recipe(SQLModel, table=True):
     )
 
     id: int | None = Field(default=None, primary_key=True)
-    source: str  # 'foodcom' or 'mealdb'
+    source: str  # 'foodcom', 'mealdb', or 'ai'
     source_id: str
+    is_ai_generated: bool = Field(default=False)
 
     name: str
     category: str | None = None

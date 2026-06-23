@@ -21,10 +21,32 @@ from app.recipes.service import (
     get_recipe_quantities_handler,
     search_recipes_handler,
     suggest_recipes,
+    embed_all_recipes_task,
 )
 from app.shared.deps import get_current_user, get_session
 
 router = APIRouter(prefix='/recipes', tags=['recipes'])
+
+@router.post("/embed-all")
+async def embed_all(session: AsyncSession = Depends(get_session)):
+    """
+    Generate and save vector embeddings for all recipes currently in the database.
+    """
+    from fastapi import HTTPException, status
+    try:
+        count = await embed_all_recipes_task(session)
+        return {
+            "success": True,
+            "message": (
+                f"Successfully loaded and embedded {count} "
+                "recipes in the suggestions index."
+            )
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to index recipes: {str(e)}"
+        )
 
 
 @router.get('/feed', response_model=SearchResponse)
