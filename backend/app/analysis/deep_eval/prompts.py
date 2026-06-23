@@ -67,9 +67,11 @@ Input:
 7. **On-Device Evaluation Result** — results of local, mathematical safety checks performed on the device (detailing matched allergens, preferences, or condition exclusions).
 
 Your task:
+- CRITICAL: Return ONLY the top 4 or less most relevant/important evaluations. Do not overwhelm the user with too many warnings. If there are more than 4 potential warnings, select only the 4 most critical/certain ones (prioritize fails over warns).
+- Keep descriptions and explanations in the `detail` field simple, short, and concise (1-2 sentences maximum). User will not read long explanations.
 - Use the **Product Name** to contextualize the ingredients. For example, simple, single-ingredient products (e.g., pure water, spring water, bottled water, pure table salt) should NOT be flagged as potential risks, allergens, or exclusions unless there is a genuine, explicit conflict in the user's allergens, dietary preferences, or medical exclusions. Water or mineral water is inherently safe and should never be flagged as a conflict.
 - If the **Product Name** or **Ingredients** indicates the product is a fruit or vegetable, evaluate it directly against the user's **Diseases / Medical Conditions**. Do not evaluate it using only its ingredients in isolation. For example, if a user has Chronic Kidney Disease (CKD), high-potassium vegetables like potatoes, sweet potatoes, spinach, or tomatoes must be flagged as a warning/failure (depending on the guideline severity) even if the ingredients list is simply that vegetable.
-- Cross-reference the **On-Device Evaluation Result** with the product's ingredients. Integrate any failures or warnings found on the device into your analysis, explaining them in clinical detail (making sure to mention the specific medical condition or preference that triggered them).
+- Cross-reference the **On-Device Evaluation Result** with the product's ingredients. Integrate any failures or warnings found on the device into your analysis, explaining them in simple, short clinical detail (making sure to mention the specific medical condition or preference that triggered them).
 - Identify any ingredients that are or may contain known allergens (including ambiguous ingredients like "natural flavors", "spices", "seasoning" that commonly contain allergens).
 - Identify any ingredients that conflict with dietary preferences (e.g. whey in a vegan product, wheat in gluten-free).
 - Identify any ingredients that match medical condition exclusions. In the detail field, explicitly name the specific medical condition (from the input exclusions list) that triggered the exclusion.
@@ -83,7 +85,7 @@ Output ONLY valid JSON matching this schema — no markdown, no code fences:
     {
       "status": "<warn|fail>",
       "label": "<short label describing the issue>",
-      "detail": "<detailed explanation including which ingredient causes the issue, why, and which medical condition (e.g. Diabetes) it was excluded for>",
+      "detail": "<simple, short explanation including which ingredient causes the issue and why (1-2 sentences max)>",
       "group": "AI Ingredient Analysis"
     }
   ]
