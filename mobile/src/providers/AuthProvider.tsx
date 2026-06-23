@@ -47,38 +47,47 @@ function AuthProvider({ children }: { children: ReactNode }) {
   }, [clearAuth])
 
   useEffect(() => {
+    let cancelled = false
     ;(async () => {
-      const hasToken = await restoreToken()
-      if (!hasToken) {
-        setIsLoading(false)
-        return
-      }
       try {
-        // Proactively refresh the access token before fetching the user, so an
-        // expired token doesn't cause a 401 that relies on the interceptor to
-        // re-drive the request.
-        const { data: refreshData } = await api.post<{ access_token: string }>(
-          '/v1/auth/refresh',
-          {},
-        )
-        setAccessToken(refreshData.access_token)
-      } catch {
-        // Refresh failed — session is dead; try a direct /me call in case the
-        // stored access token is still valid (e.g. server was restarted).
-      }
-      try {
-        const { data } = await api.get<{ id: number; email: string; created_at: string }>(
-          '/v1/auth/me',
-        )
-        setUser(data)
-        setAccessTokenState(getAccessToken())
-      } catch {
-        await setToken(null)
-        setAccessToken(null)
+        const hasToken = await restoreToken()
+        if (!hasToken) {
+          return
+        }
+        try {
+          // Proactively refresh the access token before fetching the user, so an
+          // expired token doesn't cause a 401 that relies on the interceptor to
+          // re-drive the request.
+          const { data: refreshData } = await api.post<{ access_token: string }>(
+            '/v1/auth/refresh',
+            {},
+          )
+          setAccessToken(refreshData.access_token)
+          setToken(refreshData.access_token)
+        } catch {
+          // Refresh failed — session is dead; try a direct /me call in case the
+          // stored access token is still valid (e.g. server was restarted).
+        }
+        if (cancelled) return
+        try {
+          const { data } = await api.get<{ id: number; email: string; created_at: string }>(
+            '/v1/auth/me',
+          )
+          setUser(data)
+          setAccessTokenState(getAccessToken())
+        } catch {
+          await setToken(null)
+          setAccessToken(null)
+        }
       } finally {
-        setIsLoading(false)
+        if (!cancelled) {
+          setIsLoading(false)
+        }
       }
     })()
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   const signUp = useCallback(
