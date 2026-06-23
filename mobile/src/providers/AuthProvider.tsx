@@ -54,6 +54,19 @@ function AuthProvider({ children }: { children: ReactNode }) {
         return
       }
       try {
+        // Proactively refresh the access token before fetching the user, so an
+        // expired token doesn't cause a 401 that relies on the interceptor to
+        // re-drive the request.
+        const { data: refreshData } = await api.post<{ access_token: string }>(
+          '/v1/auth/refresh',
+          {},
+        )
+        setAccessToken(refreshData.access_token)
+      } catch {
+        // Refresh failed — session is dead; try a direct /me call in case the
+        // stored access token is still valid (e.g. server was restarted).
+      }
+      try {
         const { data } = await api.get<{ id: number; email: string; created_at: string }>(
           '/v1/auth/me',
         )
