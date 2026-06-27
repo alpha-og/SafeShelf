@@ -27,7 +27,7 @@ pnpm dev:ios            # build and deploy to iOS device
 ## Common Commands
 
 | Command | Description |
-|---|---|---|
+|---|---|
 | `pnpm dev` | Start backend and mobile dev servers |
 | `pnpm dev:setup` | Prerequisite check, dependency install, SSL cert generation |
 | `pnpm dev:android` | Build and deploy mobile app to Android device |
