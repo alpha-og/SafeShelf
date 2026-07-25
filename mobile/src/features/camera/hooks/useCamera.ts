@@ -34,8 +34,9 @@ interface PhotoResult {
   dataUrl?: string
 }
 
+const capCamera = Camera as unknown as { getPhoto: (opts: PhotoOptions) => Promise<PhotoResult> }
+
 function pickFromGalleryNative(): Promise<string | null> {
-  const capCamera = Camera as unknown as { getPhoto: (opts: PhotoOptions) => Promise<PhotoResult> }
   return capCamera
     .getPhoto({ source: 'PHOTOS', resultType: 'DATA_URL', quality: 80 })
     .then((photo) => photo.dataUrl ?? null)
