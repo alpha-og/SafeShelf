@@ -28,7 +28,7 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar(
   return (
     <div
       ref={ref}
-      className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between gap-2 p-4 pt-[calc(var(--sat)_+_1rem)]"
+      className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between gap-2 p-4 pt-4"
     >
       <div className="flex items-center min-w-0 flex-1">
         <div

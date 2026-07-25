@@ -92,7 +92,7 @@ export function CameraViewfinder({ mode, onCaptureActiveChange, activeTab }: Cam
 
         <SessionBanner />
 
-        <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center pb-[calc(7rem+var(--sab))] sm:pb-[calc(8rem+var(--sab))]">
+        <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center pb-28 sm:pb-32">
           <div className="flex items-center gap-6 sm:gap-8">
             <GalleryButton onClick={handleGalleryPick} cameraAvailable={isCameraReady} />
             <CaptureButton

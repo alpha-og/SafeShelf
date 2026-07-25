@@ -83,7 +83,7 @@ export function ProductSheet({
           </div>
         </>
       ) : result ? (
-        <div className="flex flex-col flex-1 min-h-0 pb-(--sab)">
+        <div className="flex flex-col flex-1 min-h-0">
           <ProductHero
             product={result}
             suitability={suitability}
