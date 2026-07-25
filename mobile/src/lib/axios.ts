@@ -97,9 +97,11 @@ api.interceptors.response.use(
       } catch (refreshError) {
         apiError('RefreshToken', refreshError)
         processQueue(refreshError, null)
-        accessToken = null
-        await setToken(null)
-        onLogout?.()
+        if ((refreshError as AxiosError).response) {
+          accessToken = null
+          await setToken(null)
+          onLogout?.()
+        }
         return Promise.reject(refreshError)
       } finally {
         isRefreshing = false
