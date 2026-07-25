@@ -487,11 +487,11 @@ function buildServingInfo(
 function checkAllergens(productAllergens: string[], userAllergens: string[]): SuitabilityCheck[] {
   if (!userAllergens.length || !productAllergens.length) return []
 
-  const userLower = userAllergens.map((a) => a.toLowerCase())
+  const userLower = userAllergens.filter(Boolean).map((a) => a.toLowerCase())
   const checks: SuitabilityCheck[] = []
 
   for (const allergen of productAllergens) {
-    if (userLower.includes(allergen.toLowerCase())) {
+    if (allergen && userLower.includes(allergen.toLowerCase())) {
       checks.push({
         type: 'allergen',
         status: 'fail',
@@ -508,11 +508,11 @@ function checkAllergens(productAllergens: string[], userAllergens: string[]): Su
 function checkAllergenTraces(productTraces: string[], userAllergens: string[]): SuitabilityCheck[] {
   if (!userAllergens.length || !productTraces.length) return []
 
-  const userLower = userAllergens.map((a) => a.toLowerCase())
+  const userLower = userAllergens.filter(Boolean).map((a) => a.toLowerCase())
   const checks: SuitabilityCheck[] = []
 
   for (const trace of productTraces) {
-    if (userLower.includes(trace.toLowerCase())) {
+    if (trace && userLower.includes(trace.toLowerCase())) {
       checks.push({
         type: 'traces',
         status: 'warn',
@@ -573,7 +573,7 @@ function checkExclusions(
 ): SuitabilityCheck[] {
   if (!productIngredients.length) return []
 
-  const ingredientLower = productIngredients.map((i) => i.toLowerCase())
+  const ingredientLower = productIngredients.filter(Boolean).map((i) => i.toLowerCase())
   const checks: SuitabilityCheck[] = []
 
   for (const threshold of thresholds) {
@@ -614,10 +614,10 @@ function checkDietary(
 ): SuitabilityCheck[] {
   if (!dietaryPreferences.length) return []
 
-  const ingredientLower = productIngredients.map((i) => i.toLowerCase())
-  const labelsLower = labels.map((l) => l.toLowerCase())
-  const categoriesLower = productCategories.map((c) => c.toLowerCase())
-  const allergensLower = productAllergens.map((a) => a.toLowerCase())
+  const ingredientLower = productIngredients.filter(Boolean).map((i) => i.toLowerCase())
+  const labelsLower = labels.filter(Boolean).map((l) => l.toLowerCase())
+  const categoriesLower = productCategories.filter(Boolean).map((c) => c.toLowerCase())
+  const allergensLower = productAllergens.filter(Boolean).map((a) => a.toLowerCase())
   const productNameLower = productName?.toLowerCase()
   const checks: SuitabilityCheck[] = []
 
@@ -707,7 +707,7 @@ export function evaluate(
   checks.push(...checkAllergenTraces(product.allergenTraces, profile.allergens))
 
   const matchedConditions = thresholds.filter((ct) =>
-    profile.conditions.some((c) => c.toLowerCase() === ct.disease.toLowerCase()),
+    ct.disease && profile.conditions.some((c) => c?.toLowerCase() === ct.disease.toLowerCase()),
   )
 
   for (const threshold of matchedConditions) {

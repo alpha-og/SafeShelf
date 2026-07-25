@@ -23,21 +23,24 @@ export interface ProductInfo {
 }
 
 export function mapResponse(data: Record<string, unknown>): ProductInfo {
+  const filterStrings = (arr: unknown): string[] =>
+    Array.isArray(arr) ? arr.filter((v): v is string => typeof v === 'string') : []
+
   return {
     barcode: (data.barcode as string) ?? null,
     productName: (data.product_name as string) ?? null,
     brand: (data.brand as string) ?? null,
-    categories: (data.categories as string[]) ?? [],
-    ingredients: (data.ingredients as string[]) ?? [],
+    categories: filterStrings(data.categories),
+    ingredients: filterStrings(data.ingredients),
     nutrients: (data.nutrients as Record<string, unknown>) ?? {},
-    allergens: (data.allergens as string[]) ?? [],
+    allergens: filterStrings(data.allergens),
     imageUrl: (data.image_url as string) ?? null,
     nutriscoreGrade: (data.nutriscore_grade as string) ?? null,
     ecoscoreGrade: (data.ecoscore_grade as string) ?? null,
     novaGroup: (data.nova_group as number) ?? null,
     nutrientLevels: (data.nutrient_levels as Record<string, string>) ?? {},
-    labels: (data.labels as string[]) ?? [],
-    allergenTraces: (data.allergen_traces as string[]) ?? [],
+    labels: filterStrings(data.labels),
+    allergenTraces: filterStrings(data.allergen_traces),
     imageNutritionUrl: (data.image_nutrition_url as string) ?? null,
     imageIngredientsUrl: (data.image_ingredients_url as string) ?? null,
     quantity: (data.quantity as string) ?? null,
@@ -71,7 +74,8 @@ export async function getSuggestions(barcode: string, storeId?: string, n = 5): 
     const response = await api.get(`/v1/suggestion/${barcode}`, {
       params: { store_id: storeId, n }
     })
-    return response.data as SuggestionResponse[]
+    const data = response.data
+    return Array.isArray(data) ? data : []
   } catch (err) {
     apiError('getSuggestions', err)
     return []
