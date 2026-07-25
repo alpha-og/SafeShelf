@@ -6,8 +6,8 @@ import pandas as pd
 from sqlmodel import SQLModel, select
 
 from app.recipes.models import Recipe
-from app.shared.db import async_session, engine
 from scripts.lib.logger import info, success, warn
+from scripts.lib.seed import _make_session_maker
 
 _DEFAULT_LIMIT = 50_000
 _BATCH_SIZE = 500
@@ -154,23 +154,27 @@ def _row_to_recipe(row: dict) -> Recipe:
         sugar_content=_parse_float(row.get('SugarContent')),
         protein_content=_parse_float(row.get('ProteinContent')),
         date_published=(
-            pd.to_datetime(row['DatePublished']).to_pydatetime()
+            pd.to_datetime(row['DatePublished']).to_pydatetime().replace(tzinfo=None)
             if pd.notna(row.get('DatePublished'))
             else None
         ),
-        created_at=datetime.now(UTC),
+        created_at=datetime.now(),
     )
     return recipe
 
 
-async def run_seed_recipes(csv_path: str | None = None, limit: int = _DEFAULT_LIMIT) -> None:
+async def run_seed_recipes(
+    csv_path: str | None = None, limit: int = _DEFAULT_LIMIT, db_url: str | None = None
+) -> None:
+    _engine, session_maker = _make_session_maker(db_url)
+
     info('Initializing database tables...')
-    async with engine.begin() as conn:
+    async with _engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
 
     df = _load_dataframe(csv_path, limit)
 
-    async with async_session() as session:
+    async with session_maker() as session:
         existing_result = await session.exec(
             select(Recipe.source_id).where(Recipe.source == 'foodcom')
         )
@@ -203,3 +207,6 @@ async def run_seed_recipes(csv_path: str | None = None, limit: int = _DEFAULT_LI
                 await session.refresh(r)
 
         success(f'Seeded {len(new_records)} recipes')
+
+    if db_url:
+        await _engine.dispose()

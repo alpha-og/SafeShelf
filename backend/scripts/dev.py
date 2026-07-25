@@ -47,7 +47,7 @@ def cmd_seed(
 
     if do_recipes:
         header('Seeding Recipes from Food.com Dataset')
-        asyncio.run(run_seed_recipes(csv_path=csv_path, limit=limit))
+        asyncio.run(run_seed_recipes(csv_path=csv_path, limit=limit, db_url=db_url))
 
 
 def cmd_generate_ingredients(
