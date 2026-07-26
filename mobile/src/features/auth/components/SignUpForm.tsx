@@ -15,7 +15,11 @@ export function SignUpForm() {
       onChange: signUpSchema,
     },
     onSubmit: async ({ value }) => {
-      await signUpMutation.mutateAsync(value)
+      try {
+        await signUpMutation.mutateAsync(value)
+      } catch {
+        // TanStack Query already sets isError/error — FormError reads it
+      }
     },
   })
 

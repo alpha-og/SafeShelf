@@ -89,33 +89,43 @@ function AuthProvider({ children }: { children: ReactNode }) {
 
   const signUp = useCallback(
     async (email: string, password: string) => {
-      const { data } = await api.post<{
-        id: number
-        email: string
-        created_at: string
-        access_token: string
-      }>('/v1/auth/signup', { email, password })
-      restoreSession(data.access_token, {
-        id: data.id,
-        email: data.email,
-        created_at: data.created_at,
-      })
+      try {
+        const { data } = await api.post<{
+          id: number
+          email: string
+          created_at: string
+          access_token: string
+        }>('/v1/auth/signup', { email, password })
+        restoreSession(data.access_token, {
+          id: data.id,
+          email: data.email,
+          created_at: data.created_at,
+        })
+      } catch (err) {
+        console.error('signUp failed:', err)
+        throw err
+      }
     },
     [restoreSession],
   )
 
   const signIn = useCallback(async (email: string, password: string) => {
-    const { data } = await api.post<{ access_token: string }>('/v1/auth/signin', {
-      email,
-      password,
-    })
-    setAccessToken(data.access_token)
-    setAccessTokenState(data.access_token)
-    setToken(data.access_token)
-    const { data: userData } = await api.get<{ id: number; email: string; created_at: string }>(
-      '/v1/auth/me',
-    )
-    setUser(userData)
+    try {
+      const { data } = await api.post<{ access_token: string }>('/v1/auth/signin', {
+        email,
+        password,
+      })
+      setAccessToken(data.access_token)
+      setAccessTokenState(data.access_token)
+      setToken(data.access_token)
+      const { data: userData } = await api.get<{ id: number; email: string; created_at: string }>(
+        '/v1/auth/me',
+      )
+      setUser(userData)
+    } catch (err) {
+      console.error('signIn failed:', err)
+      throw err
+    }
   }, [])
 
   const signOut = useCallback(async () => {

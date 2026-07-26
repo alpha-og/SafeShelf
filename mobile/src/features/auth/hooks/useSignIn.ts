@@ -9,12 +9,17 @@ export function useSignIn() {
   return useMutation({
     mutationFn: (data: SignInInput) => authApi.signIn(data),
     onSuccess: async (response) => {
-      const { access_token } = response.data
-      setAccessToken(access_token)
-      const { data: user } = await api.get<{ id: number; email: string; created_at: string }>(
-        '/v1/auth/me',
-      )
-      auth.restoreSession(access_token, user)
+      try {
+        const { access_token } = response.data
+        setAccessToken(access_token)
+        const { data: user } = await api.get<{ id: number; email: string; created_at: string }>(
+          '/v1/auth/me',
+        )
+        auth.restoreSession(access_token, user)
+      } catch (err) {
+        setAccessToken(null as unknown as string)
+        throw err
+      }
     },
   })
 }

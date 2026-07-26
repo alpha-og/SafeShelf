@@ -15,7 +15,11 @@ export function SignInForm() {
       onChange: signInSchema,
     },
     onSubmit: async ({ value }) => {
-      await signInMutation.mutateAsync(value)
+      try {
+        await signInMutation.mutateAsync(value)
+      } catch {
+        // TanStack Query already sets isError/error — FormError reads it
+      }
     },
   })
 

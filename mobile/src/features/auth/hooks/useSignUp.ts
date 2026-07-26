@@ -8,8 +8,13 @@ export function useSignUp() {
   return useMutation({
     mutationFn: (data: SignUpInput) => authApi.signUp(data),
     onSuccess: (response) => {
-      const { access_token, id, email, created_at } = response.data
-      auth.restoreSession(access_token, { id, email, created_at })
+      try {
+        const { access_token, id, email, created_at } = response.data
+        auth.restoreSession(access_token, { id, email, created_at })
+      } catch (err) {
+        console.error('restoreSession failed after signup:', err)
+        throw err
+      }
     },
   })
 }

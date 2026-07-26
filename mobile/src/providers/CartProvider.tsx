@@ -152,23 +152,35 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const continueSession = () => setPreviousSessionPending(false)
 
   const startNewSession = async () => {
-    await archive(items)
-    await saveCart([])
-    setPreviousSessionPending(false)
+    try {
+      await archive(items)
+      await saveCart([])
+      setPreviousSessionPending(false)
+    } catch {
+      toast.error('Failed to start new session')
+    }
   }
 
   const restoreSession = async (id: string) => {
-    const session = sessionHistory.find((s) => s.id === id)
-    if (!session) return
-    // Archive whatever's in the cart now so it isn't lost, then swap the saved
-    // session in and drop it from history.
-    const afterArchive = await archive(items)
-    await saveHistory(afterArchive.filter((s) => s.id !== id))
-    await saveCart(session.items)
+    try {
+      const session = sessionHistory.find((s) => s.id === id)
+      if (!session) return
+      // Archive whatever's in the cart now so it isn't lost, then swap the saved
+      // session in and drop it from history.
+      const afterArchive = await archive(items)
+      await saveHistory(afterArchive.filter((s) => s.id !== id))
+      await saveCart(session.items)
+    } catch {
+      toast.error('Failed to restore session')
+    }
   }
 
   const deleteSession = async (id: string) => {
-    await saveHistory(sessionHistory.filter((s) => s.id !== id))
+    try {
+      await saveHistory(sessionHistory.filter((s) => s.id !== id))
+    } catch {
+      toast.error('Failed to delete session')
+    }
   }
 
   const { selectedStoreId } = useStore()
@@ -214,27 +226,39 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }
 
   const removeFromCart = async (barcode: string) => {
-    const newItems = items.filter((item) => item.product.barcode !== barcode)
-    await saveCart(newItems)
+    try {
+      const newItems = items.filter((item) => item.product.barcode !== barcode)
+      await saveCart(newItems)
+    } catch {
+      toast.error('Failed to remove item from cart')
+    }
   }
 
   const updateQuantity = async (barcode: string, quantity: number) => {
-    if (quantity <= 0) {
-      await removeFromCart(barcode)
-      return
-    }
-    const newItems = items.map((item) => {
-      if (item.product.barcode === barcode) {
-        return { ...item, quantity }
+    try {
+      if (quantity <= 0) {
+        await removeFromCart(barcode)
+        return
       }
-      return item
-    })
-    await saveCart(newItems)
+      const newItems = items.map((item) => {
+        if (item.product.barcode === barcode) {
+          return { ...item, quantity }
+        }
+        return item
+      })
+      await saveCart(newItems)
+    } catch {
+      toast.error('Failed to update cart')
+    }
   }
 
   const clearCart = async () => {
-    await archive(items)
-    await saveCart([])
+    try {
+      await archive(items)
+      await saveCart([])
+    } catch {
+      toast.error('Failed to clear cart')
+    }
   }
 
   return (

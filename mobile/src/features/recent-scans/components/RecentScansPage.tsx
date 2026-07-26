@@ -1,6 +1,7 @@
 import { useNavigate } from '@tanstack/react-router'
 import { History, PackageX, Trash2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 import { EmptyState } from '@/components/EmptyState'
 import { PageHeader } from '@/components/PageHeader'
 import { StatusDot } from '@/components/StatusDot'
@@ -79,8 +80,12 @@ export function RecentScansPage() {
   }, [])
 
   const handleClear = async () => {
-    await clearScanHistory()
-    setRecords([])
+    try {
+      await clearScanHistory()
+      setRecords([])
+    } catch {
+      toast.error('Failed to clear scan history')
+    }
   }
 
   if (records.length === 0) {
