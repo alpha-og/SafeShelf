@@ -1,4 +1,5 @@
 import { CapacitorHttp } from '@capacitor/core'
+import { AxiosError } from 'axios'
 import type { AxiosAdapter, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 
 function buildUrl(config: InternalAxiosRequestConfig): string {
@@ -14,11 +15,13 @@ export const capacitorHttpAdapter: AxiosAdapter = async (config) => {
 
   const headers: Record<string, string> = {}
   if (config.headers && typeof config.headers === 'object') {
-    const h = config.headers as Record<string, unknown>
-    for (const key of Object.keys(h)) {
-      if (key !== 'common' && key !== 'delete' && key !== 'get' && key !== 'head' &&
-          key !== 'post' && key !== 'put' && key !== 'patch' && typeof h[key] === 'string') {
-        headers[key] = h[key] as string
+    const src = config.headers as { toJSON?: () => Record<string, unknown> }
+    const raw: Record<string, unknown> =
+      typeof src.toJSON === 'function' ? src.toJSON() : (src as Record<string, unknown>)
+    const skip = new Set(['common', 'delete', 'get', 'head', 'post', 'put', 'patch'])
+    for (const key of Object.keys(raw)) {
+      if (!skip.has(key) && typeof raw[key] === 'string') {
+        headers[key] = raw[key] as string
       }
     }
   }
@@ -48,6 +51,17 @@ export const capacitorHttpAdapter: AxiosAdapter = async (config) => {
       statusText: String(response.status),
       headers: response.headers as Record<string, string>,
       config,
+    }
+
+    const status = axiosResponse.status
+    if (status < 200 || status >= 300) {
+      throw new AxiosError(
+        `Request failed with status code ${status}`,
+        AxiosError.ERR_BAD_RESPONSE,
+        config,
+        undefined,
+        axiosResponse,
+      )
     }
 
     return axiosResponse
