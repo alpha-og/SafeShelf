@@ -6,14 +6,14 @@ from app.products.service import get_product_by_barcode, identify_product, searc
 router = APIRouter(prefix='/products', tags=['products'])
 
 
-@router.get('/{barcode}', response_model=BarcodeResponse)
-async def product_by_barcode(barcode: str):
-    return await get_product_by_barcode(barcode)
-
-
 @router.get('/search', response_model=SearchResponse)
 async def search(q: str = Query(min_length=1)):
     return await search_products(q)
+
+
+@router.get('/{barcode}', response_model=BarcodeResponse)
+async def product_by_barcode(barcode: str):
+    return await get_product_by_barcode(barcode)
 
 
 @router.post('/identify', response_model=IdentifyResponse)
