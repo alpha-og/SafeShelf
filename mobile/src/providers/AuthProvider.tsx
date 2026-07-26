@@ -60,8 +60,15 @@ function AuthProvider({ children }: { children: ReactNode }) {
           )
           setAccessToken(refreshData.access_token)
           setToken(refreshData.access_token)
-        } catch (err) {
+        } catch (err: unknown) {
           if (controller.signal.aborted) return
+          const isTimeout =
+            (err as { code?: string })?.code === 'ECONNABORTED' ||
+            (err as { code?: string })?.code === 'ETIMEDOUT'
+          const hasResponse = !!(err as { response?: unknown }).response
+          if (isTimeout || !hasResponse) {
+            return
+          }
           await setToken(null)
           setAccessToken(null)
           return
