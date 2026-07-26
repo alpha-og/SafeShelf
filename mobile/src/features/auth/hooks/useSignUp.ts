@@ -10,6 +10,7 @@ export function useSignUp() {
     onSuccess: (response) => {
       try {
         const { access_token, id, email, created_at } = response.data
+        if (!access_token) throw new Error('No access token in signup response')
         auth.restoreSession(access_token, { id, email, created_at })
       } catch (err) {
         console.error('restoreSession failed after signup:', err)

@@ -11,6 +11,7 @@ export function useSignIn() {
     onSuccess: async (response) => {
       try {
         const { access_token } = response.data
+        if (!access_token) throw new Error('No access token in signin response')
         setAccessToken(access_token)
         const { data: user } = await api.get<{ id: number; email: string; created_at: string }>(
           '/v1/auth/me',
